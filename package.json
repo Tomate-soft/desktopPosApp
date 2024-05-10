@@ -1,0 +1,48 @@
+{
+  "name": "pos-tomate",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build && electron-builder",
+    "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@digitalpersona/authentication": "^0.2.6",
+    "@digitalpersona/devices": "^0.2.6",
+    "@formkit/drag-and-drop": "^0.0.38",
+    "axios": "^1.6.5",
+    "print-js": "^1.6.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.21.1",
+    "react-to-print": "^2.14.15",
+    "swr": "^2.2.5",
+    "uuid": "^9.0.1",
+    "vite-tsconfig-paths": "^4.2.2",
+    "zustand": "4.5.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.48",
+    "@types/react-dom": "^18.2.18",
+    "@types/uuid": "^9.0.8",
+    "@typescript-eslint/eslint-plugin": "^6.6.0",
+    "@typescript-eslint/parser": "^6.6.0",
+    "@vitejs/plugin-react": "^4.0.4",
+    "electron": "^26.1.0",
+    "electron-builder": "^24.13.3",
+    "eslint": "^8.48.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.3",
+    "standard": "^17.1.0",
+    "typescript": "^5.2.2",
+    "vite": "^4.4.9",
+    "vite-plugin-electron": "^0.14.0",
+    "vite-plugin-electron-renderer": "^0.14.5"
+  },
+  "main": "dist-electron/main.js",
+  "eslintConfig": {
+    "extends": "standard"
+  }
+}
