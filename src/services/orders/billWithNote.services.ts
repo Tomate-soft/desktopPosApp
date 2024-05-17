@@ -1,9 +1,7 @@
-import axios from "axios";
-
-const URL_PATH = "https://tomate-server.onrender.com/notes/";
+import axios from "../../configs/axios";
+import { NOTES_PATH } from "../../lib/routes.paths.lib";
 
 export const updateNoteService = async (id: string, noteData: {}) => {
-  const response = await axios.put(`${URL_PATH}${id}`, noteData);
+  const response = await axios.put(`${NOTES_PATH}/${id}`, noteData);
   return response;
 };
-// update

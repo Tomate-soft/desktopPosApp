@@ -1,4 +1,5 @@
-import axios from "axios";
+import axios from "../../configs/axios";
+import { SIGN_IN_PATH } from "../../lib/routes.paths.lib";
 
 interface User {
   employeeNumber: string;
@@ -6,12 +7,6 @@ interface User {
 }
 
 export const signIn = async (user: User) => {
-  console.log(user);
-  const response = await axios.post(
-    "https://tomate-server.onrender.com/auth/signIn",
-    user
-  );
-  console.log(response);
-
+  const response = await axios.post(SIGN_IN_PATH, user);
   return response;
 };

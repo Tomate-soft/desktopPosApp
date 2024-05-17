@@ -1,8 +1,8 @@
-import axios from "axios";
+import axios from "../configs/axios";
+import { TABLES_PATH, TABLES_RESET_PATH } from "../lib/routes.paths.lib";
 
-const URL_PATH = "https://tomate-server.onrender.com";
 export const getTablesService = async () => {
-  const response = axios("https://tomate-server.onrender.com/tables");
+  const response = axios(TABLES_PATH);
   return response;
 };
 
@@ -25,10 +25,10 @@ export const updateTablesService = async (
     const responses = [];
     for (const updateTable of tablesArgs) {
       console.log(updateTable);
-      const res = await axios.patch(
-        `https://tomate-server.onrender.com/tables/${updateTable._id}`,
-        { assigned: true, user: userId }
-      );
+      const res = await axios.patch(`${TABLES_PATH}/${updateTable._id}`, {
+        assigned: true,
+        user: userId,
+      });
       responses.push(res);
     }
     return responses;
@@ -39,6 +39,6 @@ export const updateTablesService = async (
 };
 
 export const resetTablesService = async () => {
-  const response = await axios.put(`${URL_PATH}/tables/reset`);
+  const response = await axios.put(TABLES_RESET_PATH);
   return response;
 };

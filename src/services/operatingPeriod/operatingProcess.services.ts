@@ -1,8 +1,7 @@
-import axios from "axios";
-
-const URL_PATH = "https://tomate-server.onrender.com/operating-period/current";
+import axios from "../../configs/axios";
+import { OPERATING_PERIOD_CURRENT } from "../../lib/routes.paths.lib";
 
 export const getCurrentProcessService = async () => {
-  const response = axios(URL_PATH);
+  const response = axios(OPERATING_PERIOD_CURRENT);
   return response;
 };

@@ -1,5 +1,6 @@
-import axios from "axios";
+import axios from "../configs/axios";
 import { useState } from "react";
+import { USERS_PATH } from "../lib/routes.paths.lib";
 
 export default function UseUsers() {
   const [usersArray, setUsersArray] = useState<any>();
@@ -9,7 +10,7 @@ export default function UseUsers() {
   const getUsers = async () => {
     setIsLoading(true);
     try {
-      const res = await axios.get("https://tomate-server.onrender.com/users", {
+      const res = await axios.get(USERS_PATH, {
         timeout: 5000,
       });
 
