@@ -186,7 +186,6 @@ export default function Order() {
         setBillCurrentCommand(tableItem.bill[0].notes[0]); // HEALTCHECK
         console.log("Entre el IF CON notas y...");
         console.log(selectNote.length); // Esto se consologuea bien
-        return;
       }
 
       if (tableItem.bill[0]) {
@@ -484,6 +483,7 @@ export default function Order() {
       ) : null}
       {confirmChanges.isOpen && confirmChanges.modalName === CONFIRM_CHANGES ? (
         <ConfirmChanges
+          actionType={logOutRequest}
           isOpen={confirmChanges.isOpen}
           onClose={confirmChanges.closeModal}
           loading={isLoadingNote}

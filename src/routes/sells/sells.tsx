@@ -33,6 +33,8 @@ import BillBoard from "../../components/billBoard/billBoard";
 import ClosedBillBoard from "../../components/closeBillBoard/closedBillBoard";
 import ExceptionMessages from "../../components/modals/exceptionMessages/exceptionMessages";
 import UseCashierException from "../../hooks/exceptions/useCashierException";
+import { useEffect } from "react";
+import { billInitialState } from "../../configs/bills.initial.state";
 
 export default function Sells() {
   //exceptions
@@ -65,6 +67,12 @@ export default function Sells() {
   const closedBillBoard = useModal(CLOSED_BILLBOARD_MODAL);
 
   UseCashierException(cashierSessionException.openModal);
+
+  useEffect(() => {
+    console.log("PRODUCTOS ACTUALIES EN LA COMANDA");
+    console.log(billCurrentCommand);
+    setBillCurrentCommand(billInitialState);
+  }, []);
 
   return (
     <div className={styles.container}>

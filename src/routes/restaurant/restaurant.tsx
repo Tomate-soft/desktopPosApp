@@ -28,6 +28,7 @@ import ExceptionMessages from "../../components/modals/exceptionMessages/excepti
 import { EXCEPTION_MESSAGES_CASHIER_SESSION_MODAL } from "../../lib/modals.lib";
 import UseCashierException from "../../hooks/exceptions/useCashierException";
 import { useOperationProcess } from "../../store/operatingPeriod/operatingPeriod.store";
+import { useCurrentCommand } from "../sells/imports";
 
 export default function Restaurant() {
   const getOperatingPeriod = useOperationProcess(
@@ -47,13 +48,16 @@ export default function Restaurant() {
   const isAdmin =
     authData?.payload?.user?.role?.role.value === ADMIN ? true : false;
 
+  const billCurrentCommand = useCurrentCommand(
+    (state) => state.BillCommandCurrent
+  );
+
   //exceptions
   const cashierSessionException = useModal(
     EXCEPTION_MESSAGES_CASHIER_SESSION_MODAL
   );
   UseCashierException(cashierSessionException.openModal);
   useEffect(() => {
-    console.log(currentPeriod);
     getTables();
   }, []);
   return (
