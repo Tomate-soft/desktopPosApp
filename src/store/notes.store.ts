@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { getNotesService } from "../services/notes.services";
+import { updateNoteService } from "../services/orders/billWithNote.services";
 
 interface state {
   isLoading: boolean;
@@ -7,6 +8,7 @@ interface state {
   message: string | null;
   notesArray: [];
   getNotes: () => Promise<{}>;
+  updateNote: (id: string, body: {}) => Promise<void>;
 }
 
 export const useNotesStore = create<state>((set) => {
@@ -37,6 +39,29 @@ export const useNotesStore = create<state>((set) => {
         });
       }
       throw new Error("Ha ocurrido un error inesperado");
+    },
+    updateNote: async (id, body) => {
+      set({ isLoading: true });
+      try {
+        const res = await updateNoteService(id, body);
+        if (!res.data) {
+          set({
+            isLoading: false,
+            errors: true,
+            message: "No se pudo actualizar la nota",
+          });
+          throw new Error("Error al actualizar la nota");
+        }
+        set({ isLoading: false });
+        return;
+      } catch (error) {
+        set({
+          isLoading: false,
+          errors: true,
+          message: "No se pudo actualizar",
+        });
+        throw new Error("No se actualizo la nota debido a un error inesperado");
+      }
     },
   };
 });
