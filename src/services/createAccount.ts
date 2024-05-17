@@ -1,6 +1,7 @@
 //api.js
-import axios from "axios";
+import axios from "../configs/axios";
 import { useState } from "react";
+import { BILLS_PATH } from "../lib/routes.paths.lib";
 
 export const useAccount = () => {
   const [loading, setLoading] = useState(false);
@@ -10,10 +11,7 @@ export const useAccount = () => {
     try {
       setLoading(true);
 
-      const response = await axios.post(
-        "https://tomate-server.onrender.com/bills",
-        account
-      );
+      const response = await axios.post(BILLS_PATH, account);
       setLoading(false);
       if (!response.data) {
         throw new Error("No se encontro respuesta");

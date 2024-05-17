@@ -1,6 +1,7 @@
-import axios from "axios";
+import axios from "../configs/axios";
 import { useState } from "react";
 import { tables } from "../mocks/tables";
+import { TABLES_PATH } from "../lib/routes.paths.lib";
 
 export default function UseTable() {
   const [isLoading, setIsLoading] = useState(false);
@@ -11,7 +12,7 @@ export default function UseTable() {
   async function getTables() {
     setIsLoading(true);
     try {
-      const res = await axios("https://tomate-server.onrender.com/tables");
+      const res = await axios(TABLES_PATH);
       if (!res.data) {
         setIsLoading(false);
         setErrors(true);
@@ -31,9 +32,7 @@ export default function UseTable() {
   async function getOneTable(id: string | undefined) {
     setIsLoading(true);
     try {
-      const res = await axios(
-        `https://tomate-server.onrender.com/tables/${id}`
-      );
+      const res = await axios(`${TABLES_PATH}/${id}`);
       if (!res.data) {
         setIsLoading(false);
         setErrors(true);
@@ -61,17 +60,16 @@ export default function UseTable() {
 
     try {
       if (bill) {
-        const res = await axios.patch(
-          `https://tomate-server.onrender.com/tables/${id}`,
-          { status: statusChange, bill: [] }
-        );
+        const res = await axios.patch(`${TABLES_PATH}/${id}`, {
+          status: statusChange,
+          bill: [],
+        });
 
         return res.data;
       }
-      const res = await axios.patch(
-        `https://tomate-server.onrender.com/tables/${id}`,
-        { status: statusChange }
-      );
+      const res = await axios.patch(`${TABLES_PATH}/${id}`, {
+        status: statusChange,
+      });
       if (!res.data) {
         setIsLoading(false);
         setErrors(true);

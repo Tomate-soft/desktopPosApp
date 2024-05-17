@@ -1,8 +1,7 @@
-import axios from "axios";
-
-const URL_PATH = "https://tomate-server.onrender.com/products";
+import axios from "../configs/axios";
+import { PRODUCTS_PATH } from "../lib/routes.paths.lib";
 
 export const getProductsService = async () => {
-  const response = axios(URL_PATH);
+  const response = axios(PRODUCTS_PATH);
   return response;
 };

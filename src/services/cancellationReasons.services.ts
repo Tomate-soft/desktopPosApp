@@ -1,8 +1,7 @@
-import axios from "axios";
+import axios from "../configs/axios";
+import { CANCELLATION_REASON_PATH } from "../lib/routes.paths.lib";
 
 export const getReasonsAction = async () => {
-  const response = await axios(
-    "https://tomate-server.onrender.com/cancellation-reason"
-  );
+  const response = await axios(CANCELLATION_REASON_PATH);
   return response;
 };

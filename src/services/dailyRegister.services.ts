@@ -1,13 +1,11 @@
-import axios from "axios";
-
-const api = process.env.API_URL_PATH;
-const dailyRegisterPath = process.env.DAILY_REGISTER_PATH;
+import axios from "../configs/axios";
+import { DAILY_REGISTER_PATH } from "../lib/routes.paths.lib";
 
 export const createEntryService = (employeeNumber: number, pinPos: number) => {
   const body = {
     employeeNumber,
     pinPos,
   };
-  const response = axios.post(`${api}${dailyRegisterPath}`, body)
-  return response.
-}
+  const response = axios.post(DAILY_REGISTER_PATH, body);
+  return response;
+};

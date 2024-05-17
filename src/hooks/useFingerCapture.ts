@@ -6,7 +6,8 @@ import {
   SamplesAcquired,
 } from "@digitalpersona/devices";
 import { useState } from "react";
-import axios from "axios";
+import axios from "../configs/axios";
+import { BILLS_PATH } from "../lib/routes.paths.lib";
 
 export default function UseFingerCapture() {
   const [reader, setReader] = useState<FingerprintReader | null>(null);
@@ -86,10 +87,7 @@ export default function UseFingerCapture() {
     console.log(data);
     setIsLoading(true);
     try {
-      const res = await axios.put(
-        `https://tomate-server.onrender.com/users/${id}`,
-        { samples: data }
-      );
+      const res = await axios.put(`${BILLS_PATH}/${id}`, { samples: data });
       if (!res.data) {
         setIsLoading(false);
         setErrors("No se ha podido actualizar");

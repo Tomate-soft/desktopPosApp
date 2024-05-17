@@ -1,8 +1,7 @@
-import axios from "axios";
-
-const URL_PATH = "https://tomate-server.onrender.com/categories";
+import axios from "../configs/axios";
+import { CATEGORIES_PATH } from "../lib/routes.paths.lib";
 
 export const getCategoriesService = async () => {
-  const response = axios(URL_PATH);
+  const response = axios(CATEGORIES_PATH);
   return response;
 };

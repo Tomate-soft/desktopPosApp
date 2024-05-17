@@ -1,6 +1,7 @@
-import axios from "axios";
+import axios from "../configs/axios";
 import { Payment } from "../types/payment";
 import { useState } from "react";
+import { PAYMENTS_PATH } from "../lib/routes.paths.lib";
 
 export default function UsePayment() {
   const [isLoading, setIsLoading] = useState(false);
@@ -10,10 +11,7 @@ export default function UsePayment() {
   const createPayment = async (payment: Payment) => {
     setIsLoading(true);
     try {
-      const res = await axios.post(
-        "https://tomate-server.onrender.com/payments",
-        payment
-      );
+      const res = await axios.post(PAYMENTS_PATH, payment);
 
       const newPayment = await res.data;
       if (!newPayment) {

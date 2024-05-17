@@ -1,6 +1,12 @@
 import axios from "axios";
+import axiosInstance from "../configs/axios";
 import { Bill } from "../types/account";
 import { useState } from "react";
+import {
+  BILLS_PATH,
+  DEVICE_IDN_PATH,
+  TABLES_PATH,
+} from "../lib/routes.paths.lib";
 
 export default function UseAccount() {
   const [isLoading, setIsLoading] = useState(false);
@@ -36,10 +42,7 @@ export default function UseAccount() {
 
     const sendAccount = { ...account, products: accountProducts };
     try {
-      const response = await axios.post(
-        `https://tomate-server.onrender.com/bills`,
-        sendAccount
-      );
+      const response = await axiosInstance.post(BILLS_PATH, sendAccount);
       setIsLoading(false);
       if (!response.data) {
         throw new Error("No se encontro respuesta");
@@ -56,7 +59,7 @@ export default function UseAccount() {
   async function getBills() {
     setIsLoading(true);
     try {
-      const res = await axios(`https://tomate-server.onrender.com/bills`);
+      const res = await axiosInstance(BILLS_PATH);
       if (!res.data) {
         setIsLoading(false);
         throw new Error("No se encontraron cuentas");
@@ -74,7 +77,7 @@ export default function UseAccount() {
   async function getAccount(id: string) {
     setIsLoading(true);
     try {
-      const res = await axios(`https://tomate-server.onrender.com/bills/${id}`);
+      const res = await axiosInstance(`${BILLS_PATH}/${id}`);
       if (!res.data) {
         setIsLoading(false);
         throw new Error("No se encontraron cuentas");
@@ -108,14 +111,11 @@ export default function UseAccount() {
 
     const sendAccount = { ...form, products: accountProducts };
     try {
-      const res = await axios.put(
-        `https://tomate-server.onrender.com/bills/${id}`,
-        {
-          status: statusChange,
-          products: sendAccount.products,
-          checkTotal: sendAccount.checkTotal,
-        }
-      );
+      const res = await axiosInstance.put(`${BILLS_PATH}/${id}`, {
+        status: statusChange,
+        products: sendAccount.products,
+        checkTotal: sendAccount.checkTotal,
+      });
       if (!res.data) {
         setIsLoading(false);
         setErrors(true);
@@ -135,10 +135,9 @@ export default function UseAccount() {
       }
     });  */
     try {
-      const res = await axios.patch(
-        `https://tomate-server.onrender.com/tables/${id}`,
-        { bill: [statusChange] }
-      );
+      const res = await axiosInstance.patch(`${TABLES_PATH}/${id}`, {
+        bill: [statusChange],
+      });
       if (!res.data) {
         setIsLoading(false);
         setErrors(true);
@@ -165,9 +164,7 @@ export default function UseAccount() {
       return;
     }
     try {
-      const response = axios(
-        `https://tomate-server.onrender.com/device/deviceIdn/${serial.data}`
-      );
+      const response = axiosInstance(`${DEVICE_IDN_PATH}/${serial.data}`);
       if (!response) {
         setIsLoading(false);
         setErrors(true);
@@ -202,10 +199,7 @@ export default function UseAccount() {
     setIsLoading(true);
     console.log(id, key);
     try {
-      const res = await axios.put(
-        `https://tomate-server.onrender.com/bills/${id}`,
-        key
-      );
+      const res = await axiosInstance.put(`${BILLS_PATH}/${id}`, key);
       if (!res) {
         setErrors(true);
       }

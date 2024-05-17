@@ -1,8 +1,7 @@
-import axios from "axios";
-
-const URL_PATH = "https://tomate-server.onrender.com/dishes";
+import axios from "../configs/axios";
+import { DISHES_PATH } from "../lib/routes.paths.lib";
 
 export const getDishesService = async () => {
-  const response = await axios(URL_PATH);
+  const response = await axios(DISHES_PATH);
   return response;
 };
