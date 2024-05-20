@@ -52,8 +52,6 @@ export const createNotes = async (notesArray: any) => {
         }
       } else {
         try {
-          console.log("Actualizacion");
-          console.log(note);
           const transferNote = {
             accountId: null,
             body: { products: note.products },
@@ -84,6 +82,10 @@ export const injectNotesInBill = async (id: string, notesArray: any[]) => {
 };
 
 export const addNameInNote = async (id: string, noteName: NoteName) => {
+  const data = {
+    accountId: null,
+    body: noteName,
+  };
   const response = axios.put(`${NOTES_PATH}/${id}`, noteName);
   return response;
 };

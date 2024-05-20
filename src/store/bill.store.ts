@@ -78,7 +78,6 @@ export const updateBillProps = create<state>((set) => {
             throw new Error("Ha ocurrido algo inesperado");
           }
         }
-
         set({ isLoading: false });
       } catch (error) {
         console.error(error);
