@@ -103,23 +103,24 @@ export default function PaymentInterface({
     0
   );
   const conditionalTotal = currentBill.note
-    ? currentBill.note.checkTotal
-    : currentBill.checkTotal;
+    ? currentBill.note?.checkTotal
+    : currentBill?.checkTotal;
   const currentPayment = parseFloat(conditionalTotal) - totalTransactions;
 
   useEffect(() => {
     console.log(
       "Por aca consologuean el item que llega debe llegar Nota o cuenta"
     );
-    console.log(currentBill);
+    console.log(currentBill.checkTotal);
     if (!paymentQuantity) setPaymentQuantity("0.00");
     setCreatePayment({
       ...createPayment,
       cashier: "develop",
       check: "exampleCode",
       paymentDate: new Date().toISOString(),
-      paymentTotal: currentBill.note.checkTotal ?? currentBill.bill.checkTotal,
-      accountId: currentBill.bill._id ?? currentBill.bill._id,
+      paymentTotal:
+        currentBill?.note?.checkTotal ?? currentBill.bill?.checkTotal,
+      accountId: currentBill.bill?._id ?? currentBill.bill?._id,
     });
     return setPaymentQuantity("0.00");
   }, []);

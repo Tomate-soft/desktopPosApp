@@ -184,8 +184,7 @@ export default function Order() {
       if (tableItem.bill[0]?.notes && tableItem.bill[0]?.notes?.length > 0) {
         setSelectNote(tableItem.bill[0].notes[0]); // HEALTCHECK
         setBillCurrentCommand(tableItem.bill[0].notes[0]); // HEALTCHECK
-        console.log("Entre el IF CON notas y...");
-        console.log(selectNote.length); // Esto se consologuea bien
+        return;
       }
 
       if (tableItem.bill[0]) {
@@ -215,7 +214,6 @@ export default function Order() {
         ...billCurrentCommand,
         products: [],
       });
-      console.log("Aca el auth data");
       console.log(authData); // aca es rollete del bug de volver a v3er los productos.
     };
   }, []);
