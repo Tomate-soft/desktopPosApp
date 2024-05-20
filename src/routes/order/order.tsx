@@ -545,7 +545,6 @@ export default function Order() {
         <button
           className={styles.printButton}
           onClick={async () => {
-            console.log(billCurrentCommand);
             if (type === ON_SITE_ORDER) {
               if (isWithNotes) {
                 const dataTransfer = {
@@ -555,7 +554,6 @@ export default function Order() {
                   },
                   accountId: tableItem.bill[0]._id,
                 };
-                console.log(dataTransfer);
                 updateNote(selectNote._id, dataTransfer);
                 confirmChanges.openModal();
                 return;
@@ -578,12 +576,10 @@ export default function Order() {
             }
             if (type === TO_GO_ORDER) {
               if (toGoOrder) {
-                console.log("Solicitud de actualizacion");
                 updateToGoOrder(toGoOrder._id, billCurrentCommand);
                 logOutRequest();
                 return;
               }
-              console.log("creacion de pedido");
               createToGoOrder(billCurrentCommand);
               logOutRequest();
             }

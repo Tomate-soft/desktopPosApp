@@ -52,8 +52,6 @@ export const createNotes = async (notesArray: any) => {
         }
       } else {
         try {
-          console.log("Actualizacion");
-          console.log(note);
           const transferNote = {
             accountId: null,
             body: { products: note.products },

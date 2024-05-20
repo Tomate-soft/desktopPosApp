@@ -31,10 +31,7 @@ export default function UseAccount() {
   };
 
   async function createAccount(account: Bill) {
-    console.log(account);
-    console.log("legue aca");
     setIsLoading(true);
-
     const accountProducts = account.products.map((item) => {
       const newProductStatus = { ...item, active: true };
       return newProductStatus;
@@ -48,7 +45,7 @@ export default function UseAccount() {
         throw new Error("No se encontro respuesta");
       }
       setNewAccount(response.data);
-      alert("Enviado con exito");
+      alert("Enviado con exito"); // aca hay que abrir el modal de confirmacion y bquitar elo alert
       return response.data;
     } catch (error) {
       setIsLoading(false);
