@@ -42,7 +42,7 @@ import trashBtn from "../../assets/icon/trashIcon.svg";
 import arrow from "../../assets/icon/selectArrow.svg";
 import { useNotesStore } from "../../store/notes.store";
 import ConfirmChanges from "../../components/modals/confirm/confirmChanges";
-import { ENABLE_STATUS } from "../../lib/tables.status.lib";
+import { ENABLE_STATUS, FOR_PAYMENT_STATUS } from "../../lib/tables.status.lib";
 import { useCashierSessionStore } from "../../store/operatingPeriod/cashierSession.store";
 import UseVerify from "../../hooks/verifications/useVerify";
 
@@ -61,6 +61,7 @@ export default function Order() {
   const errorsNote = useNotesStore((state) => state.errors);
   const messagesInNote = useNotesStore((state) => state.message);
   const updateNote = useNotesStore((state) => state.updateNote);
+  const updatePropInNote = useNotesStore((state) => state.updateNoteProp);
 
   const [selectNote, setSelectNote] = useState([]);
   const [toggleStatus, setToggleStatus] = useState(false);
@@ -507,11 +508,22 @@ export default function Order() {
           <img src={dividerBtn} alt="divider-buttons" />
           <button
             onClick={() => {
+              if (isWithNotes) {
+                console.log("es una nota");
+                console.log(selectNote._id);
+                const body = {
+                  accountId: tableItem.bill[0]._id,
+                  body: { status: FOR_PAYMENT_STATUS },
+                };
+                updatePropInNote(selectNote._id, body);
+                logOutRequest();
+                return;
+              }
               {
                 /* handlePrintBill("billPrint", billCurrentCommand),*/
               }
-              updateBill("forPayment", billCurrent, billCurrentCommand);
-              updateTable("forPayment", _id);
+              updateBill(FOR_PAYMENT_STATUS, billCurrent, billCurrentCommand);
+              updateTable(FOR_PAYMENT_STATUS, _id);
               // vamos a mandar el indice 0 desde el periodo operativo actual
               const elasticBalnceChargeBills =
                 currentPeriod[0]?.sellProcess?.length < 2
@@ -520,8 +532,7 @@ export default function Order() {
                     currentPeriod[0]?.sellProcess[1]?.bills?.length
                   ? currentPeriod[0]?.sellProcess[1]._id
                   : currentPeriod[0]?.sellProcess[0]._id;
-              console.log(elasticBalnceChargeBills);
-              addBillForPayment(elasticBalnceChargeBills, billCurrent._id);
+              addBillForPayment(elasticBalnceChargeBills, billCurrent._id); // CHECAR ESTE METODO COMO MANDA A COBRAR LAS NOTAS Y LAS
               logOutRequest();
             }}
             disabled={!billCurrent?.products}
@@ -565,7 +576,7 @@ export default function Order() {
                   logOutRequest();
                   return;
                 }
-                updateBill("enable", billCurrent, billCurrentCommand);
+                updateBill(ENABLE_STATUS, billCurrent, billCurrentCommand);
                 handlePrint(billCurrentCommand);
                 logOutRequest();
               } catch (error) {

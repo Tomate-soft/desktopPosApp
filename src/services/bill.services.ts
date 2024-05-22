@@ -86,7 +86,7 @@ export const addNameInNote = async (id: string, noteName: NoteName) => {
     accountId: null,
     body: noteName,
   };
-  const response = axios.put(`${NOTES_PATH}/${id}`, noteName);
+  const response = axios.put(`${NOTES_PATH}/${id}`, data);
   return response;
 };
 

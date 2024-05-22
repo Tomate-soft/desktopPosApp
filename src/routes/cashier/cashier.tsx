@@ -16,17 +16,20 @@ import PaymentInterface from "../../components/payments/payments.int";
 // Components
 import CashierBox from "../../components/cashierBox/cashierBox";
 import { useEffect, useState } from "react";
-import { Bill } from "../../types/account";
 import ConfirmPayment from "../../components/modals/confirmPayments/confirmPayments";
 import { useAuthStore } from "../../store/auth/auth.store";
 import { useNavigate } from "react-router-dom";
-import { EXCEPTION_MESSAGES_CASHIER_SESSION_MODAL } from "../../lib/modals.lib";
+import {
+  CONFIRM_PAYMENT_MODAL,
+  EXCEPTION_MESSAGES_CASHIER_SESSION_MODAL,
+  PAYMENT_INTERFACE_MODAL,
+} from "../../lib/modals.lib";
 import ExceptionMessages from "../../components/modals/exceptionMessages/exceptionMessages";
 import UseCashierException from "../../hooks/exceptions/useCashierException";
 import { useNotesStore } from "../../store/notes.store";
-import axios from "axios";
 import { useCashierSessionStore } from "../../store/operatingPeriod/cashierSession.store";
 import { FOR_PAYMENT_STATUS } from "../../lib/tables.status.lib";
+import { ENTRY_PATH } from "../../lib/routes.paths.lib";
 
 export default function Cashier() {
   //exceptions
@@ -37,8 +40,8 @@ export default function Cashier() {
   const logOutRequest = useAuthStore((state) => state.logOutRequest);
   const navigate = useNavigate();
 
-  const paymentInterface = useModal("paymentInterface");
-  const confirmPayment = useModal("confirmPayment");
+  const paymentInterface = useModal(PAYMENT_INTERFACE_MODAL);
+  const confirmPayment = useModal(CONFIRM_PAYMENT_MODAL);
   const { accountArray, getBills } = UseAccount();
   const [currentBill, setCurrentBill] = useState<{}>();
 
@@ -75,25 +78,28 @@ export default function Cashier() {
                 setting={setCurrentBill}
                 openModal={paymentInterface.openModal}
                 item={item}
-                route={"/"}
+                route={ENTRY_PATH}
               />
             </div>
           ) : (
-            item.notes.map((note, index) => (
-              <div>
-                <CashierBox
-                  setting={setCurrentBill}
-                  openModal={paymentInterface.openModal}
-                  item={item}
-                  isNote={note}
-                  route={"/"}
-                />
-              </div>
-            ))
+            item.notes.map(
+              (note, index) =>
+                note.status === FOR_PAYMENT_STATUS && (
+                  <div>
+                    <CashierBox
+                      setting={setCurrentBill}
+                      openModal={paymentInterface.openModal}
+                      item={item}
+                      isNote={note}
+                      route={ENTRY_PATH}
+                    />
+                  </div>
+                )
+            )
           )
         )}
         {paymentInterface.isOpen &&
-        paymentInterface.modalName === "paymentInterface" ? (
+        paymentInterface.modalName === PAYMENT_INTERFACE_MODAL ? (
           <PaymentInterface
             setRevolve={setRevolve}
             handleLoading={setIsloading}
@@ -106,7 +112,7 @@ export default function Cashier() {
           </PaymentInterface>
         ) : null}
         {confirmPayment.isOpen &&
-        confirmPayment.modalName === "confirmPayment" ? (
+        confirmPayment.modalName === CONFIRM_PAYMENT_MODAL ? (
           <ConfirmPayment
             setIsLoading={setIsloading}
             revolve={revolve}
