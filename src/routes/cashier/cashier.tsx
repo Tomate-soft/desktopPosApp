@@ -61,7 +61,6 @@ export default function Cashier() {
   const filterSession = sessionsArray.filter(
     (item) => item.user === authData.payload.user._id
   );
-
   useEffect(() => {
     getSession();
     getNotes();

@@ -42,8 +42,6 @@ const PrintButton = ({
       disabled={diference > 0}
       onClick={() => {
         if (currentBill?.note) {
-          console.log("ES NOTA!!!");
-          console.log(currentBill);
           const constPay = {
             accountId: currentBill?.note?.accountId,
             body: {
@@ -53,8 +51,9 @@ const PrintButton = ({
           };
 
           console.log(constPay);
+          setRevolve(constPay.body.difference);
           paymentNote(currentBill.note._id, constPay);
-
+          openModal();
           return;
         }
         handleLoading(true);

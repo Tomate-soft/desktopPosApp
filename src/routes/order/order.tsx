@@ -42,7 +42,11 @@ import trashBtn from "../../assets/icon/trashIcon.svg";
 import arrow from "../../assets/icon/selectArrow.svg";
 import { useNotesStore } from "../../store/notes.store";
 import ConfirmChanges from "../../components/modals/confirm/confirmChanges";
-import { ENABLE_STATUS, FOR_PAYMENT_STATUS } from "../../lib/tables.status.lib";
+import {
+  ENABLE_STATUS,
+  FINISHED_STATUS,
+  FOR_PAYMENT_STATUS,
+} from "../../lib/tables.status.lib";
 import { useCashierSessionStore } from "../../store/operatingPeriod/cashierSession.store";
 import UseVerify from "../../hooks/verifications/useVerify";
 
@@ -89,7 +93,8 @@ export default function Order() {
   const { _id, billCurrent, tableItem, type, toGoOrder } = location.state || {};
   const { currentPeriod } = UseVerify();
   const managementNotes = tableItem.bill[0]?.notes.filter(
-    (element: any) => element.status != FOR_PAYMENT_STATUS
+    (element: any) =>
+      element.status != FOR_PAYMENT_STATUS && element.status != FINISHED_STATUS
   );
 
   const userName = authData?.payload?.user.name;
