@@ -88,6 +88,9 @@ export default function Order() {
   const location = useLocation();
   const { _id, billCurrent, tableItem, type, toGoOrder } = location.state || {};
   const { currentPeriod } = UseVerify();
+  const managementNotes = tableItem.bill[0]?.notes.filter(
+    (element: any) => element.status != FOR_PAYMENT_STATUS
+  );
 
   const userName = authData?.payload?.user.name;
   const initialOrderTogo: ToGoOrder = {
@@ -183,8 +186,8 @@ export default function Order() {
 
     if (type === ON_SITE_ORDER) {
       if (tableItem.bill[0]?.notes && tableItem.bill[0]?.notes?.length > 0) {
-        setSelectNote(tableItem.bill[0].notes[0]); // HEALTCHECK
-        setBillCurrentCommand(tableItem.bill[0].notes[0]); // HEALTCHECK
+        setSelectNote(managementNotes[0]); // HEALTCHECK
+        setBillCurrentCommand(managementNotes[0]); // HEALTCHECK
         return;
       }
 
@@ -255,7 +258,7 @@ export default function Order() {
                             toggleStatus ? styles.options : styles.hidden
                           }
                         >
-                          {tableItem.bill[0].notes.map((element, index) => (
+                          {managementNotes.map((element, index) => (
                             <span
                               key={index}
                               className={styles.option}
