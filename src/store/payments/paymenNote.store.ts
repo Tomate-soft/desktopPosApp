@@ -14,9 +14,6 @@ export const UsePaymentsStore = create<state>((set) => {
     errors: false,
     message: null,
     paymentNote: async (id, body) => {
-      console.log("Legue al store de payments");
-      console.log(id);
-      console.log(body);
       set({ isLoading: true });
       try {
         const res = await paymentNoteService(id, body);
