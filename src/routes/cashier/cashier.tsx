@@ -30,6 +30,7 @@ import { useNotesStore } from "../../store/notes.store";
 import { useCashierSessionStore } from "../../store/operatingPeriod/cashierSession.store";
 import { FOR_PAYMENT_STATUS } from "../../lib/tables.status.lib";
 import { ENTRY_PATH } from "../../lib/routes.paths.lib";
+import { useOperationProcess } from "../../store/operatingPeriod/operatingPeriod.store";
 
 export default function Cashier() {
   //exceptions
@@ -56,15 +57,19 @@ export default function Cashier() {
   const getNotes = useNotesStore((state) => state.getNotes);
   //////////////////////////
   UseCashierException(cashierSessionException.openModal);
-  const getSession = useCashierSessionStore((state) => state.getSessions);
-  const sessionsArray = useCashierSessionStore((state) => state.cashierSession);
-  const filterSession = sessionsArray.filter(
-    (item) => item.user === authData.payload.user._id
+  const operatingPeriod = useOperationProcess((state) => state.operatingPeriod);
+  const getPeriod = useOperationProcess((state) => state.getCurrentPeriod);
+  const filterSession = operatingPeriod[0]?.sellProcess?.filter(
+    (item: any) => item.user === authData.payload.user._id
   );
   useEffect(() => {
-    getSession();
+    getPeriod();
     getNotes();
     getBills();
+    /*
+    return () => {
+      getPeriod();
+    }; */
   }, []);
   return (
     <div className={styles.container}>

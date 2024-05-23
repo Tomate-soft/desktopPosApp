@@ -18,7 +18,6 @@ import { OPEN_MORE_ACTIONS } from "../../configs/consts";
 import MoreActionsMenu from "../../components/menus/mainMenu/moreActions/moreActionsMenu";
 // Dependecies
 // Hooks
-import useSWR from "swr";
 import { useAuthStore } from "../../store/auth/auth.store";
 import { useNavigate } from "react-router-dom";
 import { ADMIN } from "../../components/tools/confirmPassword/lib";

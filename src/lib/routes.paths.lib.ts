@@ -30,3 +30,4 @@ export const TABLE_IN_USER_PATH = "/users/r/tables";
 export const USERS_PATH = "/users";
 export const DEVICE_IDN_PATH = "/device/deviceIdn";
 export const PAYMENTS_PATH = "/payments";
+export const PAYMENT_NOTES_PATH = "/payments/p/note";
