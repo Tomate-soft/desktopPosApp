@@ -4,6 +4,7 @@ import {
   SaveBillInTableService,
   UpdatePropInBillService,
 } from "../../services/moreActions/moreActions";
+import { table } from "../../shared";
 
 export interface state {
   isLoading: boolean;
@@ -48,6 +49,7 @@ export const UseActions = create<state>((set) => {
           const res = await UpdatePropInBillService(data.item.bill[0]._id, {
             transferHistory: [data.item.tableNum],
             tableNum: data.receivingItem.tableNum,
+            table: data.receivingItem._id,
           });
           if (!res.data) {
             set({ message: "No se actualizo el historial de transferencia" });

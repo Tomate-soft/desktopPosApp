@@ -63,11 +63,13 @@ export default function Cashier() {
     (item: any) => item.user === authData.payload.user._id
   );
   useEffect(() => {
-    console.log(operatingPeriod[0].sellProcess);
-    console.log(filterSession);
     getPeriod();
     getNotes();
     getBills();
+    /*
+    return () => {
+      getPeriod();
+    }; */
   }, []);
   return (
     <div className={styles.container}>
