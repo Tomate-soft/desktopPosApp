@@ -5,6 +5,7 @@ import trashIcon from "../../assets/icon/trashIcon.svg";
 import { v4 as uuidv4 } from "uuid";
 import { useEffect, useState } from "react";
 import { updateBillProps } from "../../store/bill.store";
+import { UseActions } from "../../store/moreActions/moreActions.store";
 
 interface Props {
   item: any;
@@ -16,7 +17,7 @@ export default function SeparateChecks({ item, openModal }: Props) {
   const [selectedProducts, setSelectedProducts] = useState<any[]>([]);
   const [enableNote, setEnableNote] = useState<any[]>([]);
 
-  const createNotes = updateBillProps((state) => state.createNotes);
+  const createNotes = UseActions((state) => state.createNotes);
 
   function handleProducts(product: any) {
     if (
@@ -248,7 +249,6 @@ export default function SeparateChecks({ item, openModal }: Props) {
         <button
           disabled={!item.bill[0]}
           onClick={() => {
-            console.log(separateNotes, item.bill[0]._id);
             if (separateNotes?.length) {
               openModal();
               createNotes(separateNotes, item.bill[0]._id);

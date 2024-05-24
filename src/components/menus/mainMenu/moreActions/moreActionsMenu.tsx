@@ -36,6 +36,9 @@ import NotesCourtesy from "../../../courtesy/notesCourtesy/notesCourtesy";
 import NotesCancellation from "../../../cancellations/noteCancellation/noteCancellation";
 import ProductsCancel from "../../../cancellations/productCancellation/productCancellation";
 import { ON_SITE_ORDER, TO_GO_ORDER } from "../../../../lib/orders.lib";
+import { cancellationReasonStore } from "../../../../store/cancellationReasons.store";
+import { UseActions } from "../../../../store/moreActions/moreActions.store";
+import { state } from "@formkit/drag-and-drop";
 interface Props {
   isOpen: any;
   onClose: any;
@@ -48,15 +51,14 @@ export default function MoreActionsMenu({ onClose, item, type }: Props) {
   const [petition, setPetition] = useState(false);
   const accountProps = UseAccount();
 
-  const updateNameBill = updateBillProps((state) => state.updateName);
-  const updateCommentBill = updateBillProps((state) => state.updateComments);
-  const updateNameNote = updateBillProps((state) => state.updateNameInNote);
-  const isLoading = updateBillProps((state) => state.isLoading);
-  const errors = updateBillProps((state) => state.errors);
+  const updateCommentBill = UseActions((state) => state.updateComments);
+  const cancelBill = UseActions((state) => state.cancelBill);
+  const isLoading = UseActions((state) => state.isLoading);
+  const updateNameNote = UseActions((state) => state.updateNameInNote);
+  const errors = UseActions((state) => state.errors);
+  const updateNameBill = UseActions((state) => state.updateName);
 
   const confirmChanges = useModal(CONFIRM_ACTIONS);
-
-  // El proble es que hay muchos loadings diferentes aca de diferentes peticiones
 
   return (
     <main className={styles.screen}>
@@ -212,11 +214,7 @@ export default function MoreActionsMenu({ onClose, item, type }: Props) {
             <>
               <ActionsKeyboard // ACA HAY QUE CAMBIAR  TODO PARA FUNCIONAR COMO CORTESIA, HACER UN SERVICIO PARA CAMBIAR EL STATUS DE LA MESA - CAMBAIR EL STATUS DE LA CUENTA - E IMPRIMIR EL TICKET
                 option={selectedOption}
-                actionType={
-                  /* aca va el nuevo servicio */ () => {
-                    return;
-                  }
-                }
+                actionType={cancelBill}
                 item={item}
                 openModal={confirmChanges.openModal}
               >
@@ -240,17 +238,13 @@ export default function MoreActionsMenu({ onClose, item, type }: Props) {
             </>
           ) : selectedOption === BILL_CANCEL ? (
             <>
-              <ActionsKeyboard // ACA HAY QUE CAMBIAR  TODO PARA FUNCIONAR COMO CANCELLAR NOTA, HACER UN SERVICIO PARA CAMBIAR EL STATUS DE LA MESA - CAMBAIR EL STATUS DE LA CUENTA - E IMPRIMIR EL TICKET
+              <ActionsKeyboard
                 option={selectedOption}
-                actionType={
-                  /* aca va el nuevo servicio */ () => {
-                    return;
-                  }
-                }
+                actionType={cancelBill}
                 item={item}
                 openModal={confirmChanges.openModal}
               >
-                Ingresa descripcion de la cancellacion:
+                Ingresa descripcion de la cancelacion:
               </ActionsKeyboard>
             </>
           ) : (
