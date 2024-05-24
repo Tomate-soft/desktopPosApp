@@ -4,6 +4,10 @@ import divider from "../../../assets/icon/dividerTransfer.svg";
 import { useModal } from "../../../hooks/useModal";
 import { GENERIC_KEYBOARD_ACTIVE } from "../../genericKeyboard/config";
 import { GenericKeyboard } from "../../genericKeyboard/genericKeyboard";
+import { useEffect, useState } from "react";
+import { useAuthStore } from "../../../shared";
+import { UseActions } from "../../../store/moreActions/moreActions.store";
+import { NOTES_CANCEL } from "../../menus/mainMenu/moreActions/configs/constants";
 
 interface Props {
   item: any;
@@ -16,7 +20,23 @@ export default function NotesCancellation({
   openModal,
   children,
 }: Props) {
+  const authData = useAuthStore((state) => state.authData);
+  const [selectedNote, setSelectedNote] = useState();
   const genericKeyboard = useModal(GENERIC_KEYBOARD_ACTIVE);
+
+  const cancelNote = UseActions((state) => state.cancelBill);
+
+  const requestData = {
+    accountId: item.bill[0]._id,
+    noteId: selectedNote,
+    cancellationBy: authData.payload.user._id,
+    cancellationFor: "Validacion futura",
+  };
+  const [cancelData, setyCancelData] = useState({});
+
+  useEffect(() => {
+    setSelectedNote(item.bill[0].notes[0]);
+  }, []);
 
   return (
     <div className={styles.container}>
@@ -46,14 +66,10 @@ export default function NotesCancellation({
                         type="radio"
                         name="notes"
                         onChange={() => {
-                          console.log(noteForDiscount);
-                          if (
-                            noteForDiscount &&
-                            noteForDiscount.noteNumber === element.noteNumber
-                          ) {
-                            return;
-                          }
-                          setNoteForDiscount(element);
+                          setyCancelData({
+                            ...requestData,
+                            noteId: element._id,
+                          });
                         }}
                       />
                     </div>
@@ -81,6 +97,10 @@ export default function NotesCancellation({
             isOpen={genericKeyboard.isOpen}
             onClose={genericKeyboard.closeModal}
             openModal={openModal}
+            data={cancelData}
+            setValue={setyCancelData}
+            actionType={cancelNote}
+            keyAction={NOTES_CANCEL}
           >
             Descripción de la cancelacion:
           </GenericKeyboard>

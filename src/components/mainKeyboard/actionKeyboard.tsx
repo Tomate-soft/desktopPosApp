@@ -6,12 +6,14 @@ import spaceIcon from "../../assets/icon/spaceIcon.svg";
 import minCheck from "../../assets/icon/minCheck.svg";
 import nextArrow from "../../assets/icon/nextArrow.svg";
 import previousArrow from "../../assets/icon/previousArrow.svg";
-import disquetIcon from "../../assets/icon/disquetIcon.svg";
 import {
+  BILL_CANCEL,
   BILL_NAME,
   COMMENTS,
+  NOTES_CANCEL,
   NOTES_NAME,
 } from "../menus/mainMenu/moreActions/configs/constants";
+import { useAuthStore } from "../../shared";
 interface Props {
   children: string;
   actionType: any;
@@ -37,6 +39,8 @@ export function ActionsKeyboard({
   const rowFour = ["Z", "X", "C", "V", "B", "N", "M", ",", "."];
 
   const selectedNote = notes[indexNote];
+
+  const authData = useAuthStore((state) => state.authData);
 
   useEffect(() => {
     if (item.bill[0] && item.bill[0].notes && item.bill[0].notes.length) {
@@ -196,39 +200,32 @@ export function ActionsKeyboard({
         >
           <img src={spaceIcon} alt="space-icon" />
         </button>
-        {option === BILL_NAME ? (
-          <button
-            className={styles.checkBtn}
-            disabled={!item?.bill[0]}
-            onClick={() => {
-              if (text.length > 1) {
-                actionType(item.bill[0]?._id, text);
-              }
+        <button
+          className={styles.checkBtn}
+          disabled={!item?.bill[0]}
+          onClick={() => {
+            const write = text.length > 1;
+            if ((write && option === BILL_NAME) || option === COMMENTS) {
+              actionType(item.bill[0]?._id, text);
+              openModal();
+            } else if (write && option === NOTES_NAME) {
+              actionType(selectedNote._id, text);
+              openModal();
+            } else if (write && option === BILL_CANCEL) {
+              const body = {
+                accountId: item.bill[0]._id,
+                cancellationBy: authData.payload.user._id,
+                cancellationFor: "Validacion futura",
+                cancellationReason: text,
+              };
+              actionType(body);
               openModal();
               return;
-            }}
-          >
-            <img src={minCheck} alt="check-icon" />
-          </button>
-        ) : (
-          <button
-            className={styles.checkBtn}
-            disabled={!item?.bill[0] || text.length > 14 || text.length <= 0}
-            onClick={() => {
-              if (text.length > 1) {
-                actionType(selectedNote._id, text);
-              }
-              openModal();
-              return;
-            }}
-          >
-            <img
-              className={styles.disquet}
-              src={disquetIcon}
-              alt="check-icon"
-            />
-          </button>
-        )}
+            }
+          }}
+        >
+          <img src={minCheck} alt="check-icon" />
+        </button>
       </div>
     </article>
   );

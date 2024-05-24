@@ -28,6 +28,7 @@ import { EXCEPTION_MESSAGES_CASHIER_SESSION_MODAL } from "../../lib/modals.lib";
 import UseCashierException from "../../hooks/exceptions/useCashierException";
 import { useOperationProcess } from "../../store/operatingPeriod/operatingPeriod.store";
 import { useCurrentCommand } from "../sells/imports";
+import { initialState } from "../../components/payments/utils/initialState";
 
 export default function Restaurant() {
   const getOperatingPeriod = useOperationProcess(
@@ -47,9 +48,7 @@ export default function Restaurant() {
   const isAdmin =
     authData?.payload?.user?.role?.role.value === ADMIN ? true : false;
 
-  const billCurrentCommand = useCurrentCommand(
-    (state) => state.BillCommandCurrent
-  );
+  const setSillCurrentCommand = useCurrentCommand((state) => state.setState);
 
   //exceptions
   const cashierSessionException = useModal(
@@ -58,6 +57,17 @@ export default function Restaurant() {
   UseCashierException(cashierSessionException.openModal);
   useEffect(() => {
     getTables();
+    return () => {
+      setSillCurrentCommand({
+        sellType: "n/A",
+        user: "Moises",
+        checkTotal: "0.00",
+        products: [],
+        status: "enable",
+        tableNum: "s/N",
+        table: undefined,
+      });
+    };
   }, []);
   return (
     <div className={styles.container}>

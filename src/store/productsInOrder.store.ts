@@ -14,7 +14,6 @@ export const useCurrentCommand = create<state>((set) => {
       checkTotal: "0.00",
       products: [],
       status: "enable",
-      paymentDate: "",
       tableNum: "s/N",
       table: undefined,
     },

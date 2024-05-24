@@ -5,6 +5,7 @@ import cleanIcon from "../../assets/icon/cleanIcon.svg";
 import spaceIcon from "../../assets/icon/spaceIcon.svg";
 import leftArrow from "../../assets/icon/backArrow.svg";
 import disquetIcon from "../../assets/icon/disquetIcon.svg";
+import { NOTES_CANCEL } from "../menus/mainMenu/moreActions/configs/constants";
 
 interface Props {
   children: string;
@@ -13,6 +14,8 @@ interface Props {
   setValue?: any;
   isOpen: boolean;
   onClose: () => void;
+  data?: any;
+  keyAction?: string;
 }
 export function GenericKeyboard({
   children,
@@ -21,6 +24,8 @@ export function GenericKeyboard({
   onClose,
   setValue,
   isOpen,
+  data,
+  keyAction,
 }: Props) {
   const [mayus, setMayus] = useState(true);
   const [text, setText] = useState("");
@@ -145,7 +150,15 @@ export function GenericKeyboard({
           >
             <img src={spaceIcon} alt="space-icon" />
           </button>
-          <button className={styles.checkBtn}>
+          <button
+            className={styles.checkBtn}
+            onClick={() => {
+              if (keyAction === NOTES_CANCEL) {
+                actionType({ ...data, cancellationReason: text });
+                openModal();
+              }
+            }}
+          >
             <img
               className={styles.disquet}
               src={disquetIcon}
