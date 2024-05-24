@@ -93,8 +93,7 @@ export default function Order() {
   const { _id, billCurrent, tableItem, type, toGoOrder } = location.state || {};
   const { currentPeriod } = UseVerify();
   const managementNotes = tableItem.bill[0]?.notes.filter(
-    (element: any) =>
-      element.status != FOR_PAYMENT_STATUS && element.status != FINISHED_STATUS
+    (element: any) => element.status === ENABLE_STATUS
   );
 
   const userName = authData?.payload?.user.name;
