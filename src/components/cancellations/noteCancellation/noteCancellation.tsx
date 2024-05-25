@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { useAuthStore } from "../../../shared";
 import { UseActions } from "../../../store/moreActions/moreActions.store";
 import { NOTES_CANCEL } from "../../menus/mainMenu/moreActions/configs/constants";
+import { ENABLE_STATUS } from "../../../lib/tables.status.lib";
 
 interface Props {
   item: any;
@@ -23,7 +24,9 @@ export default function NotesCancellation({
   const authData = useAuthStore((state) => state.authData);
   const [selectedNote, setSelectedNote] = useState();
   const genericKeyboard = useModal(GENERIC_KEYBOARD_ACTIVE);
-
+  const managementNotes = item.bill[0]?.notes.filter(
+    (element) => element.status === ENABLE_STATUS
+  );
   const cancelNote = UseActions((state) => state.cancelBill);
 
   const requestData = {
@@ -55,7 +58,7 @@ export default function NotesCancellation({
               </div>
               <div className={styles.productsContainer}>
                 {item.bill[0]?.notes ? (
-                  item.bill[0]?.notes.map((element, index) => (
+                  managementNotes.map((element, index) => (
                     <div className={styles.productBox} key={index}>
                       <span>
                         {element.noteName
