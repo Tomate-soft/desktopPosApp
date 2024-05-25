@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from "uuid";
 import { useEffect, useState } from "react";
 import { updateBillProps } from "../../store/bill.store";
 import { UseActions } from "../../store/moreActions/moreActions.store";
+import { ENABLE_STATUS } from "../../lib/tables.status.lib";
 
 interface Props {
   item: any;
@@ -16,6 +17,9 @@ export default function SeparateChecks({ item, openModal }: Props) {
   const [separateNotes, setSeparateNotes] = useState<any[]>([]);
   const [selectedProducts, setSelectedProducts] = useState<any[]>([]);
   const [enableNote, setEnableNote] = useState<any[]>([]);
+  const managementNotes = separateNotes.filter(
+    (element) => element.status === ENABLE_STATUS
+  );
 
   const createNotes = UseActions((state) => state.createNotes);
 
@@ -51,11 +55,17 @@ export default function SeparateChecks({ item, openModal }: Props) {
   };
 
   useEffect(() => {
+    // estudiar este metodo y plantarle un unique a cada producto al agregarlo asi se diferenciara acada uno
     if (!item.bill[0]?.notes.length) {
       const updatedProducts = item.bill[0]?.products.flatMap((element: any) => {
         if (element.quantity > 1) {
           const products = [];
           for (let i = 0; i < element.quantity; i++) {
+            /*
+            if (element.unique) {
+              continue;
+            }
+            */
             products.push({ ...element, quantity: 1, unique: uuidv4() });
           }
           return products;
@@ -63,6 +73,27 @@ export default function SeparateChecks({ item, openModal }: Props) {
           return { ...element, unique: uuidv4() };
         }
       });
+
+      if (item.bill[0]?.notes.length) {
+        for (let note of item.bill[0]?.notes) {
+          const updatedProducts = note.products.flatMap((element: any) => {
+            if (element.quantity > 1) {
+              const products = [];
+              for (let i = 0; i < element.quantity; i++) {
+                /*
+                if (element.unique) {
+                  continue;
+                }
+                */
+                products.push({ ...element, quantity: 1, unique: uuidv4() });
+              }
+              return products;
+            } else {
+              return { ...element, unique: uuidv4() };
+            }
+          });
+        }
+      }
 
       if (!item.bill[0]) {
         return;
@@ -96,7 +127,7 @@ export default function SeparateChecks({ item, openModal }: Props) {
           <>
             {separateNotes && separateNotes.length > 0 ? (
               <>
-                {separateNotes.map((noteElement, index) => (
+                {managementNotes.map((noteElement, index) => (
                   <div>
                     <div>
                       <div>
