@@ -71,7 +71,6 @@ export default function SeparateChecks({ item, openModal }: Props) {
       });
 
       if (item.bill[0]?.notes.length) {
-        console.log("LLEGUE ACA");
         for (let note of item.bill[0]?.notes) {
           const updatedProducts = note.products.flatMap((element) => {
             if (element.quantity > 1) {
@@ -84,10 +83,9 @@ export default function SeparateChecks({ item, openModal }: Props) {
               return { ...element, unique: uuidv4() };
             }
           });
-          note.products = updatedProducts; // Asegúrate de actualizar los productos en la nota
+          note.products = updatedProducts;
         }
       }
-
       if (!item.bill[0]) {
         return;
       }
@@ -112,7 +110,7 @@ export default function SeparateChecks({ item, openModal }: Props) {
       });
       setSeparateNotes(updatedNotes);
     }
-  }, [createNotes]);
+  }, []);
 
   return (
     <article className={styles.container}>
