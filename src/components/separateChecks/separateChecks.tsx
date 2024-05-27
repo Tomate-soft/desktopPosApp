@@ -55,17 +55,13 @@ export default function SeparateChecks({ item, openModal }: Props) {
   };
 
   useEffect(() => {
-    // estudiar este metodo y plantarle un unique a cada producto al agregarlo asi se diferenciara acada uno
+    console.log(item.bill[0].notes);
+
     if (!item.bill[0]?.notes.length) {
-      const updatedProducts = item.bill[0]?.products.flatMap((element: any) => {
+      const updatedProducts = item.bill[0]?.products.flatMap((element) => {
         if (element.quantity > 1) {
           const products = [];
           for (let i = 0; i < element.quantity; i++) {
-            /*
-            if (element.unique) {
-              continue;
-            }
-            */
             products.push({ ...element, quantity: 1, unique: uuidv4() });
           }
           return products;
@@ -75,16 +71,12 @@ export default function SeparateChecks({ item, openModal }: Props) {
       });
 
       if (item.bill[0]?.notes.length) {
+        console.log("LLEGUE ACA");
         for (let note of item.bill[0]?.notes) {
-          const updatedProducts = note.products.flatMap((element: any) => {
+          const updatedProducts = note.products.flatMap((element) => {
             if (element.quantity > 1) {
               const products = [];
               for (let i = 0; i < element.quantity; i++) {
-                /*
-                if (element.unique) {
-                  continue;
-                }
-                */
                 products.push({ ...element, quantity: 1, unique: uuidv4() });
               }
               return products;
@@ -92,6 +84,7 @@ export default function SeparateChecks({ item, openModal }: Props) {
               return { ...element, unique: uuidv4() };
             }
           });
+          note.products = updatedProducts; // Asegúrate de actualizar los productos en la nota
         }
       }
 
@@ -102,20 +95,23 @@ export default function SeparateChecks({ item, openModal }: Props) {
         { ...NOTE_TEMPLATE, products: updatedProducts },
         { ...NOTE_TEMPLATE },
       ]);
-      return;
+    } else {
+      const updatedNotes = item.bill[0]?.notes.map((note) => {
+        const updatedProducts = note.products.flatMap((element) => {
+          if (element.quantity > 1) {
+            const products = [];
+            for (let i = 0; i < element.quantity; i++) {
+              products.push({ ...element, quantity: 1, unique: uuidv4() });
+            }
+            return products;
+          } else {
+            return { ...element, unique: uuidv4() };
+          }
+        });
+        return { ...note, products: updatedProducts };
+      });
+      setSeparateNotes(updatedNotes);
     }
-    const updatedNotes = [...item.bill[0]?.notes];
-    /*
-    const newData = updatedNotes.map((element, index) => {
-      console.log(element);
-      return {
-        ...NOTE_TEMPLATE,
-        noteNumber: element.noteNumber,
-        products: element.products,
-      };
-    }); 
-    */
-    setSeparateNotes(updatedNotes);
   }, [createNotes]);
 
   return (
