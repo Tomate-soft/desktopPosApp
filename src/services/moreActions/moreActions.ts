@@ -22,8 +22,6 @@ interface Data {
 }
 
 export const productsToBillServices = async (data: Data) => {
-  console.log("ONE");
-  console.log(data);
   const response = axios.put(`${BILLS_PATH}${TRANSFER_PRODUCTS_PATH}`, data);
   return response;
 };
