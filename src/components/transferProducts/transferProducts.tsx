@@ -5,7 +5,9 @@ import arrow from "../../assets/icon/selectArrow.svg";
 import divider from "../../assets/icon/dividerTransfer.svg";
 import { UseTableStore } from "../../store/tables.store";
 import TableBoard from "../tableBoard/tableBoard";
+import { v4 as uuidv4 } from "uuid";
 import { UseActions } from "../../store/moreActions/moreActions.store";
+import { BILL_TO_BILL } from "./cases";
 
 interface Props {
   children: string;
@@ -23,10 +25,22 @@ export default function TransferProducts({ children, item, openModal }: Props) {
   const [selectedNoteTransfer, setSelectedNoteTransfer] = useState("Seleccion");
   const [selectedProducts, setSelectedProducts] = useState<any[]>([]);
   const [tableSearch, setTableSearch] = useState();
+  const [managementBill, setManagementBill] = useState([]);
 
   const tableSelected = tablesArray.filter((element) => {
     return element.tableNum === tableSearch;
   });
+
+  const receivingProducts =
+    tableSelected[0]?.bill?.[0]?.products.concat(selectedProducts) || [];
+  const remainingProducts =
+    managementBill?.products?.filter(
+      (item) =>
+        !selectedProducts.some(
+          (selectedItem) => selectedItem.unique === item.unique
+        )
+    ) || [];
+  const transferProducts = UseActions((state) => state.transferProducts);
 
   function handleProducts(product: any) {
     if (
@@ -34,7 +48,6 @@ export default function TransferProducts({ children, item, openModal }: Props) {
         (selectedElement) => selectedElement.unique === product.unique
       )
     ) {
-      // El producto ya está seleccionado, lo filtramos
       const updatedProducts = selectedProducts.filter(
         (selectedElement) => selectedElement.unique !== product.unique
       );
@@ -45,16 +58,32 @@ export default function TransferProducts({ children, item, openModal }: Props) {
   }
 
   useEffect(() => {
-    getTablesArray();
-    /*
-    if (item && item.bill[0] && !item.bill[0]?.notes.length) {
-      setSelectedNote(item.bill[0]?.notes[0]);
+    if (!item.bill[0].notes.length || item.bill[0].notes.length < 1) {
+      const uProducts = item.bill[0].products.flatMap((element: any) => {
+        if (element.quantity > 1) {
+          const products = [];
+          for (let i = 0; i < element.quantity; i++) {
+            products.push({
+              ...element,
+              quantity: 1,
+              unique: uuidv4(),
+            });
+          }
+          return products;
+        } else {
+          return [element];
+        }
+      });
+
+      setManagementBill({ ...item.bill[0], products: uProducts });
+
+      getTablesArray();
+
+      if (item && item.bill[0] && item.bill[0].notes.length > 0) {
+        setSelectedNote(item.bill[0].notes[0]);
+      }
     }
-    */
-    if (item && item.bill[0] && item.bill[0]?.notes.length > 0) {
-      setSelectedNote(item.bill[0]?.notes[0]);
-    }
-  }, []);
+  }, [item, getTablesArray, setSelectedNote, setManagementBill]);
   return (
     <article className={styles.container}>
       <div className={styles.head}>
@@ -70,51 +99,53 @@ export default function TransferProducts({ children, item, openModal }: Props) {
                 <div className={styles.containerInput}>
                   <span>{`Mesa ${item.tableNum}`}</span>
                   <div className={styles.categoriesSelect}>
-                    <div
-                      className={styles.customSelect}
-                      onClick={() => {
-                        setToggleStatus(!toggleStatus);
-                      }}
-                    >
-                      <div className={styles.selectTrigger}>
-                        <span>
-                          {selectedNote ? (
-                            <>
-                              {selectedNote.noteName
-                                ? selectedNote.noteName.slice(0, 12)
-                                : selectedNote.noteNumber
-                                ? `Nota ${selectedNote.noteNumber}`
-                                : `Nota ${item.bill[0]?.notes[0]?.noteNumber}`}
-                            </>
-                          ) : (
-                            "Notas"
-                          )}
-                        </span>
-                        <img
-                          src={arrow}
-                          alt=""
-                          className={styles.arrowSelect}
-                        />
-                      </div>
+                    {item.bill[0]?.notes.length > 0 && (
                       <div
-                        className={
-                          toggleStatus ? styles.options : styles.hidden
-                        }
+                        className={styles.customSelect}
+                        onClick={() => {
+                          setToggleStatus(!toggleStatus);
+                        }}
                       >
-                        {item.bill[0]?.notes.map((element, index) => (
-                          <span
-                            className={styles.option}
-                            onClick={() => {
-                              setSelectedNote(element);
-                            }}
-                          >
-                            {element.noteName
-                              ? element.noteName
-                              : `Nota ${element.noteNumber}`}
+                        <div className={styles.selectTrigger}>
+                          <span>
+                            {selectedNote ? (
+                              <>
+                                {selectedNote.noteName
+                                  ? selectedNote.noteName.slice(0, 12)
+                                  : selectedNote.noteNumber
+                                  ? `Nota ${selectedNote.noteNumber}`
+                                  : `Nota ${item.bill[0]?.notes[0]?.noteNumber}`}
+                              </>
+                            ) : (
+                              "Notas"
+                            )}
                           </span>
-                        ))}
+                          <img
+                            src={arrow}
+                            alt=""
+                            className={styles.arrowSelect}
+                          />
+                        </div>
+                        <div
+                          className={
+                            toggleStatus ? styles.options : styles.hidden
+                          }
+                        >
+                          {item.bill[0]?.notes.map((element, index) => (
+                            <span
+                              className={styles.option}
+                              onClick={() => {
+                                setSelectedNote(element);
+                              }}
+                            >
+                              {element.noteName
+                                ? element.noteName
+                                : `Nota ${element.noteNumber}`}
+                            </span>
+                          ))}
+                        </div>
                       </div>
-                    </div>
+                    )}
                   </div>
                 </div>
               ) : null}
@@ -136,12 +167,11 @@ export default function TransferProducts({ children, item, openModal }: Props) {
                       )}
                       onChange={() => {
                         handleProducts(element);
-                        console.log(selectedProducts);
                       }}
                     />
                   </div>
                 ))
-              : item.bill[0].products.map((element, index) => (
+              : managementBill?.products?.map((element, index) => (
                   <div className={styles.productBox} key={index}>
                     <span>{element.productName}</span>
                     <input
@@ -152,7 +182,6 @@ export default function TransferProducts({ children, item, openModal }: Props) {
                       )}
                       onChange={() => {
                         handleProducts(element);
-                        console.log(selectedProducts);
                       }}
                     />
                   </div>
@@ -288,7 +317,19 @@ export default function TransferProducts({ children, item, openModal }: Props) {
       <div className={styles.footerSection}>
         <button
           onClick={() => {
-            console.log(selectedNoteTransfer.products);
+            console.log(item?.bill[0]?.notes.length);
+            if (item?.bill?.[0]?.notes?.length < 1) {
+              const data = {
+                case: BILL_TO_BILL,
+                receivingBill: {
+                  ...tableSelected?.[0]?.bill?.[0],
+                  products: receivingProducts,
+                },
+                sendBill: { ...item?.bill[0], products: remainingProducts },
+              };
+              transferProducts(data);
+              openModal();
+            }
           }}
         >
           <img src={disquetIcon} alt="save-icon" />

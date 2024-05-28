@@ -13,6 +13,8 @@ import HeaderTwo from "../../components/headers/headerTwo/headerTwo";
 import rest from "../../assets/icon/rest.svg";
 import sum from "../../assets/icon/sum.svg";
 import searchIcon from "../../assets/icon/searchIcon.svg";
+import { v4 as uuidv4 } from "uuid";
+
 // Hooks
 import useProducts from "../../hooks/useProducts";
 import { useEffect, useState } from "react";
@@ -116,20 +118,11 @@ export default function Order() {
   const setBillCurrentCommand = useCurrentCommand((state) => state.setState);
 
   const handleAddedProducts = (item: Product) => {
-    /*
-    if (isWithNotes) {
-     
-      setSelectNote({
-        ...selectNote,
-        products: [...selectNote.products, item],
-      });
-      return;
-    }
-      */
+    const itemWithUnique = { ...item, unique: uuidv4() };
 
     setBillCurrentCommand({
       ...billCurrentCommand,
-      products: [...billCurrentCommand.products, item],
+      products: [...billCurrentCommand.products, itemWithUnique],
     });
   };
   ////////////////////////////

@@ -3,6 +3,7 @@ import { MoveTableDto } from "../../types/moreActions";
 import {
   SaveBillInTableService,
   UpdatePropInBillService,
+  productsToBillServices,
 } from "../../services/moreActions/moreActions";
 import {
   addComments,
@@ -23,6 +24,7 @@ export interface state {
   updateComments: (id: string, arg: string) => Promise<void>;
   createNotes: (notesArray: any[], id: string) => Promise<void>;
   cancelBill: (body: {}) => Promise<void>;
+  transferProducts: (data: any) => Promise<void>;
 }
 
 export const UseActions = create<state>((set) => {
@@ -164,6 +166,30 @@ export const UseActions = create<state>((set) => {
       } catch (error) {
         set({ isLoading: false, errors: true });
         throw new Error(`No se pudo actualizar. ${error}`);
+      }
+    },
+    transferProducts: async (data) => {
+      set({ isLoading: true });
+      try {
+        const res = await productsToBillServices(data);
+        if (!res.data) {
+          set({
+            isLoading: false,
+            errors: true,
+            message: `No se pudo actualizar`,
+          });
+          throw new Error(`No se actualizo`);
+        }
+        set({ isLoading: false });
+      } catch (error) {
+        set({
+          isLoading: false,
+          errors: true,
+          message: `No se actualizo debido a un error inesperado, mas informacion: ${error}`,
+        });
+        throw new Error(
+          `No se actualizo debido a un error inesperado, mas informacion: ${error}`
+        );
       }
     },
   };
