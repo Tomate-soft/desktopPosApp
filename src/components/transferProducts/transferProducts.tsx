@@ -7,7 +7,12 @@ import { UseTableStore } from "../../store/tables.store";
 import TableBoard from "../tableBoard/tableBoard";
 import { v4 as uuidv4 } from "uuid";
 import { UseActions } from "../../store/moreActions/moreActions.store";
-import { BILL_TO_BILL } from "./cases";
+import {
+  BILL_TO_BILL,
+  BILL_TO_NOTE,
+  NOTE_TO_BILL,
+  NOTE_TO_NOTE,
+} from "./cases";
 
 interface Props {
   children: string;
@@ -21,8 +26,8 @@ export default function TransferProducts({ children, item, openModal }: Props) {
   //states
   const [toggleStatus, setToggleStatus] = useState(false);
   const [toggleStatusTransfer, setToggleStatusTransfer] = useState(false);
-  const [selectedNote, setSelectedNote] = useState("seleccion");
-  const [selectedNoteTransfer, setSelectedNoteTransfer] = useState("Seleccion");
+  const [selectedNote, setSelectedNote] = useState({});
+  const [selectedNoteTransfer, setSelectedNoteTransfer] = useState({});
   const [selectedProducts, setSelectedProducts] = useState<any[]>([]);
   const [tableSearch, setTableSearch] = useState();
   const [managementBill, setManagementBill] = useState([]);
@@ -33,8 +38,20 @@ export default function TransferProducts({ children, item, openModal }: Props) {
 
   const receivingProducts =
     tableSelected[0]?.bill?.[0]?.products.concat(selectedProducts) || [];
+
+  const receivingProductsInNote =
+    selectedNoteTransfer?.products?.concat(selectedProducts) || [];
+
   const remainingProducts =
     managementBill?.products?.filter(
+      (item) =>
+        !selectedProducts.some(
+          (selectedItem) => selectedItem.unique === item.unique
+        )
+    ) || [];
+
+  const remainingProductsInNote =
+    selectedNote?.products?.filter(
       (item) =>
         !selectedProducts.some(
           (selectedItem) => selectedItem.unique === item.unique
@@ -317,8 +334,11 @@ export default function TransferProducts({ children, item, openModal }: Props) {
       <div className={styles.footerSection}>
         <button
           onClick={() => {
-            console.log(item?.bill[0]?.notes.length);
-            if (item?.bill?.[0]?.notes?.length < 1) {
+            if (
+              item?.bill?.[0]?.notes?.length < 1 &&
+              tableSelected[0].bill[0]?.notes.length < 1
+            ) {
+              // BILL_TO_BILL CASE
               const data = {
                 case: BILL_TO_BILL,
                 receivingBill: {
@@ -326,6 +346,58 @@ export default function TransferProducts({ children, item, openModal }: Props) {
                   products: receivingProducts,
                 },
                 sendBill: { ...item?.bill[0], products: remainingProducts },
+              };
+              transferProducts(data);
+              openModal();
+            } else if (
+              item?.bill[0]?.notes?.length >= 1 &&
+              tableSelected[0].bill[0]?.notes.length >= 1
+            ) {
+              // NOTE_TO_NOTE CASE
+              const data = {
+                case: NOTE_TO_NOTE,
+                receivingBill: {
+                  ...selectedNoteTransfer,
+                  products: receivingProductsInNote,
+                },
+                sendBill: {
+                  ...selectedNote,
+                  products: remainingProductsInNote,
+                },
+              };
+              transferProducts(data);
+              openModal();
+            } else if (
+              item?.bill[0]?.notes?.length < 1 &&
+              tableSelected[0].bill[0]?.notes.length >= 1
+            ) {
+              // BILL_TO_NOTE CASE
+              const data = {
+                case: BILL_TO_NOTE,
+                receivingBill: {
+                  ...selectedNoteTransfer,
+                  products: receivingProductsInNote,
+                },
+                sendBill: { ...item?.bill[0], products: remainingProducts },
+              };
+              transferProducts(data);
+              openModal();
+            } else if (
+              item?.bill[0]?.notes?.length >= 1 &&
+              tableSelected[0].bill[0]?.notes.length < 1
+            ) {
+              // NOTE_TO_BILL CASE
+              console.log("note to bill funciona perfectamente");
+              const data = {
+                case: NOTE_TO_BILL,
+                receivingBill: {
+                  ...tableSelected[0]?.bill[0],
+                  products: receivingProducts,
+                },
+                sendBill: {
+                  ...selectedNote,
+                  products: remainingProductsInNote,
+                },
               };
               transferProducts(data);
               openModal();

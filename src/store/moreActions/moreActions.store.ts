@@ -172,15 +172,8 @@ export const UseActions = create<state>((set) => {
       set({ isLoading: true });
       try {
         const res = await productsToBillServices(data);
-        if (!res.data) {
-          set({
-            isLoading: false,
-            errors: true,
-            message: `No se pudo actualizar`,
-          });
-          throw new Error(`No se actualizo`);
-        }
         set({ isLoading: false });
+        return res;
       } catch (error) {
         set({
           isLoading: false,
