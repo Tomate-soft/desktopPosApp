@@ -35,7 +35,6 @@ export default function TransferProducts({ children, item, openModal }: Props) {
   const tableSelected = tablesArray.filter((element) => {
     return element.tableNum === tableSearch;
   });
-
   const receivingProducts =
     tableSelected[0]?.bill?.[0]?.products.concat(selectedProducts) || [];
 

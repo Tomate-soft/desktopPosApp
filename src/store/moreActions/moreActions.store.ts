@@ -3,6 +3,7 @@ import { MoveTableDto } from "../../types/moreActions";
 import {
   SaveBillInTableService,
   UpdatePropInBillService,
+  createDiscountService,
   productsToBillServices,
 } from "../../services/moreActions/moreActions";
 import {
@@ -25,6 +26,7 @@ export interface state {
   createNotes: (notesArray: any[], id: string) => Promise<void>;
   cancelBill: (body: {}) => Promise<void>;
   transferProducts: (data: any) => Promise<void>;
+  createDiscount: (data: {}) => Promise<void>;
 }
 
 export const UseActions = create<state>((set) => {
@@ -183,6 +185,15 @@ export const UseActions = create<state>((set) => {
         throw new Error(
           `No se actualizo debido a un error inesperado, mas informacion: ${error}`
         );
+      }
+    },
+    createDiscount: async (data) => {
+      set({ isLoading: true });
+      try {
+        const res = await createDiscountService(data);
+        set({ isLoading: false });
+      } catch (error) {
+        set({ isLoading: false, errors: true });
       }
     },
   };

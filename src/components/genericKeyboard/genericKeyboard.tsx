@@ -5,7 +5,10 @@ import cleanIcon from "../../assets/icon/cleanIcon.svg";
 import spaceIcon from "../../assets/icon/spaceIcon.svg";
 import leftArrow from "../../assets/icon/backArrow.svg";
 import disquetIcon from "../../assets/icon/disquetIcon.svg";
-import { NOTES_CANCEL } from "../menus/mainMenu/moreActions/configs/constants";
+import {
+  NOTES_CANCEL,
+  PRODUCTS_DISCOUNTS,
+} from "../menus/mainMenu/moreActions/configs/constants";
 
 interface Props {
   children: string;
@@ -16,6 +19,7 @@ interface Props {
   onClose: () => void;
   data?: any;
   keyAction?: string;
+  payload: {};
 }
 export function GenericKeyboard({
   children,
@@ -26,6 +30,7 @@ export function GenericKeyboard({
   isOpen,
   data,
   keyAction,
+  payload,
 }: Props) {
   const [mayus, setMayus] = useState(true);
   const [text, setText] = useState("");
@@ -155,6 +160,20 @@ export function GenericKeyboard({
             onClick={() => {
               if (keyAction === NOTES_CANCEL) {
                 actionType({ ...data, cancellationReason: text });
+                openModal();
+              }
+              if (keyAction === PRODUCTS_DISCOUNTS) {
+                console.log("Descuento dee productos funciona correctamente");
+                const dataSend = {
+                  ...payload,
+                  discountReason: text,
+                  discountType: PRODUCTS_DISCOUNTS,
+                };
+                const transferObject = {
+                  accountApt: data,
+                  body: dataSend,
+                };
+                actionType(transferObject);
                 openModal();
               }
             }}
