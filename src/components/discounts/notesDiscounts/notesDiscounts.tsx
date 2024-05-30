@@ -46,7 +46,6 @@ export default function NotesDiscounts({ item, openModal, children }: Props) {
                         type="radio"
                         name="notes"
                         onChange={() => {
-                          console.log(noteForDiscount);
                           if (
                             noteForDiscount &&
                             noteForDiscount.noteNumber === element.noteNumber

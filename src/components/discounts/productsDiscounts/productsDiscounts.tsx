@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { useModal } from "../../../hooks/useModal";
 import { GENERIC_KEYBOARD_ACTIVE } from "../../genericKeyboard/config";
 import { GenericKeyboard } from "../../genericKeyboard/genericKeyboard";
-import { SET_PERCENT } from "../../discountBoard/constants";
+import { SET_PERCENT, SET_QUANTITY } from "../../discountBoard/constants";
 import { useAuthStore } from "../../../shared";
 import { PRODUCTS_DISCOUNTS } from "../../menus/mainMenu/moreActions/configs/constants";
 import { UseActions } from "../../../store/moreActions/moreActions.store";
@@ -48,30 +48,43 @@ export default function ProductsDiscounts({
         ).toString();
 
   const data = {
-    accountId: item.bill[0]._id,
+    accountId: item.bill[0].notes?.length < 0 ? selectedNote : item.bill[0]._id,
     discountMount: percent,
     setting: mode,
     discountByUser: user,
     discountFor: "Validacion futura",
   };
 
+  const moi = (
+    parseFloat(productSelection?.priceInSite) - parseFloat(discountApply)
+  )
+    .toFixed(2)
+    .toString();
   const discountForBillRoute = {
-    ...item.bill[0],
-    products: item.bill[0].products.map((element) => {
+    ...(selectedNote || item.bill[0]), // Usa selectedNote si está definido, de lo contrario usa item.bill[0]
+    products: (selectedNote || item.bill[0]).products.map((element) => {
       if (element.unique === productSelection?.unique) {
         return {
           ...element,
           discount: data,
-          priceInSite: discountApply,
+          priceInSite:
+            mode === SET_QUANTITY
+              ? discountApply
+              : (
+                  parseFloat(productSelection?.priceInSite) -
+                  parseFloat(discountApply)
+                )
+                  .toFixed(2)
+                  .toString(),
         };
       }
       return element;
     }),
     checkTotal: (
-      parseFloat(item.bill[0].checkTotal) - parseFloat(discountApply)
+      parseFloat((selectedNote || item.bill[0]).checkTotal) -
+      parseFloat(discountApply)
     ).toString(),
   };
-
   useEffect(() => {
     if (item.bill[0].notes.length > 0) {
       setSelectedNote(item.bill[0].notes[0]);
@@ -155,6 +168,16 @@ export default function ProductsDiscounts({
                               type="radio"
                               name="productSelection"
                               onChange={() => {
+                                console.log(
+                                  parseFloat(
+                                    selectedNote?.checkTotal ||
+                                      item.bill[0]?.checkTotal ||
+                                      "0" // Valor por defecto '0' si no hay checkTotal válido
+                                  ) - parseFloat(discountApply || "0") // Valor por defecto '0' si discountApply no es válido
+                                );
+
+                                console.log(selectedNote?.checkTotal);
+                                console.log(item.bill[0]?.checkTotal);
                                 setproductSelection(element);
                               }}
                             />
@@ -170,6 +193,16 @@ export default function ProductsDiscounts({
                               type="radio"
                               name="productSelection"
                               onChange={() => {
+                                console.log(
+                                  parseFloat(
+                                    selectedNote?.checkTotal ||
+                                      item.bill[0]?.checkTotal ||
+                                      "0" // Valor por defecto '0' si no hay checkTotal válido
+                                  ) - parseFloat(discountApply || "0") // Valor por defecto '0' si discountApply no es válido
+                                );
+
+                                console.log(selectedNote);
+                                console.log(item.bill[0]?.checkTotal);
                                 setproductSelection(element);
                               }}
                             />
@@ -193,7 +226,10 @@ export default function ProductsDiscounts({
         </div>
         <div>
           <button
-            onClick={genericKeyboard.openModal}
+            onClick={() => {
+              console.log(discountForBillRoute);
+              genericKeyboard.openModal();
+            }}
             disabled={
               parseFloat(discountApply) < 1 ||
               parseFloat(discountApply) >=

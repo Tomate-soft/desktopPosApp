@@ -50,7 +50,7 @@ export default function MoveTable({ children, item, openModal }: Props) {
         <div>
           <div>
             <div className={styles.headContainerFirst}>
-              {item.bill[0]?.notes ? (
+              {item.bill[0]?.notes.length > 0 ? (
                 <div className={styles.containerInput}>
                   <span>{`Mesa ${item.tableNum}`}</span>
                   <div className={styles.categoriesSelect}>
@@ -106,21 +106,15 @@ export default function MoveTable({ children, item, openModal }: Props) {
             </div>
           </div>
           <div className={styles.productsContainer}>
-            {selectedNote &&
-            selectedNote.products &&
-            selectedNote.products.length ? (
-              selectedNote.products.map((element, index) => (
-                <div className={styles.productBox} key={index}>
-                  <span>{element.productName}</span>
-                </div>
-              ))
-            ) : (
-              <div className={styles.productBoxEmpty}>
-                <h2>Nota actualmente vacia</h2>
+            {(selectedNote?.products?.length
+              ? selectedNote.products
+              : item.bill[0].products
+            ).map((element, index) => (
+              <div className={styles.productBox} key={index}>
+                <span>{element.productName}</span>
               </div>
-            )}
+            ))}
           </div>
-
           <div></div>
         </div>
         <div className={styles.selectTable}>

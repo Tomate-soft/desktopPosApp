@@ -173,6 +173,7 @@ export function GenericKeyboard({
                   accountApt: data,
                   body: dataSend,
                 };
+                console.log(transferObject);
                 actionType(transferObject);
                 openModal();
               }
