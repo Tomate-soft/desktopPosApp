@@ -74,6 +74,8 @@ export default function TransferProducts({ children, item, openModal }: Props) {
   }
 
   useEffect(() => {
+    getTablesArray();
+
     if (!item.bill[0].notes.length || item.bill[0].notes.length < 1) {
       const uProducts = item.bill[0].products.flatMap((element: any) => {
         if (element.quantity > 1) {
@@ -92,8 +94,6 @@ export default function TransferProducts({ children, item, openModal }: Props) {
       });
 
       setManagementBill({ ...item.bill[0], products: uProducts });
-
-      getTablesArray();
 
       if (item && item.bill[0] && item.bill[0].notes.length > 0) {
         setSelectedNote(item.bill[0].notes[0]);
@@ -215,8 +215,13 @@ export default function TransferProducts({ children, item, openModal }: Props) {
             ) : (
               <button
                 onClick={() => {
+                  /*
                   const currentProducts = selectedNote.products;
-                  setSelectedProducts(currentProducts);
+                  setSelectedProducts(currentProducts); */
+                  console.log("Table search");
+                  console.log(tableSearch);
+                  console.log("Table selected");
+                  console.log(tableSelected);
                 }}
               >
                 Seleccionar todo
@@ -386,7 +391,6 @@ export default function TransferProducts({ children, item, openModal }: Props) {
               tableSelected[0].bill[0]?.notes.length < 1
             ) {
               // NOTE_TO_BILL CASE
-              console.log("note to bill funciona perfectamente");
               const data = {
                 case: NOTE_TO_BILL,
                 receivingBill: {

@@ -190,8 +190,6 @@ export default function Order() {
 
       if (tableItem.bill[0]) {
         setBillCurrentCommand(tableItem.bill[0]);
-        console.log("Entre el IF SIN notas y...");
-        console.log(billCurrentCommand);
         return;
       }
       setBillCurrentCommand({
@@ -206,7 +204,6 @@ export default function Order() {
         setBillCurrentCommand(toGoOrder);
         return;
       }
-      console.log("Listoa pra crear un pedido para llevar");
       setBillCurrentCommand(initialOrderTogo);
     }
 
@@ -215,7 +212,6 @@ export default function Order() {
         ...billCurrentCommand,
         products: [],
       });
-      console.log(authData); // aca es rollete del bug de volver a v3er los productos.
     };
   }, []);
   return (
@@ -393,9 +389,11 @@ export default function Order() {
                         {element.productName}
                       </span>
                       {element.quantity > 1 ? (
-                        <p>$ {element.priceInSiteBill}</p>
+                        <p>
+                          $ {parseFloat(element.priceInSiteBill).toFixed(2)}
+                        </p>
                       ) : (
-                        <p>$ {element.priceInSite}.00</p>
+                        <p>$ {parseFloat(element.priceInSite).toFixed(2)}</p>
                       )}
                       {!element.active && (
                         <button>
