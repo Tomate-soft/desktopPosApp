@@ -3,10 +3,16 @@ import styles from "./productsDiscounts.module.css";
 import rightArrow from "../../../assets/icon/arrowRight.svg";
 import arrow from "../../../assets/icon/selectArrow.svg";
 import divider from "../../../assets/icon/dividerTransfer.svg";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useModal } from "../../../hooks/useModal";
 import { GENERIC_KEYBOARD_ACTIVE } from "../../genericKeyboard/config";
 import { GenericKeyboard } from "../../genericKeyboard/genericKeyboard";
+import { SET_PERCENT } from "../../discountBoard/constants";
+import { useAuthStore } from "../../../shared";
+import { PRODUCTS_DISCOUNTS } from "../../menus/mainMenu/moreActions/configs/constants";
+import { UseActions } from "../../../store/moreActions/moreActions.store";
+import axiosInstance from "../../../configs/axios";
+import { DISCOUNTS_PATH } from "../../../lib/routes.paths.lib";
 
 interface Props {
   item: any;
@@ -20,9 +26,57 @@ export default function ProductsDiscounts({
   children,
 }: Props) {
   const [toggleStatus, setToggleStatus] = useState(false);
-  const [selectedNote, setSelectedNote] = useState("seleccion");
+  const [selectedNote, setSelectedNote] = useState();
   const [productSelection, setproductSelection] = useState();
+  const [percent, setPercent] = useState("");
   const genericKeyboard = useModal(GENERIC_KEYBOARD_ACTIVE);
+  const [mode, setMode] = useState<string>(SET_PERCENT);
+  const [isCorrect, setIsCorect] = useState(true);
+
+  const authData = useAuthStore((state) => state.authData);
+  const user = authData.payload.user._id;
+  const createDiscount = UseActions((state) => state.createDiscount);
+
+  const discountApply =
+    mode === SET_PERCENT
+      ? (
+          (parseFloat(productSelection?.priceInSite) * parseInt(percent)) /
+          100
+        ).toString()
+      : (
+          parseFloat(productSelection?.priceInSite) - parseFloat(percent)
+        ).toString();
+
+  const data = {
+    accountId: item.bill[0]._id,
+    discountMount: percent,
+    setting: mode,
+    discountByUser: user,
+    discountFor: "Validacion futura",
+  };
+
+  const discountForBillRoute = {
+    ...item.bill[0],
+    products: item.bill[0].products.map((element) => {
+      if (element.unique === productSelection?.unique) {
+        return {
+          ...element,
+          discount: data,
+          priceInSite: discountApply,
+        };
+      }
+      return element;
+    }),
+    checkTotal: (
+      parseFloat(item.bill[0].checkTotal) - parseFloat(discountApply)
+    ).toString(),
+  };
+
+  useEffect(() => {
+    if (item.bill[0].notes.length > 0) {
+      setSelectedNote(item.bill[0].notes[0]);
+    }
+  }, []);
 
   return (
     <div className={styles.container}>
@@ -33,7 +87,7 @@ export default function ProductsDiscounts({
             <div>
               <div className={styles.head}>
                 <div>
-                  {item.bill[0]?.notes ? (
+                  {item.bill[0]?.notes.length > 0 ? (
                     <div className={styles.containerInput}>
                       <span>{`Mesa ${item.tableNum}`}</span>
                       <div className={styles.categoriesSelect}>
@@ -91,41 +145,64 @@ export default function ProductsDiscounts({
               <div className={styles.productsContainer}>
                 {selectedNote &&
                 selectedNote.products &&
-                selectedNote.products.length ? (
-                  selectedNote.products.map((element, index) => (
-                    <div className={styles.productBox} key={index}>
-                      <span>{element.productName}</span>
-                      <input
-                        type="radio"
-                        name="productSelection"
-                        onChange={() => {
-                          console.log(productSelection);
-                          if (
-                            setproductSelection &&
-                            setproductSelection.unique === element.unique
-                          ) {
-                            return;
-                          }
-                          setproductSelection(element);
-                        }}
-                      />
-                    </div>
-                  ))
-                ) : (
-                  <div className={styles.productBoxEmpty}>
-                    <h2>Nota actualmente vacia</h2>
-                  </div>
-                )}
+                selectedNote.products.length
+                  ? selectedNote.products.map(
+                      (element, index) =>
+                        !element.discount && (
+                          <div className={styles.productBox} key={index}>
+                            <span>{element.productName}</span>
+                            <input
+                              type="radio"
+                              name="productSelection"
+                              onChange={() => {
+                                setproductSelection(element);
+                              }}
+                            />
+                          </div>
+                        )
+                    )
+                  : item.bill[0].products.map(
+                      (element, index) =>
+                        !element.discount && (
+                          <div className={styles.productBox} key={index}>
+                            <span>{element.productName}</span>
+                            <input
+                              type="radio"
+                              name="productSelection"
+                              onChange={() => {
+                                setproductSelection(element);
+                              }}
+                            />
+                          </div>
+                        )
+                    )}
               </div>
             </div>
           </div>
           <div>
             <h3>2.-Ingresa descuento</h3>
-            <DiscountBoard>ea la marea</DiscountBoard>
+            <DiscountBoard
+              mode={mode}
+              settingMode={setMode}
+              percent={percent}
+              setting={setPercent}
+            >
+              ea la marea
+            </DiscountBoard>
           </div>
         </div>
         <div>
-          <button onClick={genericKeyboard.openModal}>
+          <button
+            onClick={genericKeyboard.openModal}
+            disabled={
+              parseFloat(discountApply) < 1 ||
+              parseFloat(discountApply) >=
+                parseFloat(productSelection?.priceInSite) - 1 ||
+              (parseFloat(percent) >= 100 && mode === SET_PERCENT) ||
+              (parseFloat(percent) <= 0 && mode === SET_PERCENT) ||
+              !percent
+            }
+          >
             <img src={rightArrow} alt="right-arrow" />
             Siguiente
           </button>
@@ -138,6 +215,10 @@ export default function ProductsDiscounts({
             isOpen={genericKeyboard.isOpen}
             onClose={genericKeyboard.closeModal}
             openModal={openModal}
+            data={discountForBillRoute}
+            payload={data}
+            keyAction={PRODUCTS_DISCOUNTS}
+            actionType={createDiscount}
           >
             Ingresa la descripción del descuento
           </GenericKeyboard>

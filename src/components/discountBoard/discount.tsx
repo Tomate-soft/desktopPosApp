@@ -7,12 +7,23 @@ interface Props {
   item: any;
   openModal: () => void;
   children: string;
+  percent: string;
+  setting: (args: any) => void;
+  mode: string;
+  settingMode: any;
+  bool?: boolean;
 }
 
-export default function DiscountBoard({ item, openModal }: Props) {
-  const [percent, setPercent] = useState("");
-  const [mode, setMode] = useState<string>(SET_PERCENT);
-
+export default function DiscountBoard({
+  item,
+  openModal,
+  children,
+  percent,
+  setting,
+  mode,
+  settingMode,
+  bool,
+}: Props) {
   const keys = ["7", "8", "9", "4", "5", "6", "1", "2", "3", "0", "."];
   return (
     <div className={styles.container}>
@@ -29,7 +40,7 @@ export default function DiscountBoard({ item, openModal }: Props) {
                   key={index}
                   onClick={() => {
                     if (percent.length <= 5) {
-                      setPercent((prevValue) => {
+                      setting((prevValue: any) => {
                         return prevValue.concat(element);
                       });
                     }
@@ -43,19 +54,17 @@ export default function DiscountBoard({ item, openModal }: Props) {
             <div>
               {mode === SET_QUANTITY ? (
                 <>
-                  <button>
-                    <img
-                      src={backspace}
-                      alt="backspace"
-                      onClick={() => {
-                        setPercent("");
-                      }}
-                    />
+                  <button
+                    onClick={() => {
+                      setting("");
+                    }}
+                  >
+                    <img src={backspace} alt="backspace" />
                   </button>
                   <button
                     onClick={() => {
-                      setMode(SET_PERCENT);
-                      setPercent("");
+                      settingMode(SET_PERCENT);
+                      setting("");
                     }}
                   >
                     %
@@ -74,7 +83,7 @@ export default function DiscountBoard({ item, openModal }: Props) {
                   key={index}
                   onClick={() => {
                     if (percent.length <= 5) {
-                      setPercent((prevValue) => {
+                      setting((prevValue) => {
                         return prevValue.concat(element);
                       });
                     }
@@ -88,19 +97,17 @@ export default function DiscountBoard({ item, openModal }: Props) {
             <div>
               {mode === SET_PERCENT ? (
                 <>
-                  <button>
-                    <img
-                      src={backspace}
-                      alt="backspace"
-                      onClick={() => {
-                        setPercent("");
-                      }}
-                    />
+                  <button
+                    onClick={() => {
+                      setting("");
+                    }}
+                  >
+                    <img src={backspace} alt="backspace" />
                   </button>
                   <button
                     onClick={() => {
-                      setMode(SET_QUANTITY);
-                      setPercent("");
+                      settingMode(SET_QUANTITY);
+                      setting("");
                     }}
                   >
                     $
