@@ -7,6 +7,7 @@ import leftArrow from "../../assets/icon/backArrow.svg";
 import disquetIcon from "../../assets/icon/disquetIcon.svg";
 import {
   NOTES_CANCEL,
+  NOTES_DISCOUNTS,
   PRODUCTS_DISCOUNTS,
 } from "../menus/mainMenu/moreActions/configs/constants";
 
@@ -174,6 +175,19 @@ export function GenericKeyboard({
                   body: dataSend,
                 };
                 console.log(transferObject);
+                actionType(transferObject);
+                openModal();
+              }
+              if (keyAction === NOTES_DISCOUNTS) {
+                const dataSend = {
+                  ...payload,
+                  discountReason: text,
+                  discountType: NOTES_DISCOUNTS,
+                };
+                const transferObject = {
+                  accountApt: data,
+                  body: dataSend,
+                };
                 actionType(transferObject);
                 openModal();
               }

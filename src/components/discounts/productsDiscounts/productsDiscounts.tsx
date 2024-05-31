@@ -55,11 +55,6 @@ export default function ProductsDiscounts({
     discountFor: "Validacion futura",
   };
 
-  const moi = (
-    parseFloat(productSelection?.priceInSite) - parseFloat(discountApply)
-  )
-    .toFixed(2)
-    .toString();
   const discountForBillRoute = {
     ...(selectedNote || item.bill[0]), // Usa selectedNote si está definido, de lo contrario usa item.bill[0]
     products: (selectedNote || item.bill[0]).products.map((element) => {
