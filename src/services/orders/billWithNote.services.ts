@@ -13,7 +13,6 @@ export const updateNoteService = async (id: string, noteData: {}) => {
 };
 
 export const updatePropInNote = async (id: string, noteProp: {}) => {
-  console.log(noteProp);
   const response = axios.put(`${NOTES_PATH}/${id}`, noteProp);
   return response;
 };

@@ -6,6 +6,10 @@ import { useState } from "react";
 import { useModal } from "../../../hooks/useModal";
 import { GENERIC_KEYBOARD_ACTIVE } from "../../genericKeyboard/config";
 import { GenericKeyboard } from "../../genericKeyboard/genericKeyboard";
+import { SET_PERCENT } from "../../discountBoard/constants";
+import { useAuthStore } from "../../../shared";
+import { UseActions } from "../../../store/moreActions/moreActions.store";
+import { COURTESY_APPLY_NOTES } from "../../menus/mainMenu/moreActions/configs/constants";
 
 interface Props {
   item: any;
@@ -16,6 +20,18 @@ interface Props {
 export default function NotesCourtesy({ item, openModal, children }: Props) {
   const [noteForDiscount, setNoteForDiscount] = useState();
   const genericKeyboard = useModal(GENERIC_KEYBOARD_ACTIVE);
+
+  const authData = useAuthStore((state) => state.authData);
+  const user = authData.payload.user._id;
+  const createDiscount = UseActions((state) => state.createDiscount);
+
+  const data = {
+    accountId: noteForDiscount?._id,
+    discountMount: "100",
+    setting: SET_PERCENT,
+    discountByUser: user,
+    discountFor: "Validacion futura",
+  };
 
   return (
     <div className={styles.container}>
@@ -80,6 +96,10 @@ export default function NotesCourtesy({ item, openModal, children }: Props) {
             isOpen={genericKeyboard.isOpen}
             onClose={genericKeyboard.closeModal}
             openModal={openModal}
+            data={{}}
+            payload={data}
+            keyAction={COURTESY_APPLY_NOTES}
+            actionType={createDiscount}
           >
             Ingresa la descripción del descuento
           </GenericKeyboard>

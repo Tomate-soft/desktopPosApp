@@ -507,8 +507,6 @@ export default function Order() {
           <button
             onClick={() => {
               if (isWithNotes) {
-                console.log("es una nota");
-                console.log(selectNote._id);
                 const body = {
                   accountId: tableItem.bill[0]._id,
                   body: { status: FOR_PAYMENT_STATUS },

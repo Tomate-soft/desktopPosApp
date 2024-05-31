@@ -9,7 +9,6 @@ import { GenericKeyboard } from "../../genericKeyboard/genericKeyboard";
 import { SET_PERCENT } from "../../discountBoard/constants";
 import { useAuthStore } from "../../../shared";
 import { UseActions } from "../../../store/moreActions/moreActions.store";
-import { NOTES_DISCOUNTS } from "../../menus/mainMenu/moreActions/configs/constants";
 
 interface Props {
   item: any;
@@ -106,9 +105,9 @@ export default function NotesDiscounts({ item, openModal, children }: Props) {
                 isOpen={genericKeyboard.isOpen}
                 onClose={genericKeyboard.closeModal}
                 openModal={openModal}
-                data={{}}
+                data={discountForBillRoute}
                 payload={data}
-                keyAction={NOTES_DISCOUNTS}
+                keyAction={PRODUCTS_DISCOUNTS}
                 actionType={createDiscount}
               >
                 Ingresa la descripción del descuento
