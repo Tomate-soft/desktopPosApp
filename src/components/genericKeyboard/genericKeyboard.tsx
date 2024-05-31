@@ -6,6 +6,8 @@ import spaceIcon from "../../assets/icon/spaceIcon.svg";
 import leftArrow from "../../assets/icon/backArrow.svg";
 import disquetIcon from "../../assets/icon/disquetIcon.svg";
 import {
+  BILL_DISCOUNTS,
+  COURTESY_APPLY_PRODUCTS,
   NOTES_CANCEL,
   NOTES_DISCOUNTS,
   PRODUCTS_DISCOUNTS,
@@ -164,7 +166,6 @@ export function GenericKeyboard({
                 openModal();
               }
               if (keyAction === PRODUCTS_DISCOUNTS) {
-                console.log("Descuento dee productos funciona correctamente");
                 const dataSend = {
                   ...payload,
                   discountReason: text,
@@ -188,6 +189,34 @@ export function GenericKeyboard({
                   accountApt: data,
                   body: dataSend,
                 };
+                actionType(transferObject);
+                openModal();
+              }
+
+              if (keyAction === BILL_DISCOUNTS) {
+                const dataSend = {
+                  ...payload,
+                  discountReason: text,
+                  discountType: BILL_DISCOUNTS,
+                };
+                const transferObject = {
+                  accountApt: data,
+                  body: dataSend,
+                };
+                actionType(transferObject);
+                openModal();
+              }
+              if (keyAction === COURTESY_APPLY_PRODUCTS) {
+                const dataSend = {
+                  ...payload,
+                  discountReason: text,
+                  discountType: COURTESY_APPLY_PRODUCTS,
+                };
+                const transferObject = {
+                  accountApt: data,
+                  body: dataSend,
+                };
+                console.log(transferObject);
                 actionType(transferObject);
                 openModal();
               }
