@@ -6,6 +6,10 @@ import { useState } from "react";
 import { GENERIC_KEYBOARD_ACTIVE } from "../../genericKeyboard/config";
 import { GenericKeyboard } from "../../genericKeyboard/genericKeyboard";
 import { useModal } from "../../../hooks/useModal";
+import { BILL_DISCOUNTS } from "../../menus/mainMenu/moreActions/configs/constants";
+import { useAuthStore } from "../../../shared";
+import { UseActions } from "../../../store/moreActions/moreActions.store";
+import { SET_PERCENT } from "../../discountBoard/constants";
 
 interface Props {
   item: any;
@@ -14,8 +18,21 @@ interface Props {
 }
 
 export default function BillDiscount({ item, openModal, children }: Props) {
-  const [noteForDiscount, setNoteForDiscount] = useState();
+  const [mode, setMode] = useState<string>(SET_PERCENT);
+  const [percent, setPercent] = useState("");
   const genericKeyboard = useModal(GENERIC_KEYBOARD_ACTIVE);
+
+  const authData = useAuthStore((state) => state.authData);
+  const user = authData.payload.user._id;
+  const createDiscount = UseActions((state) => state.createDiscount);
+
+  const data = {
+    accountId: item.bill[0]._id,
+    discountMount: percent,
+    setting: mode,
+    discountByUser: user,
+    discountFor: "Validacion futura",
+  };
 
   return (
     <div className={styles.container}>
@@ -30,7 +47,14 @@ export default function BillDiscount({ item, openModal, children }: Props) {
           </div>
           <div>
             <h3>Ingresa descuento</h3>
-            <DiscountBoard>Descuentos en mesa</DiscountBoard>
+            <DiscountBoard
+              settingMode={setMode}
+              mode={mode}
+              percent={percent}
+              setting={setPercent}
+            >
+              Descuentos en mesa
+            </DiscountBoard>
           </div>
         </div>
         <div>
@@ -47,6 +71,10 @@ export default function BillDiscount({ item, openModal, children }: Props) {
             isOpen={genericKeyboard.isOpen}
             onClose={genericKeyboard.closeModal}
             openModal={openModal}
+            data={{}}
+            payload={data}
+            keyAction={BILL_DISCOUNTS}
+            actionType={createDiscount}
           >
             Ingresa la descripción del descuento
           </GenericKeyboard>
