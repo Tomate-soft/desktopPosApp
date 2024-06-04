@@ -40,15 +40,16 @@ export default function TablesControl() {
   const errors = UseTableStore((state) => state.errors);
   const { usersArray, getUsers } = UseUsers();
   // states
-  const [selectedUser, setSelectedUser] = useState("");
+  const [selectedUser, setSelectedUser] = useState();
   const [selectedTables, setSelectedTables] = useState<string[]>([]);
   // Request
   const asingTables = useUsersStore((state) => state.updateUser);
-  const tablesValues = { tables: selectedTables };
+  const tablesValues = {
+    tables: selectedUser?.tables.concat(selectedTables),
+  };
   // modals
   const confirmChanges = useModal(CONFIRM_CHANGES);
   useEffect(() => {
-    console.log(tablesArray);
     getTables();
     getUsers();
   }, []);
@@ -139,13 +140,13 @@ export default function TablesControl() {
               <div
                 className={styles.userBox}
                 style={
-                  selectedUser === element._id
+                  selectedUser?._id === element._id
                     ? { background: "rgba(167, 92, 57, 1)" }
                     : {}
                 }
                 onClick={() => {
                   setSelectedTables([]);
-                  setSelectedUser(element._id);
+                  setSelectedUser(element);
                 }}
               >
                 <h4>{element.employeeNumber}</h4>
@@ -178,7 +179,7 @@ export default function TablesControl() {
         <div>
           <button
             onClick={() => {
-              /* ACA SEGUIMOS */
+              console.log(selectedUser.tables.concat(selectedTables));
             }}
           >
             <img src={bloquedBtn} alt="bloqued-button-icon" />
@@ -218,12 +219,12 @@ export default function TablesControl() {
           </button>
           <button
             onClick={async () => {
-              asingTables(tablesValues, selectedUser);
+              asingTables(tablesValues, selectedUser?._id);
               const requestItems = selectedTables.map((element) => ({
                 _id: element,
                 assigned: true,
               }));
-              updateTables(requestItems, selectedUser);
+              updateTables(requestItems, selectedUser?._id);
               confirmChanges.openModal();
             }}
           >

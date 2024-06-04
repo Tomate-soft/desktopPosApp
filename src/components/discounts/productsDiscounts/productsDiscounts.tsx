@@ -7,12 +7,11 @@ import { useEffect, useState } from "react";
 import { useModal } from "../../../hooks/useModal";
 import { GENERIC_KEYBOARD_ACTIVE } from "../../genericKeyboard/config";
 import { GenericKeyboard } from "../../genericKeyboard/genericKeyboard";
+import cleanDiscount from "../../../assets/icon/cleanDiscount.svg";
 import { SET_PERCENT, SET_QUANTITY } from "../../discountBoard/constants";
 import { useAuthStore } from "../../../shared";
 import { PRODUCTS_DISCOUNTS } from "../../menus/mainMenu/moreActions/configs/constants";
 import { UseActions } from "../../../store/moreActions/moreActions.store";
-import axiosInstance from "../../../configs/axios";
-import { DISCOUNTS_PATH } from "../../../lib/routes.paths.lib";
 
 interface Props {
   item: any;
@@ -154,56 +153,60 @@ export default function ProductsDiscounts({
                 {selectedNote &&
                 selectedNote.products &&
                 selectedNote.products.length
-                  ? selectedNote.products.map(
-                      (element, index) =>
-                        !element.discount && (
-                          <div className={styles.productBox} key={index}>
-                            <span>{element.productName}</span>
-                            <input
-                              type="radio"
-                              name="productSelection"
-                              onChange={() => {
-                                console.log(
-                                  parseFloat(
-                                    selectedNote?.checkTotal ||
-                                      item.bill[0]?.checkTotal ||
-                                      "0" // Valor por defecto '0' si no hay checkTotal válido
-                                  ) - parseFloat(discountApply || "0") // Valor por defecto '0' si discountApply no es válido
-                                );
+                  ? selectedNote.products.map((element, index) => (
+                      <div className={styles.productBox} key={index}>
+                        <span>{element.quantity}</span>
+                        <span>{element.productName}</span>
+                        {element.discount ? (
+                          <button className={styles.discountButton}>
+                            <img src={cleanDiscount} alt="clean-btn" />
+                          </button>
+                        ) : (
+                          <input
+                            type="radio"
+                            name="productSelection"
+                            onChange={() => {
+                              console.log(
+                                parseFloat(
+                                  selectedNote?.checkTotal ||
+                                    item.bill[0]?.checkTotal ||
+                                    "0"
+                                ) - parseFloat(discountApply || "0")
+                              );
 
-                                console.log(selectedNote?.checkTotal);
-                                console.log(item.bill[0]?.checkTotal);
-                                setproductSelection(element);
-                              }}
-                            />
-                          </div>
-                        )
-                    )
-                  : item.bill[0].products.map(
-                      (element, index) =>
-                        !element.discount && (
-                          <div className={styles.productBox} key={index}>
-                            <span>{element.productName}</span>
-                            <input
-                              type="radio"
-                              name="productSelection"
-                              onChange={() => {
-                                console.log(
-                                  parseFloat(
-                                    selectedNote?.checkTotal ||
-                                      item.bill[0]?.checkTotal ||
-                                      "0" // Valor por defecto '0' si no hay checkTotal válido
-                                  ) - parseFloat(discountApply || "0") // Valor por defecto '0' si discountApply no es válido
-                                );
+                              setproductSelection(element);
+                            }}
+                          />
+                        )}
+                      </div>
+                    ))
+                  : item.bill[0].products.map((element, index) => (
+                      <div className={styles.productBox} key={index}>
+                        <span>{element.quantity}</span>
+                        <span>{element.productName}</span>
+                        {element.discount ? (
+                          <button className={styles.discountButton}>
+                            <img src={cleanDiscount} alt="clean-btn" />
+                          </button>
+                        ) : (
+                          <input
+                            type="radio"
+                            name="productSelection"
+                            onChange={() => {
+                              console.log(
+                                parseFloat(
+                                  selectedNote?.checkTotal ||
+                                    item.bill[0]?.checkTotal ||
+                                    "0"
+                                ) - parseFloat(discountApply || "0")
+                              );
 
-                                console.log(selectedNote);
-                                console.log(item.bill[0]?.checkTotal);
-                                setproductSelection(element);
-                              }}
-                            />
-                          </div>
-                        )
-                    )}
+                              setproductSelection(element);
+                            }}
+                          />
+                        )}
+                      </div>
+                    ))}
               </div>
             </div>
           </div>

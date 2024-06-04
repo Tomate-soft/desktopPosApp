@@ -313,9 +313,11 @@ export default function Order() {
                         {element.productName}
                       </span>
                       {element.quantity > 1 ? (
-                        <p>$ {element.priceInSiteBill}</p>
+                        <p>
+                          $ {parseFloat(element.priceInSiteBill).toFixed(2)}
+                        </p>
                       ) : (
-                        <p>$ {element.priceInSite}.00</p>
+                        <p>$ {parseFloat(element.priceInSite).toFixed(2)}</p>
                       )}
                       {!element.active && (
                         <button>
@@ -410,7 +412,7 @@ export default function Order() {
                 <div className={styles.totalContainer}>
                   <div>
                     <span>Total: </span>
-                    <span>{`$${billCurrentCommand.checkTotal}`}</span>
+                    <span>{`$${billCurrentCommand.checkTotal} `}</span>
                   </div>
                 </div>
               </div>
