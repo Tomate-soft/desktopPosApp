@@ -543,9 +543,7 @@ export default function Order() {
             isOpen={addModifier.isOpen}
             onClose={addModifier.closeModal}
             product={selectedProduct}
-          >
-            {""}
-          </AddModifier>
+          ></AddModifier>
         ) : null}
         <button
           className={styles.printButton}

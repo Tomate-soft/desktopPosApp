@@ -13,7 +13,10 @@ import {
   createNotes,
   injectNotesInBill,
 } from "../../services/bill.services";
-import { cancelBillService } from "../../services/cancellation.store";
+import {
+  cancelBillService,
+  cancelProductService,
+} from "../../services/cancellation.store";
 
 export interface state {
   isLoading: boolean;
@@ -27,6 +30,7 @@ export interface state {
   cancelBill: (body: {}) => Promise<void>;
   transferProducts: (data: any) => Promise<void>;
   createDiscount: (data: {}) => Promise<void>;
+  cancelProduct: (args: {}) => Promise<void>;
 }
 
 export const UseActions = create<state>((set) => {
@@ -191,6 +195,15 @@ export const UseActions = create<state>((set) => {
       set({ isLoading: true });
       try {
         const res = await createDiscountService(data);
+        set({ isLoading: false });
+      } catch (error) {
+        set({ isLoading: false, errors: true });
+      }
+    },
+    cancelProduct: async (args) => {
+      set({ isLoading: true });
+      try {
+        const res = await cancelProductService(args);
         set({ isLoading: false });
       } catch (error) {
         set({ isLoading: false, errors: true });

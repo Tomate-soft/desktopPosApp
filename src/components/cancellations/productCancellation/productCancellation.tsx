@@ -8,6 +8,9 @@ import { useModal } from "../../../hooks/useModal";
 import { GENERIC_KEYBOARD_ACTIVE } from "../../genericKeyboard/config";
 import { GenericKeyboard } from "../../genericKeyboard/genericKeyboard";
 import { cancellationReasonStore } from "../../../store/cancellationReasons.store";
+import { useAuthStore } from "../../../shared";
+import { UseActions } from "../../../store/moreActions/moreActions.store";
+import ConfirmChanges from "../../modals/confirm/confirmChanges";
 
 interface Props {
   item: any;
@@ -18,7 +21,7 @@ interface Props {
 export default function ProductsCancel({ item, openModal, children }: Props) {
   const [active, setActive] = useState<string>();
   const [toggleStatus, setToggleStatus] = useState(false);
-  const [selectedNote, setSelectedNote] = useState("seleccion");
+  const [selectedNote, setSelectedNote] = useState({});
   const [productSelection, setproductSelection] = useState();
   const genericKeyboard = useModal(GENERIC_KEYBOARD_ACTIVE);
 
@@ -26,11 +29,46 @@ export default function ProductsCancel({ item, openModal, children }: Props) {
   const cancellationReasonsArray = cancellationReasonStore(
     (state) => state.reasonsArray
   );
+  const cancelProduct = UseActions((state) => state.cancelProduct);
   const getReasons = cancellationReasonStore((state) => state.getReasons);
+  const managementProducts = (
+    selectedNote?.products ||
+    item.bill?.[0]?.products ||
+    []
+  ).filter((product) => product.unique !== productSelection?.unique);
+
+  const authData = useAuthStore((state) => state.authData);
+  const user = authData.payload.user._id;
+
+  const dataSend =
+    item.bill[0].notes.length > 0
+      ? {
+          aptAccount: { ...selectedNote, products: managementProducts },
+          body: {
+            accountId: item.bill[0]._id,
+            noteId: selectedNote?._id,
+            product: productSelection,
+            cancellationBy: user,
+            cancellationFor: "Pendiente",
+            cancellationReason: active,
+          },
+        }
+      : {
+          aptAccount: { ...item.bill[0], products: managementProducts },
+          body: {
+            accountId: item.bill[0]._id,
+            product: productSelection,
+            cancellationBy: user,
+            cancellationFor: "Pendiente",
+            cancellationReason: active,
+          },
+        };
 
   useEffect(() => {
     getReasons();
-    console.log(cancellationReasonsArray);
+    if (item.bill[0].notes.length > 0) {
+      setSelectedNote(item.bill[0].notes[0]);
+    }
   }, []);
 
   return (
@@ -42,7 +80,7 @@ export default function ProductsCancel({ item, openModal, children }: Props) {
             <div>
               <div className={styles.head}>
                 <div>
-                  {item.bill[0]?.notes ? (
+                  {item.bill[0]?.notes.length ? (
                     <div className={styles.containerInput}>
                       <span>{`Mesa ${item.tableNum}`}</span>
                       <div className={styles.categoriesSelect}>
@@ -100,31 +138,45 @@ export default function ProductsCancel({ item, openModal, children }: Props) {
               <div className={styles.productsContainer}>
                 {selectedNote &&
                 selectedNote.products &&
-                selectedNote.products.length ? (
-                  selectedNote.products.map((element, index) => (
-                    <div className={styles.productBox} key={index}>
-                      <span>{element.productName}</span>
-                      <input
-                        type="radio"
-                        name="productSelection"
-                        onChange={() => {
-                          console.log(productSelection);
-                          if (
-                            setproductSelection &&
-                            setproductSelection.unique === element.unique
-                          ) {
-                            return;
-                          }
-                          setproductSelection(element);
-                        }}
-                      />
-                    </div>
-                  ))
-                ) : (
-                  <div className={styles.productBoxEmpty}>
-                    <h2>Nota actualmente vacia</h2>
-                  </div>
-                )}
+                selectedNote.products.length
+                  ? selectedNote.products.map((element, index) => (
+                      <div className={styles.productBox} key={index}>
+                        <span>{element.productName}</span>
+                        <input
+                          type="radio"
+                          name="productSelection"
+                          onChange={() => {
+                            if (
+                              setproductSelection &&
+                              setproductSelection.unique === element.unique
+                            ) {
+                              return;
+                            }
+                            setproductSelection(element);
+                          }}
+                        />
+                      </div>
+                    ))
+                  : item.bill[0].products.map((element, index) => (
+                      <div className={styles.productBox} key={index}>
+                        <span>{element.productName}</span>
+                        <input
+                          type="radio"
+                          name="productSelection"
+                          onChange={() => {
+                            console.log(productSelection);
+                            console.log(managementProducts);
+                            if (
+                              setproductSelection &&
+                              setproductSelection.unique === element.unique
+                            ) {
+                              return;
+                            }
+                            setproductSelection(element);
+                          }}
+                        />
+                      </div>
+                    ))}
               </div>
             </div>
           </div>
@@ -190,9 +242,18 @@ export default function ProductsCancel({ item, openModal, children }: Props) {
         </div>
 
         <div>
-          <button onClick={genericKeyboard.openModal}>
+          <button
+            onClick={() => {
+              cancelProduct(dataSend);
+              openModal();
+            }}
+          >
             <img src={rightArrow} alt="right-arrow" />
             Siguiente
+          </button>
+          <button onClick={genericKeyboard.openModal}>
+            <img src={rightArrow} alt="right-arrow" />
+            Agregar descripcion
           </button>
         </div>
       </div>

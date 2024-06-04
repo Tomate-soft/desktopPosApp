@@ -1,8 +1,16 @@
 import axios from "../configs/axios";
-import { CANCELLATIONS_PATH } from "../lib/routes.paths.lib";
+import { CANCELLATIONS_PATH, PRODUCTS_PATH } from "../lib/routes.paths.lib";
 
 export const cancelBillService = async (body: any) => {
-  console.log(body);
   const response = await axios.post(CANCELLATIONS_PATH, body);
+  return response;
+};
+
+export const cancelProductService = async (args: any) => {
+  console.log(args);
+  const response = await axios.post(
+    `${CANCELLATIONS_PATH}${PRODUCTS_PATH}`,
+    args
+  );
   return response;
 };
