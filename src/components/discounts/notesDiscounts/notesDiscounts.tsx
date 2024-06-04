@@ -5,6 +5,7 @@ import divider from "../../../assets/icon/dividerTransfer.svg";
 import { useState } from "react";
 import { useModal } from "../../../hooks/useModal";
 import { GENERIC_KEYBOARD_ACTIVE } from "../../genericKeyboard/config";
+import cleanDiscount from "../../../assets/icon/cleanDiscount.svg";
 import { GenericKeyboard } from "../../genericKeyboard/genericKeyboard";
 import { SET_PERCENT } from "../../discountBoard/constants";
 import { useAuthStore } from "../../../shared";
@@ -59,19 +60,25 @@ export default function NotesDiscounts({ item, openModal, children }: Props) {
                           ? element.noteName
                           : `Nota: ${element.noteNumber}`}
                       </span>
-                      <input
-                        type="radio"
-                        name="notes"
-                        onChange={() => {
-                          if (
-                            noteForDiscount &&
-                            noteForDiscount.noteNumber === element.noteNumber
-                          ) {
-                            return;
-                          }
-                          setNoteForDiscount(element);
-                        }}
-                      />
+                      {element.discount ? (
+                        <button className={styles.discountButton}>
+                          <img src={cleanDiscount} alt="clean-btn" />
+                        </button>
+                      ) : (
+                        <input
+                          type="radio"
+                          name="notes"
+                          onChange={() => {
+                            if (
+                              noteForDiscount &&
+                              noteForDiscount.noteNumber === element.noteNumber
+                            ) {
+                              return;
+                            }
+                            setNoteForDiscount(element);
+                          }}
+                        />
+                      )}
                     </div>
                   ))
                 ) : (

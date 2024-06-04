@@ -94,23 +94,36 @@
     }
   }
 
-  .productsContainer{
-    height: 400px;
-    width: 100%;
-    overflow-y: auto;
-    overflow-x: hidden;
-    padding: 10px 32px 10px 32px;
+  .productBox,
+  .productBoxEmpty{
+      width: 100%;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px;
 
-    .productBox,
-    .productBoxEmpty{
+      >span:nth-child(2){
         width: 100%;
-        height: 44px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
+        margin: 6px;
+        overflow: hidden;
+      }
+
+  
 
     .productBoxEmpty{
         justify-content: center;
     }
 }
+
+
+.discountButton{
+    height: 28px;
+    width: 28px;
+    margin-right: 6px;
+  }
+  
+  input[type="radio"]{
+    margin-right: 15px;
+  }
+  

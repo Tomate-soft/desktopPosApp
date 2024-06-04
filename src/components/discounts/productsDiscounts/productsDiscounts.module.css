@@ -27,6 +27,7 @@
 
             >div:first-child{
                 width: 400px;
+
                 
                 >h3{
                     height: 48px;
@@ -41,6 +42,7 @@
                     border-radius: 16px;
                     background: rgba(92, 93, 96, 1);
                     padding: 32px;
+
                 }
             }
 
@@ -157,8 +159,7 @@
     height: 400px;
     width: 100%;
     overflow-y: auto;
-    overflow-x: hidden;
-    padding: 10px 32px 10px 32px;
+
 
     .productBox,
     .productBoxEmpty{
@@ -167,9 +168,26 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
+
+        >span:nth-child(2){
+          width: 100%;
+          margin: 6px;
+          overflow: hidden;
+        }
+
     }
 
     .productBoxEmpty{
         justify-content: center;
     }
+}
+
+.discountButton{
+  height: 28px;
+  width: 28px;
+  margin-right: 6px;
+}
+
+input[type="radio"]{
+  margin-right: 15px;
 }

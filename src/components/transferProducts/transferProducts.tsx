@@ -24,13 +24,14 @@ export default function TransferProducts({ children, item, openModal }: Props) {
   const getTablesArray = UseTableStore((state) => state.getTables);
   const tablesArray = UseTableStore((state) => state.tablesArray);
   //states
+
   const [toggleStatus, setToggleStatus] = useState(false);
   const [toggleStatusTransfer, setToggleStatusTransfer] = useState(false);
-  const [selectedNote, setSelectedNote] = useState({});
-  const [selectedNoteTransfer, setSelectedNoteTransfer] = useState({});
+  const [selectedNote, setSelectedNote] = useState<any>(null); // Inicializado con null
+  const [selectedNoteTransfer, setSelectedNoteTransfer] = useState<any>(null); // Inicializado con null
   const [selectedProducts, setSelectedProducts] = useState<any[]>([]);
-  const [tableSearch, setTableSearch] = useState();
-  const [managementBill, setManagementBill] = useState([]);
+  const [tableSearch, setTableSearch] = useState<string>(""); // Inicializado con string vacío
+  const [managementBill, setManagementBill] = useState<any>(null); //
 
   const tableSelected = tablesArray.filter((element) => {
     return element.tableNum === tableSearch;
@@ -45,7 +46,7 @@ export default function TransferProducts({ children, item, openModal }: Props) {
     managementBill?.products?.filter(
       (item) =>
         !selectedProducts.some(
-          (selectedItem) => selectedItem.unique === item.unique
+          (selectedItem) => selectedItem?.unique === item?.unique
         )
     ) || [];
 
@@ -215,13 +216,12 @@ export default function TransferProducts({ children, item, openModal }: Props) {
             ) : (
               <button
                 onClick={() => {
-                  /*
-                  const currentProducts = selectedNote.products;
-                  setSelectedProducts(currentProducts); */
-                  console.log("Table search");
-                  console.log(tableSearch);
-                  console.log("Table selected");
-                  console.log(tableSelected);
+                  if (item.bill[0].notes.length) {
+                    const currentProducts = selectedNote?.products;
+                    setSelectedProducts(currentProducts);
+                  }
+                  const currentProductsBill = item.bill[0].products;
+                  setSelectedProducts(currentProductsBill);
                 }}
               >
                 Seleccionar todo
