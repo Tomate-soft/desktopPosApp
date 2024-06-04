@@ -7,6 +7,7 @@ import leftArrow from "../../assets/icon/backArrow.svg";
 import disquetIcon from "../../assets/icon/disquetIcon.svg";
 import {
   BILL_DISCOUNTS,
+  COURTESY_APPLY_NOTES,
   COURTESY_APPLY_PRODUCTS,
   NOTES_CANCEL,
   NOTES_DISCOUNTS,
@@ -22,7 +23,7 @@ interface Props {
   onClose: () => void;
   data?: any;
   keyAction?: string;
-  payload: {};
+  payload?: {};
 }
 export function GenericKeyboard({
   children,
@@ -217,6 +218,19 @@ export function GenericKeyboard({
                   body: dataSend,
                 };
                 console.log(transferObject);
+                actionType(transferObject);
+                openModal();
+              }
+              if (keyAction === COURTESY_APPLY_NOTES) {
+                const dataSend = {
+                  ...payload,
+                  discountReason: text,
+                  discountType: COURTESY_APPLY_NOTES,
+                };
+                const transferObject = {
+                  accountApt: data,
+                  body: dataSend,
+                };
                 actionType(transferObject);
                 openModal();
               }

@@ -56,7 +56,7 @@ export default function ProductsDiscounts({
   };
 
   const discountForBillRoute = {
-    ...(selectedNote || item.bill[0]), // Usa selectedNote si está definido, de lo contrario usa item.bill[0]
+    ...(selectedNote || item.bill[0]),
     products: (selectedNote || item.bill[0]).products.map((element) => {
       if (element.unique === productSelection?.unique) {
         return {

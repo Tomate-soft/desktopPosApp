@@ -10,10 +10,12 @@ import {
   BILL_CANCEL,
   BILL_NAME,
   COMMENTS,
+  COURTESY_APPLY_BILL,
   NOTES_CANCEL,
   NOTES_NAME,
 } from "../menus/mainMenu/moreActions/configs/constants";
 import { useAuthStore } from "../../shared";
+import { SET_PERCENT } from "../discountBoard/constants";
 interface Props {
   children: string;
   actionType: any;
@@ -41,6 +43,15 @@ export function ActionsKeyboard({
   const selectedNote = notes[indexNote];
 
   const authData = useAuthStore((state) => state.authData);
+  const user = authData.payload.user._id;
+
+  const data = {
+    accountId: item.bill[0]._id,
+    discountMount: "100",
+    setting: SET_PERCENT,
+    discountByUser: user,
+    discountFor: "Validacion futura",
+  };
 
   useEffect(() => {
     if (item.bill[0] && item.bill[0].notes && item.bill[0].notes.length) {
@@ -211,6 +222,19 @@ export function ActionsKeyboard({
             } else if (write && option === NOTES_NAME) {
               actionType(selectedNote._id, text);
               openModal();
+            } else if (write && option === COURTESY_APPLY_BILL) {
+              const dataSend = {
+                ...data,
+                discountReason: text,
+                discountType: COURTESY_APPLY_BILL,
+              };
+              const transferObject = {
+                accountApt: {},
+                body: dataSend,
+              };
+              actionType(transferObject);
+              openModal();
+              return;
             } else if (write && option === BILL_CANCEL) {
               const body = {
                 accountId: item.bill[0]._id,

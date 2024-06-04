@@ -54,6 +54,7 @@ export default function MoreActionsMenu({ onClose, item, type }: Props) {
   const updateNameNote = UseActions((state) => state.updateNameInNote);
   const errors = UseActions((state) => state.errors);
   const updateNameBill = UseActions((state) => state.updateName);
+  const createDiscount = UseActions((state) => state.createDiscount);
 
   const confirmChanges = useModal(CONFIRM_ACTIONS);
 
@@ -209,9 +210,9 @@ export default function MoreActionsMenu({ onClose, item, type }: Props) {
             </>
           ) : selectedOption === COURTESY_APPLY_BILL ? (
             <>
-              <ActionsKeyboard // ACA HAY QUE CAMBIAR  TODO PARA FUNCIONAR COMO CORTESIA, HACER UN SERVICIO PARA CAMBIAR EL STATUS DE LA MESA - CAMBAIR EL STATUS DE LA CUENTA - E IMPRIMIR EL TICKET
+              <ActionsKeyboard
                 option={selectedOption}
-                actionType={cancelBill}
+                actionType={createDiscount}
                 item={item}
                 openModal={confirmChanges.openModal}
               >
