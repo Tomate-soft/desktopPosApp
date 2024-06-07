@@ -41,6 +41,7 @@ interface Props {
 export default function MainMenu({ isOpen, onClose, children }: Props) {
   const authData = useAuthStore((state) => state.authData);
   const allowRole = authData.payload.user.role.role.name;
+  const sessionActive = authData.payload.user.cashierSession;
   // Modals
   const cashMoves = useModal(CASH_MOVES); // Componente de retiro de propinas
   const disableProducts = useModal(DISABLED_PRODUCTS);

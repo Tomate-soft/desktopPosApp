@@ -30,7 +30,6 @@ export default function ProductsDiscounts({
   const [percent, setPercent] = useState("");
   const genericKeyboard = useModal(GENERIC_KEYBOARD_ACTIVE);
   const [mode, setMode] = useState<string>(SET_PERCENT);
-  const [isCorrect, setIsCorect] = useState(true);
 
   const authData = useAuthStore((state) => state.authData);
   const user = authData.payload.user._id;
@@ -80,6 +79,7 @@ export default function ProductsDiscounts({
     ).toString(),
   };
   useEffect(() => {
+    console.log(authData);
     if (item.bill[0].notes.length > 0) {
       setSelectedNote(item.bill[0].notes[0]);
     }
@@ -99,6 +99,7 @@ export default function ProductsDiscounts({
                       <span>{`Mesa ${item.tableNum}`}</span>
                       <div className={styles.categoriesSelect}>
                         <div
+                          id="custom-select"
                           className={styles.customSelect}
                           onClick={() => {
                             setToggleStatus(!toggleStatus);
@@ -225,7 +226,6 @@ export default function ProductsDiscounts({
         <div>
           <button
             onClick={() => {
-              console.log(discountForBillRoute);
               genericKeyboard.openModal();
             }}
             disabled={

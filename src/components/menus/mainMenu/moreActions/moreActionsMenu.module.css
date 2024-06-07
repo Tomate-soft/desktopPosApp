@@ -9,7 +9,7 @@
     align-items: center;
     z-index: 1000;
     transition: 1s;
-    background: rgba(0, 0, 0, 0.616);
+    background: rgba(0, 0, 0, 0.795);
   }
   .modal {
     display: flex;

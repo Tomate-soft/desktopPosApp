@@ -1,7 +1,7 @@
 import { ActionsKeyboard } from "../../../mainKeyboard/actionKeyboard";
 import styles from "./moreActionsMenu.module.css";
 import { actionsMenu, actionsTogoMenu } from "./configs/options";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   BILL_CANCEL,
   BILL_DISCOUNTS,
@@ -36,6 +36,26 @@ import NotesCancellation from "../../../cancellations/noteCancellation/noteCance
 import ProductsCancel from "../../../cancellations/productCancellation/productCancellation";
 import { ON_SITE_ORDER, TO_GO_ORDER } from "../../../../lib/orders.lib";
 import { UseActions } from "../../../../store/moreActions/moreActions.store";
+import ValidateAuthMessage from "./validate/validateAuth";
+import { useAuthStore } from "../../../../shared";
+import {
+  ADD_BILL_COMMENTS_AUTH,
+  CANCEL_BILL_AUTH,
+  CANCEL_NOTE_AUTH,
+  CANCEL_PRODUCT_AUTH,
+  CHANGE_BILL_NAME_AUTH,
+  CHANGE_NOTE_NAME_AUTH,
+  COURTESY_BILL_AUTH,
+  COURTESY_NOTE_AUTH,
+  COURTESY_PRODUCTS_AUTH,
+  DISCOUNT_BILL_AUTH,
+  DISCOUNT_NOTES_AUTH,
+  DISCOUNT_PRODUCTS_AUTH,
+  MOVE_TABLE_AUTH,
+  SEPARATE_NOTES_AUTH,
+  TRANSFER_PRODUCTS_AUTH,
+} from "../../../../lib/authorizations.lib";
+import { TRANSFER_PRODUCTS_PATH } from "../../../../lib/routes.paths.lib";
 interface Props {
   isOpen: any;
   onClose: any;
@@ -45,8 +65,6 @@ interface Props {
 
 export default function MoreActionsMenu({ onClose, item, type }: Props) {
   const [selectedOption, setSelectedOption] = useState<string>("");
-  const [petition, setPetition] = useState(false);
-  const accountProps = UseAccount();
 
   const updateCommentBill = UseActions((state) => state.updateComments);
   const cancelBill = UseActions((state) => state.cancelBill);
@@ -55,9 +73,14 @@ export default function MoreActionsMenu({ onClose, item, type }: Props) {
   const errors = UseActions((state) => state.errors);
   const updateNameBill = UseActions((state) => state.updateName);
   const createDiscount = UseActions((state) => state.createDiscount);
+  const authData = useAuthStore((state) => state.authData);
+  const authorizations =
+    authData?.payload?.user?.authorizations?.pos?.sellTypes?.restaurant ?? [];
 
   const confirmChanges = useModal(CONFIRM_ACTIONS);
-
+  useEffect(() => {
+    console.log(authorizations);
+  }, []);
   return (
     <main className={styles.screen}>
       {confirmChanges.isOpen && confirmChanges.modalName === CONFIRM_ACTIONS ? (
@@ -119,131 +142,257 @@ export default function MoreActionsMenu({ onClose, item, type }: Props) {
           </div>
           {selectedOption === BILL_NAME ? (
             <>
-              <ActionsKeyboard
-                option={selectedOption}
-                actionType={updateNameBill}
-                item={item}
-                openModal={confirmChanges.openModal}
-              >
-                Ingresa el nombre de la cuenta:
-              </ActionsKeyboard>
+              {authorizations.includes(CHANGE_BILL_NAME_AUTH) ? (
+                <ActionsKeyboard
+                  option={selectedOption}
+                  actionType={updateNameBill}
+                  item={item}
+                  openModal={confirmChanges.openModal}
+                >
+                  Ingresa el nombre de la cuenta:
+                </ActionsKeyboard>
+              ) : (
+                <ValidateAuthMessage allow={false}>
+                  No autorizado
+                </ValidateAuthMessage>
+              )}
             </>
           ) : selectedOption === NOTES_NAME ? (
             <>
-              <ActionsKeyboard
-                option={selectedOption}
-                actionType={updateNameNote}
-                item={item}
-                openModal={confirmChanges.openModal}
-              >
-                Ingresa el nombre de la nota:
-              </ActionsKeyboard>
+              {item.bill[0].notes.length &&
+              authorizations.includes(CHANGE_NOTE_NAME_AUTH) ? (
+                <ActionsKeyboard
+                  option={selectedOption}
+                  actionType={updateNameNote}
+                  item={item}
+                  openModal={confirmChanges.openModal}
+                >
+                  Ingresa el nombre de la nota:
+                </ActionsKeyboard>
+              ) : (
+                <ValidateAuthMessage
+                  allow={authorizations.includes(CHANGE_NOTE_NAME_AUTH)}
+                >
+                  No se encuentran notas activas
+                </ValidateAuthMessage>
+              )}
             </>
           ) : selectedOption === COMMENTS ? (
             <>
-              <ActionsKeyboard
-                option={selectedOption}
-                actionType={updateCommentBill}
-                item={item}
-                openModal={confirmChanges.openModal}
-              >
-                Agregar comentarios a la cuenta
-              </ActionsKeyboard>
+              {authorizations.includes(ADD_BILL_COMMENTS_AUTH) ? (
+                <ActionsKeyboard
+                  option={selectedOption}
+                  actionType={updateCommentBill}
+                  item={item}
+                  openModal={confirmChanges.openModal}
+                >
+                  Agregar comentarios a la cuenta
+                </ActionsKeyboard>
+              ) : (
+                <ValidateAuthMessage allow={false}>
+                  No autorizado
+                </ValidateAuthMessage>
+              )}
             </>
           ) : selectedOption === SEPARATE_CHECKS ? (
             <>
-              <SeparateChecks
-                item={item}
-                openModal={confirmChanges.openModal}
-              ></SeparateChecks>
+              {authorizations.includes(SEPARATE_NOTES_AUTH) ? (
+                <SeparateChecks
+                  item={item}
+                  openModal={confirmChanges.openModal}
+                ></SeparateChecks>
+              ) : (
+                <ValidateAuthMessage
+                  allow={authorizations.includes(SEPARATE_NOTES_AUTH)}
+                >
+                  No autorizado
+                </ValidateAuthMessage>
+              )}
             </>
           ) : selectedOption === MOVE_PRODUCTS ? (
             <>
-              <TransferProducts
-                item={item}
-                openModal={confirmChanges.openModal}
-              >
-                ESTE ES EL CHILDREN
-              </TransferProducts>
+              {authorizations.includes(TRANSFER_PRODUCTS_AUTH) ? (
+                <TransferProducts
+                  item={item}
+                  openModal={confirmChanges.openModal}
+                >
+                  ESTE ES EL CHILDREN
+                </TransferProducts>
+              ) : (
+                <ValidateAuthMessage
+                  allow={authorizations.includes(TRANSFER_PRODUCTS_AUTH)}
+                >
+                  No autorizado
+                </ValidateAuthMessage>
+              )}
             </>
           ) : selectedOption === MOVE_TABLE ? (
             <>
-              <MoveTable item={item} openModal={confirmChanges.openModal}>
-                YEP
-              </MoveTable>
+              {authorizations.includes(MOVE_TABLE_AUTH) ? (
+                <MoveTable item={item} openModal={confirmChanges.openModal}>
+                  YEP
+                </MoveTable>
+              ) : (
+                <ValidateAuthMessage
+                  allow={authorizations.includes(MOVE_TABLE_AUTH)}
+                >
+                  No autorizado
+                </ValidateAuthMessage>
+              )}
             </>
           ) : selectedOption === PRODUCTS_DISCOUNTS ? (
             <>
-              <ProductsDiscounts
-                item={item}
-                openModal={confirmChanges.openModal}
-              >
-                YEP
-              </ProductsDiscounts>
+              {authorizations.includes(DISCOUNT_PRODUCTS_AUTH) ? (
+                <ProductsDiscounts
+                  item={item}
+                  openModal={confirmChanges.openModal}
+                >
+                  YEP
+                </ProductsDiscounts>
+              ) : (
+                <ValidateAuthMessage
+                  allow={authorizations.includes(DISCOUNT_PRODUCTS_AUTH)}
+                >
+                  No autorizado
+                </ValidateAuthMessage>
+              )}
             </>
           ) : selectedOption === NOTES_DISCOUNTS ? (
             <>
-              <NotesDiscounts item={item} openModal={confirmChanges.openModal}>
-                YEP
-              </NotesDiscounts>
+              {item.bill[0].notes.length &&
+              authorizations.includes(DISCOUNT_NOTES_AUTH) ? (
+                <NotesDiscounts
+                  item={item}
+                  openModal={confirmChanges.openModal}
+                >
+                  YEP
+                </NotesDiscounts>
+              ) : (
+                <ValidateAuthMessage
+                  allow={authorizations.includes(DISCOUNT_NOTES_AUTH)}
+                >
+                  No se encuentran notas activas
+                </ValidateAuthMessage>
+              )}
             </>
           ) : selectedOption === BILL_DISCOUNTS ? (
             <>
-              <BillDiscount item={item} openModal={confirmChanges.openModal}>
-                YEP
-              </BillDiscount>
+              {authorizations.includes(DISCOUNT_BILL_AUTH) ? (
+                <BillDiscount item={item} openModal={confirmChanges.openModal}>
+                  YEP
+                </BillDiscount>
+              ) : (
+                <ValidateAuthMessage
+                  allow={authorizations.includes(DISCOUNT_BILL_AUTH)}
+                >
+                  No autorizado
+                </ValidateAuthMessage>
+              )}
             </>
           ) : selectedOption === COURTESY_APPLY_PRODUCTS ? (
             <>
-              <ProductsCourtesy
-                item={item}
-                openModal={confirmChanges.openModal}
-              >
-                YEP
-              </ProductsCourtesy>
+              {authorizations.includes(COURTESY_PRODUCTS_AUTH) ? (
+                <ProductsCourtesy
+                  item={item}
+                  openModal={confirmChanges.openModal}
+                >
+                  YEP
+                </ProductsCourtesy>
+              ) : (
+                <ValidateAuthMessage
+                  allow={authorizations.includes(COURTESY_PRODUCTS_AUTH)}
+                >
+                  No autorizado
+                </ValidateAuthMessage>
+              )}
             </>
           ) : selectedOption === COURTESY_APPLY_NOTES ? (
             <>
-              <NotesCourtesy item={item} openModal={confirmChanges.openModal}>
-                YEP
-              </NotesCourtesy>
+              {item.bill[0].notes.length &&
+              authorizations.includes(COURTESY_NOTE_AUTH) ? (
+                <NotesCourtesy item={item} openModal={confirmChanges.openModal}>
+                  YEP
+                </NotesCourtesy>
+              ) : (
+                <ValidateAuthMessage
+                  allow={authorizations.includes(COURTESY_NOTE_AUTH)}
+                >
+                  No se encuentran notas activas
+                </ValidateAuthMessage>
+              )}
             </>
           ) : selectedOption === COURTESY_APPLY_BILL ? (
             <>
-              <ActionsKeyboard
-                option={selectedOption}
-                actionType={createDiscount}
-                item={item}
-                openModal={confirmChanges.openModal}
-              >
-                Ingresa descripcion de la cortesia:
-              </ActionsKeyboard>
+              {authorizations.includes(COURTESY_BILL_AUTH) ? (
+                <ActionsKeyboard
+                  option={selectedOption}
+                  actionType={createDiscount}
+                  item={item}
+                  openModal={confirmChanges.openModal}
+                >
+                  Ingresa descripcion de la cortesia:
+                </ActionsKeyboard>
+              ) : (
+                <ValidateAuthMessage
+                  allow={authorizations.includes(COURTESY_BILL_AUTH)}
+                >
+                  No autorizado
+                </ValidateAuthMessage>
+              )}
             </>
           ) : selectedOption === PRODUCTS_CANCEL ? (
             <>
-              <ProductsCancel item={item} openModal={confirmChanges.openModal}>
-                YEP
-              </ProductsCancel>
+              {authorizations.includes(CANCEL_PRODUCT_AUTH) ? (
+                <ProductsCancel
+                  item={item}
+                  openModal={confirmChanges.openModal}
+                >
+                  YEP
+                </ProductsCancel>
+              ) : (
+                <ValidateAuthMessage
+                  allow={authorizations.includes(CANCEL_PRODUCT_AUTH)}
+                >
+                  No autorizado
+                </ValidateAuthMessage>
+              )}
             </>
           ) : selectedOption === NOTES_CANCEL ? (
             <>
-              <NotesCancellation
-                item={item}
-                openModal={confirmChanges.openModal}
-              >
-                YEP
-              </NotesCancellation>
+              {item.bill[0].notes.length &&
+              authorizations.includes(CANCEL_NOTE_AUTH) ? (
+                <NotesCancellation
+                  item={item}
+                  openModal={confirmChanges.openModal}
+                >
+                  YEP
+                </NotesCancellation>
+              ) : (
+                <ValidateAuthMessage
+                  allow={authorizations.includes(CANCEL_NOTE_AUTH)}
+                >
+                  No se encuentran notas activas
+                </ValidateAuthMessage>
+              )}
             </>
           ) : selectedOption === BILL_CANCEL ? (
             <>
-              <ActionsKeyboard
-                option={selectedOption}
-                actionType={cancelBill}
-                item={item}
-                openModal={confirmChanges.openModal}
-              >
-                Ingresa descripcion de la cancelacion:
-              </ActionsKeyboard>
+              {authorizations.includes(CANCEL_BILL_AUTH) ? (
+                <ActionsKeyboard
+                  option={selectedOption}
+                  actionType={cancelBill}
+                  item={item}
+                  openModal={confirmChanges.openModal}
+                >
+                  Ingresa descripcion de la cancelacion:
+                </ActionsKeyboard>
+              ) : (
+                <ValidateAuthMessage
+                  allow={authorizations.includes(CANCEL_BILL_AUTH)}
+                >
+                  No autorizado
+                </ValidateAuthMessage>
+              )}
             </>
           ) : (
             <div

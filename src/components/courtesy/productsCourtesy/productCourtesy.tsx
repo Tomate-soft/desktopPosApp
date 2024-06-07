@@ -127,25 +127,27 @@ export default function ProductsCourtesy({ item, openModal, children }: Props) {
                 {selectedNote &&
                 selectedNote.products &&
                 selectedNote.products.length
-                  ? selectedNote.products.map((element, index) => (
-                      <div className={styles.productBox} key={index}>
-                        <span>{element.productName}</span>
-                        <input
-                          type="radio"
-                          name="productSelection"
-                          onChange={() => {
-                            console.log(productSelection);
-                            if (
-                              setproductSelection &&
-                              setproductSelection.unique === element.unique
-                            ) {
-                              return;
-                            }
-                            setproductSelection(element);
-                          }}
-                        />
-                      </div>
-                    ))
+                  ? selectedNote.products.map(
+                      (element, index) =>
+                        !element.discount && (
+                          <div className={styles.productBox} key={index}>
+                            <span>{element.productName}</span>
+                            <input
+                              type="radio"
+                              name="productSelection"
+                              onChange={() => {
+                                if (
+                                  setproductSelection &&
+                                  setproductSelection.unique === element.unique
+                                ) {
+                                  return;
+                                }
+                                setproductSelection(element);
+                              }}
+                            />
+                          </div>
+                        )
+                    )
                   : item.bill[0]?.products.map((element, index) => (
                       <div className={styles.productBox} key={index}>
                         <span>{element.productName}</span>
@@ -153,7 +155,6 @@ export default function ProductsCourtesy({ item, openModal, children }: Props) {
                           type="radio"
                           name="productSelection"
                           onChange={() => {
-                            console.log(productSelection);
                             if (
                               setproductSelection &&
                               setproductSelection.unique === element.unique

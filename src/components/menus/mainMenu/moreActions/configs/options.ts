@@ -36,13 +36,14 @@ export const actionsMenu: Action[] = [
     set: BILL_NAME,
   },
   {
-    option: "Nombre de las notas",
-    set: NOTES_NAME,
-  },
-  {
     option: "Comentarios",
     set: COMMENTS,
   },
+  {
+    option: "Nombre de las notas",
+    set: NOTES_NAME,
+  },
+
   {
     option: "Separar notas",
     set: SEPARATE_CHECKS,

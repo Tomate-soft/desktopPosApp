@@ -50,29 +50,32 @@ export default function NotesCourtesy({ item, openModal, children }: Props) {
               </div>
               <div className={styles.productsContainer}>
                 {item.bill[0]?.notes ? (
-                  item.bill[0]?.notes.map((element, index) => (
-                    <div className={styles.productBox} key={index}>
-                      <span>
-                        {element.noteName
-                          ? element.noteName
-                          : `Nota: ${element.noteNumber}`}
-                      </span>
-                      <input
-                        type="radio"
-                        name="notes"
-                        onChange={() => {
-                          console.log(noteForDiscount);
-                          if (
-                            noteForDiscount &&
-                            noteForDiscount.noteNumber === element.noteNumber
-                          ) {
-                            return;
-                          }
-                          setNoteForDiscount(element);
-                        }}
-                      />
-                    </div>
-                  ))
+                  item.bill[0]?.notes.map((element, index) =>
+                    element.discount?.discountType ===
+                    COURTESY_APPLY_NOTES ? null : (
+                      <div className={styles.productBox} key={index}>
+                        <span>
+                          {element.noteName
+                            ? element.noteName
+                            : `Nota: ${element.noteNumber}`}
+                        </span>
+                        <input
+                          type="radio"
+                          name="notes"
+                          onChange={() => {
+                            console.log(element.discount);
+                            if (
+                              noteForDiscount &&
+                              noteForDiscount.noteNumber === element.noteNumber
+                            ) {
+                              return;
+                            }
+                            setNoteForDiscount(element);
+                          }}
+                        />
+                      </div>
+                    )
+                  )
                 ) : (
                   <div className={styles.productBoxEmpty}>
                     <h2>Nota actualmente vacia</h2>

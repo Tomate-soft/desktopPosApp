@@ -55,8 +55,6 @@ export default function SeparateChecks({ item, openModal }: Props) {
   };
 
   useEffect(() => {
-    console.log(item.bill[0].notes);
-
     if (!item.bill[0]?.notes.length) {
       const updatedProducts = item.bill[0]?.products.flatMap((element) => {
         if (element.quantity > 1) {
@@ -90,8 +88,8 @@ export default function SeparateChecks({ item, openModal }: Props) {
         return;
       }
       setSeparateNotes([
-        { ...NOTE_TEMPLATE, products: updatedProducts },
-        { ...NOTE_TEMPLATE },
+        { ...NOTE_TEMPLATE, products: updatedProducts, noteNumber: 1 },
+        { ...NOTE_TEMPLATE, noteNumber: 2 },
       ]);
     } else {
       const updatedNotes = item.bill[0]?.notes.map((note) => {
@@ -106,7 +104,11 @@ export default function SeparateChecks({ item, openModal }: Props) {
             return { ...element, unique: uuidv4() };
           }
         });
-        return { ...note, products: updatedProducts };
+        return {
+          ...note,
+          products: updatedProducts,
+          noteNumber: note.noteNumber ?? null,
+        };
       });
       setSeparateNotes(updatedNotes);
     }
@@ -126,7 +128,11 @@ export default function SeparateChecks({ item, openModal }: Props) {
                     <div>
                       <div>
                         <h3>Mesa: 0{item.tableNum}</h3>
-                        <h3>Nota: 0{index + 1}</h3>
+                        <h3>
+                          {noteElement.noteName
+                            ? noteElement.noteName
+                            : `Nota: 0${noteElement.noteNumber}`}
+                        </h3>
                       </div>
                       <img src={divider} alt="divider-icon" />
                     </div>
