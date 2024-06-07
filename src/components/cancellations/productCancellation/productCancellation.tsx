@@ -85,6 +85,7 @@ export default function ProductsCancel({ item, openModal, children }: Props) {
                       <span>{`Mesa ${item.tableNum}`}</span>
                       <div className={styles.categoriesSelect}>
                         <div
+                          id="custom-select"
                           className={styles.customSelect}
                           onClick={() => {
                             setToggleStatus(!toggleStatus);
@@ -115,18 +116,21 @@ export default function ProductsCancel({ item, openModal, children }: Props) {
                               toggleStatus ? styles.options : styles.hidden
                             }
                           >
-                            {item.bill[0]?.notes.map((element, index) => (
-                              <span
-                                className={styles.option}
-                                onClick={() => {
-                                  setSelectedNote(element);
-                                }}
-                              >
-                                {element.noteName
-                                  ? element.noteName
-                                  : `Nota ${element.noteNumber}`}
-                              </span>
-                            ))}
+                            {item.bill[0]?.notes.map(
+                              (element, index) =>
+                                !element.discount && (
+                                  <span
+                                    className={styles.option}
+                                    onClick={() => {
+                                      setSelectedNote(element);
+                                    }}
+                                  >
+                                    {element.noteName
+                                      ? element.noteName
+                                      : `Nota ${element.noteNumber}`}
+                                  </span>
+                                )
+                            )}
                           </div>
                         </div>
                       </div>

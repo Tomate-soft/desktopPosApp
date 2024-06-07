@@ -55,6 +55,7 @@ export default function MoveTable({ children, item, openModal }: Props) {
                   <span>{`Mesa ${item.tableNum}`}</span>
                   <div className={styles.categoriesSelect}>
                     <div
+                      id="custom-select"
                       className={styles.customSelect}
                       onClick={() => {
                         setToggleStatus(!toggleStatus);

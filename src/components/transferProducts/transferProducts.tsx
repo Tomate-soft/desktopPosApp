@@ -95,10 +95,9 @@ export default function TransferProducts({ children, item, openModal }: Props) {
       });
 
       setManagementBill({ ...item.bill[0], products: uProducts });
-
-      if (item && item.bill[0] && item.bill[0].notes.length > 0) {
-        setSelectedNote(item.bill[0].notes[0]);
-      }
+    }
+    if (item && item.bill[0] && item.bill[0].notes.length > 0) {
+      setSelectedNote(item.bill[0].notes[0]);
     }
   }, [item, getTablesArray, setSelectedNote, setManagementBill]);
   return (
@@ -118,6 +117,7 @@ export default function TransferProducts({ children, item, openModal }: Props) {
                   <div className={styles.categoriesSelect}>
                     {item.bill[0]?.notes.length > 0 && (
                       <div
+                        id="custom-select"
                         className={styles.customSelect}
                         onClick={() => {
                           setToggleStatus(!toggleStatus);

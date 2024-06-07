@@ -160,6 +160,7 @@ export function GenericKeyboard({
             <img src={spaceIcon} alt="space-icon" />
           </button>
           <button
+            disabled={text.length <= 0 || text.length > 45}
             className={styles.checkBtn}
             onClick={() => {
               if (keyAction === NOTES_CANCEL) {

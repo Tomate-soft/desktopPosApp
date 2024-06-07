@@ -16,6 +16,11 @@ import {
 } from "../menus/mainMenu/moreActions/configs/constants";
 import { useAuthStore } from "../../shared";
 import { SET_PERCENT } from "../discountBoard/constants";
+import {
+  DISABLE_CHARACTERS_BILL_NAME,
+  DISABLE_CHARACTERS_COMMENTS,
+  DISABLE_CHARACTERS_NOTES_NAME,
+} from "./disable";
 interface Props {
   children: string;
   actionType: any;
@@ -52,6 +57,14 @@ export function ActionsKeyboard({
     discountByUser: user,
     discountFor: "Validacion futura",
   };
+  const disableValue =
+    option === BILL_NAME
+      ? DISABLE_CHARACTERS_BILL_NAME
+      : option === NOTES_NAME
+      ? DISABLE_CHARACTERS_NOTES_NAME
+      : option === COMMENTS
+      ? DISABLE_CHARACTERS_COMMENTS
+      : 100;
 
   useEffect(() => {
     if (item.bill[0] && item.bill[0].notes && item.bill[0].notes.length) {
@@ -213,7 +226,7 @@ export function ActionsKeyboard({
         </button>
         <button
           className={styles.checkBtn}
-          disabled={!item?.bill[0]}
+          disabled={text.length <= 0 || text.length > disableValue}
           onClick={() => {
             const write = text.length > 1;
             if ((write && option === BILL_NAME) || option === COMMENTS) {
