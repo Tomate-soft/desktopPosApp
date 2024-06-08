@@ -8,17 +8,38 @@
     border-radius: 16px;
     background: rgba(92, 93, 96, 1);
     padding: 64px 32px;
+    gap: 16px;
 
+
+    
+   .indicator{
+        border-radius: 16px;
+        box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.5) inset;
+        z-index: 1000;
+        padding: 0px 0px 0px 96px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+    >span{
+        font-size: 32px;
+        margin: 0px 64px 0px 8px;
+        display: flex;
+        justify-content: center;
+        padding: 6px;
+    }
 
     >input{
-        width: 100%;
-        height: 72px;
-        border-radius: 16px;
-        background: rgba(249, 249, 249, 0.1);
-        box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.5) inset;
-        text-align: center;
-        font-size: 24px;
+        z-index: 0;
+        background-color: transparent; 
+        display: flex;
+        flex-direction: column;
+       text-align: right;
+       font-size: 32px;
+       width: 150px;
     }
+
+   }
 
     >div{
         width: 100%;

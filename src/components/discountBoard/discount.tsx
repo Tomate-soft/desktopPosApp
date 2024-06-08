@@ -27,10 +27,13 @@ export default function DiscountBoard({
   const keys = ["7", "8", "9", "4", "5", "6", "1", "2", "3", "0", "."];
   return (
     <div className={styles.container}>
-      <input
-        type="text"
-        value={mode === SET_PERCENT ? `${percent}%` : `$${percent}`}
-      />
+      <div className={styles.indicator}>
+        <input
+          type="text"
+          value={mode === SET_PERCENT ? `${percent}` : `${percent}`}
+        />
+        <span>{mode === SET_PERCENT ? "%" : "$"}</span>
+      </div>
       <div>
         {mode === SET_QUANTITY ? (
           <>
