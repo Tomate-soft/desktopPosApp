@@ -4,6 +4,7 @@ import {
   SaveBillInTableService,
   UpdatePropInBillService,
   createDiscountService,
+  deleteDiscountService,
   productsToBillServices,
 } from "../../services/moreActions/moreActions";
 import {
@@ -31,6 +32,7 @@ export interface state {
   transferProducts: (data: any) => Promise<void>;
   createDiscount: (data: {}) => Promise<void>;
   cancelProduct: (args: {}) => Promise<void>;
+  deleteDiscount: (id: string, body: { case: string }) => Promise<void>;
 }
 
 export const UseActions = create<state>((set) => {
@@ -196,6 +198,7 @@ export const UseActions = create<state>((set) => {
       try {
         const res = await createDiscountService(data);
         set({ isLoading: false });
+        return res;
       } catch (error) {
         set({ isLoading: false, errors: true });
       }
@@ -205,6 +208,17 @@ export const UseActions = create<state>((set) => {
       try {
         const res = await cancelProductService(args);
         set({ isLoading: false });
+        return res;
+      } catch (error) {
+        set({ isLoading: false, errors: true });
+      }
+    },
+    deleteDiscount: async (id: string, body: any) => {
+      set({ isLoading: true });
+      try {
+        const res = await deleteDiscountService(id, body);
+        set({ isLoading: false });
+        return res;
       } catch (error) {
         set({ isLoading: false, errors: true });
       }

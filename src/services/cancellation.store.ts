@@ -7,7 +7,6 @@ export const cancelBillService = async (body: any) => {
 };
 
 export const cancelProductService = async (args: any) => {
-  console.log(args);
   const response = await axios.post(
     `${CANCELLATIONS_PATH}${PRODUCTS_PATH}`,
     args

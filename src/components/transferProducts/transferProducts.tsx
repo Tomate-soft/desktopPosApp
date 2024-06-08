@@ -7,6 +7,7 @@ import { UseTableStore } from "../../store/tables.store";
 import TableBoard from "../tableBoard/tableBoard";
 import { v4 as uuidv4 } from "uuid";
 import { UseActions } from "../../store/moreActions/moreActions.store";
+import warningIcon from "../../assets/icon/actionsWarning.svg";
 import {
   BILL_TO_BILL,
   BILL_TO_NOTE,
@@ -237,11 +238,17 @@ export default function TransferProducts({ children, item, openModal }: Props) {
           tableSearch.length > 0 &&
           (!tableSelected ||
             (tableSelected.length === 0 && tableSearch != "0")) ? (
-            <h3
-              className={styles.error}
-            >{`Mesa número ${tableSearch} no se encuentra registrada`}</h3>
+            <div className={styles.warningMessage}>
+              <img src={warningIcon} alt="warning-icon" />
+              <h2
+                className={styles.error}
+              >{`Mesa número ${tableSearch} no se encuentra registrada`}</h2>
+            </div>
           ) : item.tableNum === tableSelected[0]?.tableNum ? (
-            <h2>{`No es posible tranferir productos a la misma mesa`}</h2>
+            <div className={styles.warningMessage}>
+              <img src={warningIcon} alt="warning-icon" />
+              <h2>{`No es posible tranferir productos a la misma mesa`}</h2>
+            </div>
           ) : tableSelected[0] && tableSelected[0].status === "enable" ? (
             <div className={styles.transferContainer}>
               <div>
@@ -329,7 +336,10 @@ export default function TransferProducts({ children, item, openModal }: Props) {
               </div>
             </div>
           ) : tableSelected.length && tableSelected[0]?.status != "enable" ? (
-            <h2>{"La mesa no se encuentra activa en este momento"}</h2>
+            <div className={styles.warningMessage}>
+              <img src={warningIcon} alt="warning-icon" />
+              <h2>{"La mesa no se encuentra activa en este momento"}</h2>
+            </div>
           ) : (
             <h2>Ingresa número de mesa</h2>
           )}

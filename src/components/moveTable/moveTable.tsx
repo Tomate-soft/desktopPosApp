@@ -5,6 +5,7 @@ import arrow from "../../assets/icon/selectArrow.svg";
 import divider from "../../assets/icon/dividerTransfer.svg";
 import { UseTableStore } from "../../store/tables.store";
 import TableBoard from "../tableBoard/tableBoard";
+import warningIcon from "../../assets/icon/actionsWarning.svg";
 import table from "./../../assets/icon/tableFree.svg";
 import { UseActions } from "../../store/moreActions/moreActions.store";
 import { MoveTableDto } from "../../types/moreActions";
@@ -126,13 +127,22 @@ export default function MoveTable({ children, item, openModal }: Props) {
           tableSearch.length > 0 &&
           (!tableSelected ||
             (tableSelected.length === 0 && tableSearch != "0")) ? (
-            <h3
-              className={styles.error}
-            >{`Mesa número ${tableSearch} no se encuentra registrada`}</h3>
+            <div className={styles.warningMessage}>
+              <img src={warningIcon} alt="warning-icon" />
+              <h2
+                className={styles.error}
+              >{`Mesa número ${tableSearch} no se encuentra registrada`}</h2>
+            </div>
           ) : item.tableNum === tableSelected[0]?.tableNum ? (
-            <h2>{`No es posible tranferir productos a la misma mesa`}</h2>
+            <div className={styles.warningMessage}>
+              <img src={warningIcon} alt="warning-icon" />
+              <h2>{`No es posible cambiar a misma mesa`}</h2>
+            </div>
           ) : tableSelected[0]?.status === ENABLE_STATUS ? (
-            <h2>{`Esta mesa se encuentra ocupada`}</h2>
+            <div className={styles.warningMessage}>
+              <img src={warningIcon} alt="warning-icon" />
+              <h2>{`Esta mesa se encuentra ocupada`}</h2>
+            </div>
           ) : (tableSelected[0] && tableSelected[0].status === "enable") ||
             (tableSelected[0] && tableSelected[0].status === "pending") ? (
             <div className={styles.transferContainer}>
@@ -145,9 +155,12 @@ export default function MoveTable({ children, item, openModal }: Props) {
               </div>
             </div>
           ) : tableSelected.length && tableSelected[0]?.status != "enable" ? (
-            <h2>{"La mesa no se encuentra activa en este momento"}</h2>
+            <div className={styles.warningMessage}>
+              <img src={warningIcon} alt="warning-icon" />
+              <h2>{"La mesa no se encuentra activa en este momento"}</h2>
+            </div>
           ) : (
-            <h2>Ingresa número de mesa</h2>
+            <h3>Ingresa número de mesa</h3>
           )}
         </div>
       </div>

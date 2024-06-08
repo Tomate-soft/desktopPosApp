@@ -11,6 +11,7 @@ import {
   COURTESY_APPLY_PRODUCTS,
   NOTES_CANCEL,
   NOTES_DISCOUNTS,
+  PRODUCTS_CANCEL,
   PRODUCTS_DISCOUNTS,
 } from "../menus/mainMenu/moreActions/configs/constants";
 
@@ -60,6 +61,9 @@ export function GenericKeyboard({
                 onClick={() => {
                   const newText = text.concat(element);
                   setText(newText);
+                  if (setValue) {
+                    setValue(newText);
+                  }
                 }}
               >
                 {element}
@@ -70,6 +74,9 @@ export function GenericKeyboard({
               onClick={() => {
                 const newText = text.slice(0, -1);
                 setText(newText);
+                if (setValue) {
+                  setValue(newText);
+                }
               }}
             >
               <img src={backspace} alt="clean-button" />
@@ -85,6 +92,9 @@ export function GenericKeyboard({
                     mayus ? element : element.toLowerCase()
                   );
                   setText(newText);
+                  if (setValue) {
+                    setValue(newText);
+                  }
                   if (text.length >= 0 && text.length < 1 && mayus) {
                     setMayus(!mayus);
                   }
@@ -104,6 +114,9 @@ export function GenericKeyboard({
                     mayus ? element : element.toLowerCase()
                   );
                   setText(newText);
+                  if (setValue) {
+                    setValue(newText);
+                  }
                   if (text.length >= 0 && text.length < 1 && mayus) {
                     setMayus(!mayus);
                   }
@@ -131,6 +144,9 @@ export function GenericKeyboard({
                     mayus ? element : element.toLowerCase()
                   );
                   setText(newText);
+                  if (setValue) {
+                    setValue(newText);
+                  }
                   if (text.length >= 0 && text.length < 1 && mayus) {
                     setMayus(!mayus);
                   }
@@ -146,6 +162,9 @@ export function GenericKeyboard({
             className={styles.cleanBtn}
             onClick={() => {
               setText("");
+              if (setValue) {
+                setValue("");
+              }
             }}
           >
             <img src={cleanIcon} alt="clean-icon" />
@@ -155,12 +174,19 @@ export function GenericKeyboard({
             onClick={() => {
               const newText = text.concat(" ");
               setText(newText);
+              if (setValue) {
+                setValue(newText);
+              }
             }}
           >
             <img src={spaceIcon} alt="space-icon" />
           </button>
           <button
-            disabled={text.length <= 0 || text.length > 45}
+            disabled={
+              text.length <= 0 ||
+              text.length > 45 ||
+              keyAction === PRODUCTS_CANCEL
+            }
             className={styles.checkBtn}
             onClick={() => {
               if (keyAction === NOTES_CANCEL) {

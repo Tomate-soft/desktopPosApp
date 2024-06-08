@@ -1,5 +1,6 @@
 import styles from "./productCancellation.module.css";
-import rightArrow from "../../../assets/icon/arrowRight.svg";
+import rightArrow from "../../../assets/icon//disquetIcon.svg";
+import addIcon from "../../../assets/icon/addIcon.svg";
 import arrow from "../../../assets/icon/selectArrow.svg";
 import divider from "../../../assets/icon/dividerTransfer.svg";
 import dividerThree from "../../../assets/icon/divider003.svg";
@@ -11,6 +12,7 @@ import { cancellationReasonStore } from "../../../store/cancellationReasons.stor
 import { useAuthStore } from "../../../shared";
 import { UseActions } from "../../../store/moreActions/moreActions.store";
 import ConfirmChanges from "../../modals/confirm/confirmChanges";
+import { PRODUCTS_CANCEL } from "../../menus/mainMenu/moreActions/configs/constants";
 
 interface Props {
   item: any;
@@ -24,6 +26,7 @@ export default function ProductsCancel({ item, openModal, children }: Props) {
   const [selectedNote, setSelectedNote] = useState({});
   const [productSelection, setproductSelection] = useState();
   const genericKeyboard = useModal(GENERIC_KEYBOARD_ACTIVE);
+  const [description, setDescription] = useState("");
 
   // zustand
   const cancellationReasonsArray = cancellationReasonStore(
@@ -51,6 +54,7 @@ export default function ProductsCancel({ item, openModal, children }: Props) {
             cancellationBy: user,
             cancellationFor: "Pendiente",
             cancellationReason: active,
+            description: description,
           },
         }
       : {
@@ -61,6 +65,7 @@ export default function ProductsCancel({ item, openModal, children }: Props) {
             cancellationBy: user,
             cancellationFor: "Pendiente",
             cancellationReason: active,
+            description: description,
           },
         };
 
@@ -69,7 +74,8 @@ export default function ProductsCancel({ item, openModal, children }: Props) {
     if (item.bill[0].notes.length > 0) {
       setSelectedNote(item.bill[0].notes[0]);
     }
-  }, []);
+    console.log(description);
+  }, [description]);
 
   return (
     <div className={styles.container}>
@@ -244,20 +250,20 @@ export default function ProductsCancel({ item, openModal, children }: Props) {
             </div>
           </div>
         </div>
-
         <div>
+          <button onClick={genericKeyboard.openModal}>
+            <img src={addIcon} alt="right-arrow" />
+            Agregar descripcion
+          </button>
           <button
+            disabled={!productSelection || !active}
             onClick={() => {
               cancelProduct(dataSend);
               openModal();
             }}
           >
             <img src={rightArrow} alt="right-arrow" />
-            Siguiente
-          </button>
-          <button onClick={genericKeyboard.openModal}>
-            <img src={rightArrow} alt="right-arrow" />
-            Agregar descripcion
+            Guardar
           </button>
         </div>
       </div>
@@ -268,6 +274,8 @@ export default function ProductsCancel({ item, openModal, children }: Props) {
             isOpen={genericKeyboard.isOpen}
             onClose={genericKeyboard.closeModal}
             openModal={openModal}
+            setValue={setDescription}
+            keyAction={PRODUCTS_CANCEL}
           >
             Ingresa la descripción del descuento
           </GenericKeyboard>

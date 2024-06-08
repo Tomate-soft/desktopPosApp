@@ -28,8 +28,11 @@ export const productsToBillServices = async (data: Data) => {
 };
 
 export const createDiscountService = async (data: {}) => {
-  console.log("sewrvice");
-  console.log(data);
   const response = axios.post(DISCOUNTS_PATH, data);
+  return response;
+};
+
+export const deleteDiscountService = async (id: string, body: any) => {
+  const response = axios.put(`${DISCOUNTS_PATH}/d/${id}`, body);
   return response;
 };

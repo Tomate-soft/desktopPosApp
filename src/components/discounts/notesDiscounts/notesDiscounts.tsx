@@ -27,6 +27,7 @@ export default function NotesDiscounts({ item, openModal, children }: Props) {
   const authData = useAuthStore((state) => state.authData);
   const user = authData.payload.user._id;
   const createDiscount = UseActions((state) => state.createDiscount);
+  const deleteDiscount = UseActions((state) => state.deleteDiscount);
 
   const data = {
     accountId: noteForDiscount?._id,
@@ -61,7 +62,15 @@ export default function NotesDiscounts({ item, openModal, children }: Props) {
                           : `Nota: ${element.noteNumber}`}
                       </span>
                       {element.discount ? (
-                        <button className={styles.discountButton}>
+                        <button
+                          className={styles.discountButton}
+                          onClick={() => {
+                            deleteDiscount(element._id, {
+                              case: "NOTE_CASE",
+                            });
+                            openModal();
+                          }}
+                        >
                           <img src={cleanDiscount} alt="clean-btn" />
                         </button>
                       ) : (

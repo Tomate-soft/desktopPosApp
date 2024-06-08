@@ -126,3 +126,17 @@ div[id="custom-select"]{
     }
 }
 
+input[type="radio"] {
+    /* Estilos generales */
+    margin-right: 5px;
+    width: 22px !important;
+    height: 22px !important; 
+    opacity: 0.5;
+    filter: grayscale(1);
+  }
+
+  div[id="custom-select"]{
+    z-index: 10000;
+  }
+
+

@@ -12,6 +12,7 @@ import { SET_PERCENT, SET_QUANTITY } from "../../discountBoard/constants";
 import { useAuthStore } from "../../../shared";
 import { PRODUCTS_DISCOUNTS } from "../../menus/mainMenu/moreActions/configs/constants";
 import { UseActions } from "../../../store/moreActions/moreActions.store";
+// update new
 
 interface Props {
   item: any;
@@ -159,7 +160,29 @@ export default function ProductsDiscounts({
                         <span>{element.quantity}</span>
                         <span>{element.productName}</span>
                         {element.discount ? (
-                          <button className={styles.discountButton}>
+                          <button
+                            className={styles.discountButton}
+                            onClick={() => {
+                              if (element.discount.setting === "SET_PERCENT") {
+                                console.log(element.discount);
+                                const originalPrice =
+                                  parseFloat(element.priceInSite) /
+                                  (1 -
+                                    parseFloat(element.discount.discountMount) /
+                                      100);
+                                console.log(
+                                  Math.ceil(originalPrice).toString()
+                                );
+                              }
+                              if (element.discount.setting === "SET_QUANTITY") {
+                                const originalQuantity = (
+                                  parseFloat(element.priceInSite) +
+                                  parseFloat(element.discount.discountMount)
+                                ).toString();
+                                console.log(originalQuantity);
+                              }
+                            }}
+                          >
                             <img src={cleanDiscount} alt="clean-btn" />
                           </button>
                         ) : (
