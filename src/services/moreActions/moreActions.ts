@@ -36,3 +36,11 @@ export const deleteDiscountService = async (id: string, body: any) => {
   const response = axios.put(`${DISCOUNTS_PATH}/d/${id}`, body);
   return response;
 };
+
+export const deleteNoteProductDiscounService = async (
+  id: string,
+  body: any
+) => {
+  const response = axios.put(`${DISCOUNTS_PATH}/d/note/${id}`, body);
+  return response;
+};

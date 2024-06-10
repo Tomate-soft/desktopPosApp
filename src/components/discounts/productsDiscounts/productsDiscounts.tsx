@@ -35,6 +35,9 @@ export default function ProductsDiscounts({
   const authData = useAuthStore((state) => state.authData);
   const user = authData.payload.user._id;
   const createDiscount = UseActions((state) => state.createDiscount);
+  const removeNotePorductDiscount = UseActions(
+    (state) => state.deleteNoteProductDiscount
+  );
 
   const discountApply =
     mode === SET_PERCENT
@@ -74,13 +77,15 @@ export default function ProductsDiscounts({
       }
       return element;
     }),
-    checkTotal: (
-      parseFloat((selectedNote || item.bill[0]).checkTotal) -
-      parseFloat(discountApply)
-    ).toString(),
+    checkTotal:
+      mode === SET_QUANTITY
+        ? discountApply
+        : (
+            parseFloat((selectedNote || item.bill[0]).checkTotal) -
+            parseFloat(discountApply)
+          ).toString(),
   };
   useEffect(() => {
-    console.log(authData);
     if (item.bill[0].notes.length > 0) {
       setSelectedNote(item.bill[0].notes[0]);
     }
@@ -163,23 +168,161 @@ export default function ProductsDiscounts({
                           <button
                             className={styles.discountButton}
                             onClick={() => {
+                              const updateProducts =
+                                selectedNote.products.filter(
+                                  (product) => product.unique != element.unique
+                                );
                               if (element.discount.setting === "SET_PERCENT") {
-                                console.log(element.discount);
+                                if (element.quantity > 1) {
+                                  const originalPrice =
+                                    parseFloat(element.priceInSiteBill) /
+                                    (1 -
+                                      parseFloat(
+                                        element.discount.discountMount
+                                      ) /
+                                        100);
+                                  const currentProduct = {
+                                    ...element,
+                                    discount: null,
+                                    priceInSiteBill: originalPrice,
+                                  };
+                                  // aca vamos a juntar los productos y mandarlos
+                                  const sendProducts = [
+                                    ...updateProducts,
+                                    currentProduct,
+                                  ];
+                                  const checkTotalNew = sendProducts
+                                    .reduce(
+                                      (a, b) =>
+                                        a +
+                                        parseFloat(
+                                          b.quantity > 1
+                                            ? b.priceInSiteBill
+                                            : b.priceInSite
+                                        ),
+                                      0
+                                    )
+                                    .toFixed(2)
+                                    .toString();
+                                  console.log(checkTotalNew);
+                                  removeNotePorductDiscount(selectedNote._id, {
+                                    products: sendProducts,
+                                    checkTotal: checkTotalNew,
+                                  });
+
+                                  removeNotePorductDiscount(selectedNote._id, {
+                                    products: sendProducts,
+                                  });
+                                  openModal();
+                                }
                                 const originalPrice =
                                   parseFloat(element.priceInSite) /
                                   (1 -
                                     parseFloat(element.discount.discountMount) /
                                       100);
-                                console.log(
-                                  Math.ceil(originalPrice).toString()
-                                );
+                                const currentProduct = {
+                                  ...element,
+                                  discount: null,
+                                  priceInSite: originalPrice,
+                                };
+                                // aca vamos a juntar los productos y mandarlos
+                                const sendProducts = [
+                                  ...updateProducts,
+                                  currentProduct,
+                                ];
+                                const checkTotalNew = sendProducts
+                                  .reduce(
+                                    (a, b) =>
+                                      a +
+                                      parseFloat(
+                                        b.quantity > 1
+                                          ? b.priceInSiteBill
+                                          : b.priceInSite
+                                      ),
+                                    0
+                                  )
+                                  .toFixed(2)
+                                  .toString();
+                                console.log(checkTotalNew);
+                                removeNotePorductDiscount(selectedNote._id, {
+                                  products: sendProducts,
+                                  checkTotal: checkTotalNew,
+                                });
+                                openModal();
                               }
                               if (element.discount.setting === "SET_QUANTITY") {
+                                if (element.quantity > 1) {
+                                  const originalQuantity = (
+                                    parseFloat(element.priceInSiteBill) +
+                                    parseFloat(element.discount.discountMount)
+                                  ).toString();
+
+                                  const currentProduct = {
+                                    ...element,
+                                    discount: null,
+                                    priceInSiteBill: originalQuantity,
+                                  };
+                                  // aca vamos a juntar los productos y mandarlos
+                                  const sendProducts = [
+                                    ...updateProducts,
+                                    currentProduct,
+                                  ];
+                                  const checkTotalNew = sendProducts
+                                    .reduce(
+                                      (a, b) =>
+                                        a +
+                                        parseFloat(
+                                          b.quantity > 1
+                                            ? b.priceInSiteBill
+                                            : b.priceInSite
+                                        ),
+                                      0
+                                    )
+                                    .toFixed(2)
+                                    .toString();
+                                  console.log(checkTotalNew);
+                                  removeNotePorductDiscount(selectedNote._id, {
+                                    products: sendProducts,
+                                    checkTotal: checkTotalNew,
+                                  });
+
+                                  removeNotePorductDiscount(selectedNote._id, {
+                                    products: sendProducts,
+                                  });
+                                  openModal();
+                                }
                                 const originalQuantity = (
                                   parseFloat(element.priceInSite) +
                                   parseFloat(element.discount.discountMount)
                                 ).toString();
-                                console.log(originalQuantity);
+                                const currentProduct = {
+                                  ...element,
+                                  discount: null,
+                                  priceInSite: originalQuantity,
+                                };
+                                // aca vamos a juntar los productos y mandarlos
+                                const sendProducts = [
+                                  ...updateProducts,
+                                  currentProduct,
+                                ];
+                                const checkTotalNew = sendProducts
+                                  .reduce(
+                                    (a, b) =>
+                                      a +
+                                      parseFloat(
+                                        b.quantity > 1
+                                          ? b.priceInSiteBill
+                                          : b.priceInSite
+                                      ),
+                                    0
+                                  )
+                                  .toFixed(2)
+                                  .toString();
+                                removeNotePorductDiscount(selectedNote._id, {
+                                  products: sendProducts,
+                                  checkTotal: checkTotalNew,
+                                });
+                                openModal();
                               }
                             }}
                           >
