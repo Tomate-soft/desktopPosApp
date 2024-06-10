@@ -1,0 +1,15 @@
+.head {
+    width: 100vw;
+    display: flex;
+    justify-content: space-between;
+    height: 80px;
+    background: #353639;
+
+}
+
+.head div {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    margin: 0px 16px;
+}
