@@ -44,3 +44,11 @@ export const deleteNoteProductDiscounService = async (
   const response = axios.put(`${DISCOUNTS_PATH}/d/note/${id}`, body);
   return response;
 };
+
+export const deleteBillProductDiscounService = async (
+  id: string,
+  body: any
+) => {
+  const response = axios.put(`${DISCOUNTS_PATH}/d/bill/${id}`, body);
+  return response;
+};
