@@ -18,7 +18,7 @@ export const useCurrentCommand = create<state>((set) => {
       table: undefined,
     },
     setState: (form: Bill) => {
-      const checkTotalNew = form.products
+      const checkTotalNew = form?.products
         .reduce(
           (a, b) =>
             a + parseFloat(b.quantity > 1 ? b.priceInSiteBill : b.priceInSite),

@@ -200,7 +200,20 @@ export function GenericKeyboard({
                   discountType: PRODUCTS_DISCOUNTS,
                 };
                 const transferObject = {
-                  accountApt: data,
+                  accountApt: {
+                    ...data,
+                    checkTotal: data.products
+                      .reduce(
+                        (a, b) =>
+                          a +
+                          parseFloat(
+                            b.quantity > 1 ? b.priceInSiteBill : b.priceInSite
+                          ),
+                        0
+                      )
+                      .toFixed(2)
+                      .toString(),
+                  },
                   body: dataSend,
                 };
                 console.log(transferObject);
@@ -220,7 +233,6 @@ export function GenericKeyboard({
                 actionType(transferObject);
                 openModal();
               }
-
               if (keyAction === BILL_DISCOUNTS) {
                 const dataSend = {
                   ...payload,
