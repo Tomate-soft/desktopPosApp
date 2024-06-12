@@ -11,7 +11,6 @@ import { GenericKeyboard } from "../../genericKeyboard/genericKeyboard";
 import { cancellationReasonStore } from "../../../store/cancellationReasons.store";
 import { useAuthStore } from "../../../shared";
 import { UseActions } from "../../../store/moreActions/moreActions.store";
-import ConfirmChanges from "../../modals/confirm/confirmChanges";
 import { PRODUCTS_CANCEL } from "../../menus/mainMenu/moreActions/configs/constants";
 
 interface Props {

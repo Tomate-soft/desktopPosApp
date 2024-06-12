@@ -51,6 +51,7 @@ export default function MainMenu({ isOpen, onClose, children }: Props) {
   const closeOperations = useModal(CLOSE_OPERATIONS_PERIOD);
   const navigate = useNavigate();
   const { isCashierEnable } = UseVerify();
+
   return (
     <div className={styles.screen}>
       <section className={styles.modal}>
@@ -152,6 +153,7 @@ export default function MainMenu({ isOpen, onClose, children }: Props) {
       cashierCloseSession.modalName === CLOSE_CASHIER_SESSION ? (
         <AdvanzedClosing
           onClose={cashierCloseSession.closeModal}
+          sessionActive={sessionActive}
         ></AdvanzedClosing>
       ) : null}
       {cashOutProcess.isOpen &&

@@ -29,12 +29,14 @@
         justify-content: space-between;
 
 
+
         >div:first-child{
             width: 350px;
             display: flex ;
             align-items: center;
             gap: 16px;
             font-size: 24px;
+
 
         }
 
@@ -43,6 +45,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+
 
 
             >button{
@@ -68,6 +71,7 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+
 
 
 
@@ -128,6 +132,7 @@
             }
 
             >div:last-child{
+                height: 565px;
 
                 >div{
                     display: flex;
@@ -145,14 +150,17 @@
                     }   
                 }
             }
+
         }
 
         >div:last-child{
-            height: 144px;
+            height: 88px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             margin-bottom: 10px;
+
+
 
             >div{
                 display: flex;
@@ -160,27 +168,30 @@
                 align-items: center;
                 padding: 0px 8px;
 
+
                 >div{
                     display: flex;
                     align-items: center;
                     width: 300px;
                     gap: 8px;
+
                 }
             }
         }
+
     }
   
         >.primaryContainer{
             border-radius: 4px;
             background-color: transparent;
             width: 361px;
-            height: 776px;
+            height:760px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             overflow: hidden;
             overflow-y: auto;
-
+            gap: 32px;
 
             >div{
                 border-radius: 16px;
@@ -191,6 +202,16 @@
                 background: rgba(73, 74, 76, 1);
                 padding: 16px 0px;
 
+
+            }
+
+            >div:first-child{
+                 height: 432px;
+
+                 >div:last-child{
+                    height: 320px !important;
+
+                 }  
             }
             
             >div:first-child,
@@ -201,6 +222,8 @@
                 >div:first-child{
                     width: 329px;
                     height: 40px;
+                    
+                    
 
                     >div{
                         display: flex;
@@ -216,6 +239,7 @@
                     display: flex;
                     flex-direction: column;
                     justify-content: space-between;
+        
 
                     >div{
                         display: flex;
@@ -230,6 +254,7 @@
                             background: rgba(249, 249, 249, 0.1);
                             border-radius: 8px;
                             text-align: center;
+
                         }    
 
                         >input{
@@ -285,6 +310,7 @@
                 background: rgba(94, 135, 8, 1);
                 font-size: 24px;
 
+
             }
             >div:last-child{
                 height: 146px;
@@ -315,6 +341,20 @@
 }
 .import{
     margin-right: 8px;
+}
+
+.hero{
+    height: 85px;
+    animation: spin 15s infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 
