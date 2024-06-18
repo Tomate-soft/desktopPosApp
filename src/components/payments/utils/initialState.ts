@@ -17,4 +17,5 @@ export const initialState: Payment = {
 export const initialTransaction = {
   paymentType: "cash",
   quantity: "",
+  payQuantity: "",
 };

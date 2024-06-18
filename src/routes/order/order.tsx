@@ -441,7 +441,8 @@ export default function Order() {
           <section className={styles.sectionContainerProducts}>
             {productsArray &&
               commandArray?.map((item, index) => (
-                <section
+                <button
+                  disabled={item.status === "disabled"}
                   key={index}
                   className={styles.containerProduct}
                   onClick={() => {
@@ -449,7 +450,7 @@ export default function Order() {
                   }}
                 >
                   <p>{item.productName}</p>
-                </section>
+                </button>
               ))}
           </section>
           <section className={styles.sectionContainerCategories}>
@@ -517,10 +518,10 @@ export default function Order() {
                 logOutRequest();
                 return;
               }
-              {
-                /* handlePrintBill("billPrint", billCurrentCommand),*/
-              }
-              updateBill(FOR_PAYMENT_STATUS, billCurrent, billCurrentCommand);
+              // {
+              handlePrintBill("billPrint", billCurrentCommand),
+                //  }
+                updateBill(FOR_PAYMENT_STATUS, billCurrent, billCurrentCommand);
               updateTable(FOR_PAYMENT_STATUS, _id);
               // vamos a mandar el indice 0 desde el periodo operativo actual
               const elasticBalnceChargeBills =
@@ -530,7 +531,7 @@ export default function Order() {
                     currentPeriod[0]?.sellProcess[1]?.bills?.length
                   ? currentPeriod[0]?.sellProcess[1]._id
                   : currentPeriod[0]?.sellProcess[0]._id;
-              addBillForPayment(elasticBalnceChargeBills, billCurrent._id); // CHECAR ESTE METODO COMO MANDA A COBRAR LAS NOTAS Y LAS
+              addBillForPayment(elasticBalnceChargeBills, billCurrent._id);
               logOutRequest();
             }}
             disabled={!billCurrent?.products}

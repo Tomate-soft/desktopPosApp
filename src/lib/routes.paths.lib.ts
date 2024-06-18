@@ -34,3 +34,4 @@ export const PAYMENT_NOTES_PATH = "/payments/p/note";
 export const CANCELLATIONS_PATH = "/cancellations";
 export const TRANSFER_PRODUCTS_PATH = "/t/products";
 export const DISCOUNTS_PATH = "/discounts";
+export const CLOUSURES_OPERATIONS_PATH = "/clousures-of-operations";

@@ -9,6 +9,7 @@ export default function UsePayment() {
   const [payment, setPayment] = useState<Payment>();
 
   const createPayment = async (payment: Payment) => {
+    console.log(payment);
     setIsLoading(true);
     try {
       const res = await axios.post(PAYMENTS_PATH, payment);
@@ -21,7 +22,6 @@ export default function UsePayment() {
       }
       setIsLoading(false);
       setPayment(newPayment);
-
       return newPayment;
     } catch (error) {
       setIsLoading(false);

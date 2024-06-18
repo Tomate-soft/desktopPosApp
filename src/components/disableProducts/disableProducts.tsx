@@ -11,6 +11,9 @@ import indicatorOne from "../../assets/icon/enableIcon.svg";
 import indicatorTwo from "../../assets/icon/paymentIcon.svg";
 import backArrowBtn from "../../assets/icon/backArrowBtn.svg";
 import arrow from "../../assets/icon/filterIcon.svg";
+import { useModal } from "@/shared";
+import { CONFIRM_PAYMENT_MODAL } from "@/lib/modals.lib";
+import ConfirmChanges from "../modals/confirm/confirmChanges";
 
 interface Props {
   isOpen: any;
@@ -19,43 +22,44 @@ interface Props {
 }
 
 export default function DisableProducts({ isOpen, onClose, children }: Props) {
-  const [selectCategory, setSelectCategory] = useState();
+  const [selectCategory, setSelectCategory] = useState(null);
   const getCategories = useCategoriesStore((state) => state.getCategories);
   const categoriesArray = useCategoriesStore((state) => state.categoriesArray);
   const getProducts = useProductsStore((state) => state.getProducts);
   const productsArray = useProductsStore((state) => state.productsArray);
   const [toggleStatus, setToggleStatus] = useState(false);
   const [searchProduct, setSearchProducts] = useState("");
+  const disableProduct = useProductsStore((state) => state.disableProduct);
+  const isLoading = useProductsStore((state) => state.isLoading);
+  const errors = useProductsStore((state) => state.errors);
+  const message = useProductsStore((state) => state.message);
 
   const [status, setStatus] = useState<string | null>(null);
 
-  const filterBar = productsArray.filter((element) =>
-    element.productName.toLowerCase().includes(searchProduct.toLowerCase())
-  );
+  useEffect(() => {
+    getProducts();
+    getCategories();
+  }, [getProducts, getCategories]);
+
+  // Ensure productsArray is an array before using filter
+  const filterBar = Array.isArray(productsArray)
+    ? productsArray.filter((element) =>
+        element.productName.toLowerCase().includes(searchProduct.toLowerCase())
+      )
+    : [];
 
   const filterByStatus = status
     ? filterBar.filter((element) => element.status === status)
     : filterBar;
 
-  // Logica pára filtrar por categorias se trabajara mas adelante.
-  /*
-  const filterProducts = selectCategory
-    ? productsArray.filter(
-        (element) => element.category === selectCategory.categoryName
-      )
-    : productsArray;
-    */
+  const confirmChanges = useModal(CONFIRM_PAYMENT_MODAL);
 
-  useEffect(() => {
-    getProducts();
-    getCategories();
-  }, []);
   return (
     <main className={styles.screen}>
       <div>
         <div>
           <div>
-            <img src={bloquedCircle} alt="tittle-icon" />
+            <img src={bloquedCircle} alt="title-icon" />
             <h3>Desactivar productos</h3>
           </div>
           <button className={styles.closeButton} onClick={onClose}>
@@ -71,6 +75,7 @@ export default function DisableProducts({ isOpen, onClose, children }: Props) {
             <div>
               {categoriesArray?.map((element) => (
                 <button
+                  key={element.id} // Make sure to add a unique key
                   style={
                     element.categoryName === selectCategory?.categoryName
                       ? { background: "white", color: "black" }
@@ -156,32 +161,52 @@ export default function DisableProducts({ isOpen, onClose, children }: Props) {
                 </div>
                 <img src={dividerTwo} alt="f" />
               </div>
+              {confirmChanges.isOpen &&
+              confirmChanges.modalName === CONFIRM_PAYMENT_MODAL ? (
+                <ConfirmChanges
+                  actionType={getProducts}
+                  errors={errors}
+                  loading={isLoading}
+                  isOpen={confirmChanges.isOpen}
+                  onClose={confirmChanges.closeModal}
+                >
+                  Cambios guardados
+                </ConfirmChanges>
+              ) : null}
               <div>
                 {filterByStatus?.map((element) => (
-                  <div>
+                  <div key={element._id}>
                     <h3>{element.productName}</h3>
                     <div>
-                      {element.active === false ? (
+                      {element.status === "enabled" ? (
                         <>
-                          {" "}
                           <img src={indicatorOne} alt="indicator-icon" />
                           <h3>Sí</h3>
                         </>
                       ) : (
                         <>
-                          {" "}
                           <img src={indicatorTwo} alt="indicator-icon" />
                           <h3>No</h3>
                         </>
                       )}
                     </div>
                     <div>
-                      {element.active === false ? ( // esto debe funcionar con el status NO con el active arreglar luego... el active es para temas de impresion.
-                        <button>
+                      {element.status === "enabled" ? (
+                        <button
+                          onClick={() => {
+                            confirmChanges.openModal();
+                            disableProduct(element._id, { status: "disabled" });
+                          }}
+                        >
                           <img src={bloquedIcon} alt="bloqued-icon" />
                         </button>
                       ) : (
-                        <button>
+                        <button
+                          onClick={() => {
+                            confirmChanges.openModal();
+                            disableProduct(element._id, { status: "enabled" });
+                          }}
+                        >
                           <img src={backArrowBtn} alt="back-icon" />
                         </button>
                       )}

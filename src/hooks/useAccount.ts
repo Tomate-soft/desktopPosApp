@@ -169,7 +169,7 @@ export default function UseAccount() {
       const settingsArray = (await response).data.settings;
 
       const printersObjectArray: any = settingsArray.find(
-        (item: any) => item.printers
+        (item: any) => item.printer
       );
       const printers = printersObjectArray.printers.map(
         (item: any) => item.tcp

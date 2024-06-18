@@ -97,7 +97,10 @@ export default function MainMenu({ isOpen, onClose, children }: Props) {
             <img src={menuThree} alt="menu-icon" />
             <span>Control de mesas</span>
           </button>
-          <button onClick={disableProducts.openModal}>
+          <button
+            onClick={disableProducts.openModal}
+            disabled={allowRole != ADMIN}
+          >
             <img src={menuFour} alt="menu-icon" />
             <span>Desactivar Productos</span>
           </button>

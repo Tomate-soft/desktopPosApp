@@ -27,7 +27,6 @@ import {
 import ExceptionMessages from "../../components/modals/exceptionMessages/exceptionMessages";
 import UseCashierException from "../../hooks/exceptions/useCashierException";
 import { useNotesStore } from "../../store/notes.store";
-import { useCashierSessionStore } from "../../store/operatingPeriod/cashierSession.store";
 import { FOR_PAYMENT_STATUS } from "../../lib/tables.status.lib";
 import { ENTRY_PATH } from "../../lib/routes.paths.lib";
 import { useOperationProcess } from "../../store/operatingPeriod/operatingPeriod.store";
@@ -75,33 +74,36 @@ export default function Cashier() {
     <div className={styles.container}>
       <HeaderTwo />
       <main className={styles.mainSection}>
-        {filterSession[0]?.bills?.map((item) =>
-          item.status === FOR_PAYMENT_STATUS && !item.notes.length ? (
-            <div>
-              <CashierBox
-                setting={setCurrentBill}
-                openModal={paymentInterface.openModal}
-                item={item}
-                route={ENTRY_PATH}
-              />
-            </div>
-          ) : (
-            item.notes.map(
-              (note, index) =>
-                note.status === FOR_PAYMENT_STATUS && (
-                  <div>
-                    <CashierBox
-                      setting={setCurrentBill}
-                      openModal={paymentInterface.openModal}
-                      item={item}
-                      isNote={note}
-                      route={ENTRY_PATH}
-                    />
-                  </div>
+        {filterSession && filterSession.length > 0
+          ? filterSession[0]?.bills?.map((item) =>
+              item.status === FOR_PAYMENT_STATUS && !item.notes.length ? (
+                <div key={item.id}>
+                  <CashierBox
+                    setting={setCurrentBill}
+                    openModal={paymentInterface.openModal}
+                    item={item}
+                    route={ENTRY_PATH}
+                  />
+                </div>
+              ) : (
+                item.notes.map(
+                  (note, index) =>
+                    note.status === FOR_PAYMENT_STATUS && (
+                      <div key={note.id}>
+                        <CashierBox
+                          setting={setCurrentBill}
+                          openModal={paymentInterface.openModal}
+                          item={item}
+                          isNote={note}
+                          route={ENTRY_PATH}
+                        />
+                      </div>
+                    )
                 )
+              )
             )
-          )
-        )}
+          : null}
+
         {paymentInterface.isOpen &&
         paymentInterface.modalName === PAYMENT_INTERFACE_MODAL ? (
           <PaymentInterface
