@@ -37,6 +37,8 @@ export default function Host() {
   const [allowEdit, setAllowEdit] = useState(false);
   const [tableSelectedArray, setTableSelectedArray] = useState([]);
   const joinTables = UseTableStore((state) => state.joinTables);
+  const [current, setCurrent] = useState(""); // [2
+
   const [joinTableArray, setJoinTableArray] = useState([]);
   const loading = UseTableStore((state) => state.isLoading);
   const errors = UseTableStore((state) => state.errors);
@@ -71,12 +73,15 @@ export default function Host() {
           return (
             <div className={styles.grid} key={index}>
               <TableBox
+                current={current}
+                setCurrent={setCurrent}
                 item={item}
                 isEdit={allowEdit}
                 set={setTableSelectedArray}
                 selectedArray={tableSelectedArray}
                 joinedInInTable={joinTableArray}
                 setting={setJoinTableArray}
+                openModal={confirmChanges.openModal}
               />
             </div>
           );
