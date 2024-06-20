@@ -12,6 +12,8 @@
     height: 80px;
     width: 100vw;
     background: #353639;
+    padding: 16px;
+
 }
 
 .footer div {
@@ -44,5 +46,20 @@
 .mainSection::-webkit-scrollbar-track {
     background-color: #5C5D60;
 }
+
+.noBackground{
+    visibility: hidden;
+    
+}
+
+.backgroundRepeat {
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    background-image: url("../../assets/icon/posWallSprite.svg");
+    background-size: repeat;
+  }
+
 
  

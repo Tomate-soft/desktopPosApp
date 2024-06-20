@@ -14,7 +14,11 @@ import {
   filters,
   headers,
 } from "./lib";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import UseTable from "@/hooks/useTable";
+import { UseTableStore } from "@/store/tables.store";
+import { table } from "@/shared";
+import { ENABLE_STATUS } from "@/lib/tables.status.lib";
 interface Props {
   isOpen: any;
   onClose: any;
@@ -24,6 +28,17 @@ export default function BillBoard({ isOpen, onClose, children }: Props) {
   const [order, setOrder] = useState<OrderType>(SELL_TYPE_ORDER);
   const [filter, setFilter] = useState<FilterType>("");
 
+  const getTables = UseTableStore((state) => state.getTables);
+  const tableArray = UseTableStore((state) => state.tablesArray);
+  const filterTables = tableArray.filter(
+    (table) => table.status === ENABLE_STATUS
+  );
+  const accountEnables = filterTables.flatMap((table) => table.bill[0]);
+
+  useEffect(() => {
+    getTables();
+    console.log(accountEnables);
+  }, []);
   return (
     <main className={styles.screen}>
       <div>
@@ -85,11 +100,11 @@ export default function BillBoard({ isOpen, onClose, children }: Props) {
               <img src={divider} alt="table-divider" />
             </div>
             <div>
-              {[...Array(45)].map((element) => (
+              {accountEnables.map((element) => (
                 <div>
-                  <h3>ex-restaurante</h3>
-                  <h3>ex-034010</h3>
-                  <h3>ex-0000 Alejandrina O</h3>
+                  <h3>{element.sellType}</h3>
+                  <h3>{element.billCode}</h3>
+                  <h3>{element.user}</h3>
                   <h3>ex-$488.70</h3>
                   <h3>ex- 20:00</h3>
                   <h3>ex-4 min</h3>

@@ -2,6 +2,7 @@ import { create } from "zustand";
 import {
   UpdateTable,
   getTablesService,
+  joinTablesService,
   resetTablesService,
   updateTablesService,
 } from "../services/tables";
@@ -14,6 +15,7 @@ interface state {
   getTables: () => Promise<void>;
   updateTables: (args: UpdateTable[], userId: string) => Promise<void>;
   resetTables: () => Promise<void>;
+  joinTables: (body: any) => Promise<void>;
 }
 
 export const UseTableStore = create<state>((set) => {
@@ -64,6 +66,19 @@ export const UseTableStore = create<state>((set) => {
           set({ isLoading: false, errors: true });
         }
         set({ isLoading: false, errors: false });
+      } catch (error) {
+        set({ isLoading: false, errors: true });
+      }
+    },
+    joinTables: async (body) => {
+      set({ isLoading: true });
+      try {
+        const res = await joinTablesService(body);
+        if (!res) {
+          set({ isLoading: false, errors: true });
+        }
+        set({ isLoading: false, errors: false });
+        return res;
       } catch (error) {
         set({ isLoading: false, errors: true });
       }

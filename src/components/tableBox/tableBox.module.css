@@ -78,3 +78,24 @@
     }
    
 }
+
+.footBoxBetween{
+    height: 30px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    > button{
+        width: 30px;
+        height: 30px;
+        background-color: transparent;
+        border-radius: 50%;
+        padding: 5px;
+        transition: .3s ease;
+        margin-left: 2px;
+    }
+    > button:hover{
+        background-color: rgba(0, 0, 0, 0.103);
+    }
+   
+
+}

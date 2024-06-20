@@ -8,11 +8,14 @@ import enableIcon from "../../assets/icon/enableIcon.svg";
 import paymentIcon from "../../assets/icon/paymentIcon.svg";
 import logOutIcon from "../../assets/icon/logOutIcon.svg";
 import homeIcon from "../../assets/icon/homeIcon.svg";
+
 // Hooks
 import { useModal } from "../../hooks/useModal";
 import UseAccount from "../../hooks/useAccount";
+
 // Types and interfaces
 import PaymentInterface from "../../components/payments/payments.int";
+
 // Components
 import CashierBox from "../../components/cashierBox/cashierBox";
 import { useEffect, useState } from "react";
@@ -103,7 +106,6 @@ export default function Cashier() {
               )
             )
           : null}
-
         {paymentInterface.isOpen &&
         paymentInterface.modalName === PAYMENT_INTERFACE_MODAL ? (
           <PaymentInterface

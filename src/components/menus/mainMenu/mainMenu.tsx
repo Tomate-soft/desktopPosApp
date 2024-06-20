@@ -15,6 +15,7 @@ import { useNavigate } from "react-router-dom";
 import { useModal } from "../../../hooks/useModal";
 import { CASH_MOVES } from "../mainMenuActions/constants";
 import CashMoves from "../mainMenuActions/cashMoves/cashMoves";
+import posWallSprite from "@/assets/icon/posWallSprite.svg";
 import { TABLES_CONTROL_PATH } from "../../../lib/routes.paths.lib";
 import {
   CASH_OUT_PROCESS,

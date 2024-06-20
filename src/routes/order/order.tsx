@@ -65,7 +65,6 @@ export default function Order() {
   const confirmChanges = useModal(CONFIRM_CHANGES);
   const isLoadingNote = useNotesStore((state) => state.isLoading);
   const errorsNote = useNotesStore((state) => state.errors);
-  const messagesInNote = useNotesStore((state) => state.message);
   const updateNote = useNotesStore((state) => state.updateNote);
   const updatePropInNote = useNotesStore((state) => state.updateNoteProp);
 
@@ -98,7 +97,7 @@ export default function Order() {
     (element: any) => element.status === ENABLE_STATUS
   );
 
-  const userName = authData?.payload?.user.name;
+  const userName = authData?.payload?.user._id;
   const initialOrderTogo: ToGoOrder = {
     code: "1016",
     user: userName,
@@ -197,8 +196,10 @@ export default function Order() {
         tableNum: tableItem.tableNum,
         table: tableItem._id,
         payment: [],
+        user: userName,
       });
     }
+
     if (type === TO_GO_ORDER) {
       if (toGoOrder) {
         setBillCurrentCommand(toGoOrder);
