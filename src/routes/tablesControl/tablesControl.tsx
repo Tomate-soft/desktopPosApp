@@ -22,12 +22,13 @@ import divider from "../../assets/icon/divider1000.svg";
 import dividerBtn from "../../assets/icon/dividerBtn.svg";
 import { useUsersStore } from "../../store/users.store";
 import { Table } from "./type";
-import { CONFIRM_CHANGES } from "../../lib/modals.lib";
+import { CONFIRM_CHANGES, INTERACTIVE_MODAL } from "../../lib/modals.lib";
 import ConfirmChanges from "../../components/modals/confirm/confirmChanges";
 import disabledTable from "../../assets/icon/disabledTable.svg";
 import deleteIcon from "../../assets/icon/deleteIcon.svg";
 import bloquedBtn from "../../assets/icon/bloquedBtn.svg";
 import reEnableIcon from "../../assets/icon/reEnable.svg";
+import InteractiveModal from "@/components/modals/interactiveModal/interactiveModal/interactiveModal";
 
 export default function TablesControl() {
   const resetAllTables = UseTableStore((state) => state.resetTables);
@@ -47,6 +48,9 @@ export default function TablesControl() {
   const tablesValues = {
     tables: selectedUser?.tables.concat(selectedTables),
   };
+  const interactiveModal = useModal(INTERACTIVE_MODAL);
+
+  const allowTables = tablesArray.some((element) => element.bill.length > 0);
   // modals
   const confirmChanges = useModal(CONFIRM_CHANGES);
   useEffect(() => {
@@ -71,7 +75,9 @@ export default function TablesControl() {
         <div>
           {tablesArray.map((item: Table, index) => (
             <div
+              style={!item.availability ? { opacity: "0.2" } : {}}
               onClick={() => {
+                if (!item.availability) return;
                 if (!item.active) {
                   return;
                 }
@@ -192,6 +198,10 @@ export default function TablesControl() {
           <img src={dividerBtn} alt="divider-buttons" />
           <button
             onClick={() => {
+              if (allowTables) {
+                interactiveModal.openModal();
+                return;
+              }
               resetAllTables();
               setSelectedTables([]);
               confirmChanges.openModal();
@@ -232,6 +242,15 @@ export default function TablesControl() {
             Guardar
           </button>
         </div>
+        {interactiveModal.isOpen &&
+        interactiveModal.modalName === INTERACTIVE_MODAL ? (
+          <InteractiveModal
+            isOpen={interactiveModal.isOpen}
+            onClose={interactiveModal.closeModal}
+          >
+            No se pueden liberar mesas con cuentas activas
+          </InteractiveModal>
+        ) : null}
         <div></div>
       </footer>
     </div>

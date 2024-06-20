@@ -2,6 +2,7 @@ import styles from "./cashierBox.module.css";
 // Hooks
 import tableFree from "../../assets/icon/tableForPayment.svg";
 import { CashierBoxProps } from "../../types/props/cashierBoxProps";
+import { useEffect } from "react";
 // types
 export default function CashierBox({
   openModal,
@@ -15,6 +16,7 @@ export default function CashierBox({
     const itemDataSet = isNote ? itemWithNote : item;
     setting(itemDataSet);
   };
+
   return (
     <div className={styles.table} onClick={handleclick}>
       <div>
@@ -26,7 +28,7 @@ export default function CashierBox({
       </div>
       <img src={tableFree} alt="table-free" />
       <p>{item.tableNum}</p>
-      <span>{item.user}</span>
+      <span>{/*item.user */}</span>
       <div>
         <span>00.00</span>
         <span>
