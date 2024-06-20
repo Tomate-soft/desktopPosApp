@@ -4,6 +4,7 @@ import {
   getTablesService,
   joinTablesService,
   resetTablesService,
+  splitTablesService,
   updateTablesService,
 } from "../services/tables";
 import { resetTablesInUsersService } from "../services/users.services";
@@ -16,6 +17,7 @@ interface state {
   updateTables: (args: UpdateTable[], userId: string) => Promise<void>;
   resetTables: () => Promise<void>;
   joinTables: (body: any) => Promise<void>;
+  splitTables: (id: string) => Promise<void>;
 }
 
 export const UseTableStore = create<state>((set) => {
@@ -74,6 +76,19 @@ export const UseTableStore = create<state>((set) => {
       set({ isLoading: true });
       try {
         const res = await joinTablesService(body);
+        if (!res) {
+          set({ isLoading: false, errors: true });
+        }
+        set({ isLoading: false, errors: false });
+        return res;
+      } catch (error) {
+        set({ isLoading: false, errors: true });
+      }
+    },
+    splitTables: async (id) => {
+      set({ isLoading: true });
+      try {
+        const res = await splitTablesService(id);
         if (!res) {
           set({ isLoading: false, errors: true });
         }

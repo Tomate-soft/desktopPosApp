@@ -23,7 +23,11 @@ import { ON_SITE_ORDER } from "../../lib/orders.lib";
 import { useEffect, useState } from "react";
 import UseVerify from "../../hooks/verifications/useVerify";
 import { isButtonElement } from "react-router-dom/dist/dom";
-import { backIcon } from "@/shared";
+import { backIcon, useModal } from "@/shared";
+import { SPLIT_TABLES } from "@/lib/modals.lib";
+import SplitTables from "@/routes/host/modal/splitTables";
+import { UseTableStore } from "@/store/tables.store";
+import JoinTables from "../joinTables/joinTables";
 interface Props {
   item?: any;
   route?: string;
@@ -33,6 +37,8 @@ interface Props {
   isEdit?: boolean;
   selectedArray?: any[];
   joinedInInTable?: any;
+  current?: any;
+  setCurrent?: any;
 }
 export default function TableBox({
   item,
@@ -43,6 +49,8 @@ export default function TableBox({
   selectedArray,
   setting,
   joinedInInTable,
+  current,
+  setCurrent,
 }: Props) {
   const [forceRender, setForceRender] = useState(false); // [1
   const logOutRequest = useAuthStore((state) => state.logOutRequest);
@@ -52,10 +60,13 @@ export default function TableBox({
   const { updateTable } = UseTable();
   const userRole = authData.payload?.user?.role?.role.value;
   const { cashierAvailable } = UseVerify();
+  const splitTablesModal = useModal(item.tableNum);
+  const splitTables = UseTableStore((state) => state.splitTables);
+  const isLoadingTable = UseTableStore((state) => state.isLoading);
+  const errors = UseTableStore((state) => state.errors);
   const mainTable =
     selectedArray?.some((i) => i.status === ENABLE_STATUS) ?? false;
   const handleclick = () => {
-    console.log("click");
     if (cashierAvailable) {
       if (
         item.status !== FREE_STATUS &&
@@ -180,11 +191,7 @@ export default function TableBox({
           if (!item.availability || item.joinedTables.length > 0) return;
           isEdit && item.status != FOR_PAYMENT_STATUS
             ? handleEdit()
-            : isEdit && item.status != FOR_PAYMENT_STATUS
-            ? handleclick()
-            : () => {
-                console.log("no se puede seleccionar");
-              };
+            : handleclick();
         }}
       >
         <p>{item.tableNum}</p>
@@ -198,12 +205,15 @@ export default function TableBox({
         {item.joinedTables.length > 0 && isEdit && (
           <button
             onClick={() => {
+              setCurrent(item.tableNum);
               if (setting) {
-                if (joinedInInTable.length > 0) {
-                  setting([]);
+                if (joinedInInTable.length <= 0) {
+                  splitTablesModal.openModal();
+                  setting(item?.joinedTables);
                   return;
                 }
-                setting(item?.joinedTables);
+                setting([]);
+                splitTablesModal.closeModal();
               }
             }}
           >
@@ -225,6 +235,12 @@ export default function TableBox({
           <img src={moreActionsIcon} alt="more-actions" />
         </button>
       </div>
+      {splitTablesModal.isOpen && splitTablesModal.modalName === current ? (
+        <SplitTables
+          item={item}
+          openModal={openModal} // aca lo que debo pasar el el oppen modal del conmfirm changes
+        ></SplitTables>
+      ) : null}
     </div>
   );
 }

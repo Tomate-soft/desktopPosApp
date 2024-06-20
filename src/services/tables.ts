@@ -47,3 +47,8 @@ export const joinTablesService = async (body: any) => {
   const res = await axios.put(`${TABLES_PATH}/join`, body);
   return res;
 };
+
+export const splitTablesService = async (id: string) => {
+  const res = await axios.put(`${TABLES_PATH}/split/${id}`);
+  return res;
+};
