@@ -15,6 +15,7 @@ import { useNavigate } from "react-router-dom";
 import { useModal } from "../../../hooks/useModal";
 import { CASH_MOVES } from "../mainMenuActions/constants";
 import CashMoves from "../mainMenuActions/cashMoves/cashMoves";
+import posWallSprite from "@/assets/icon/posWallSprite.svg";
 import { TABLES_CONTROL_PATH } from "../../../lib/routes.paths.lib";
 import {
   CASH_OUT_PROCESS,
@@ -97,7 +98,10 @@ export default function MainMenu({ isOpen, onClose, children }: Props) {
             <img src={menuThree} alt="menu-icon" />
             <span>Control de mesas</span>
           </button>
-          <button onClick={disableProducts.openModal}>
+          <button
+            onClick={disableProducts.openModal}
+            disabled={allowRole != ADMIN}
+          >
             <img src={menuFour} alt="menu-icon" />
             <span>Desactivar Productos</span>
           </button>

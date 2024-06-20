@@ -5,13 +5,14 @@ import { Bill } from "../types/account";
 export default function UseOrder() {
   const handlePrint = async (form: Bill) => {
     const printersArray = [
-      { printerId: "192.168.1.98", position: "Bebidas sin alcohol" },
-      { printerId: "192.168.1.99", position: "Bebidas con alcohol" },
-      { printerId: "192.168.1.95", position: "Medias ordenes" },
-      { printerId: "192.168.1.97", position: "Postres" },
-      { printerId: "192.168.1.88", position: "caja" },
-      { printerId: "192.168.1.82", position: "comandas" },
+      { printerId: "192.168.1.70", position: "Bebidas sin alcohol" },
+      { printerId: "192.168.1.70", position: "Bebidas con alcohol" },
+      { printerId: "192.168.1.70", position: "Medias ordenes" },
+      { printerId: "192.168.1.70", position: "Postres" },
+      { printerId: "192.168.1.70", position: "caja" },
+      { printerId: "192.168.1.70", position: "comandas" },
     ];
+
     const commandProducts = form.products.filter(
       (item) => item.active === false
     );

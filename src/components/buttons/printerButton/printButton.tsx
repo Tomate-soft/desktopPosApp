@@ -49,8 +49,6 @@ const PrintButton = ({
               difference: (diference * -1).toString(),
             },
           };
-
-          console.log(constPay);
           setRevolve(constPay.body.difference);
           paymentNote(currentBill.note._id, constPay);
           openModal();
@@ -60,6 +58,7 @@ const PrintButton = ({
         onClose();
         const constPay = {
           ...createCurrentPayment,
+          accountId: currentBill._id,
           difference: (diference * -1).toString(),
         };
         createPayment(constPay);
@@ -69,10 +68,7 @@ const PrintButton = ({
           }, 400);
           openModal();
           setRevolve(constPay.difference);
-          updateTable("free", currentBill?.table, currentTable);
-          updateBill("finished", currentBill),
-            handlePrint("ticket", currentBill),
-            onClose();
+          handlePrint("ticket", currentBill), onClose();
           return;
           //navigate("/"); ////////////vERIFICAR LA NAVEGACION
         }

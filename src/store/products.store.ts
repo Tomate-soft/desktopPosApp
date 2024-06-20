@@ -1,5 +1,8 @@
 import { create } from "zustand";
-import { getProductsService } from "../services/getproducts";
+import {
+  disableProductService,
+  getProductsService,
+} from "../services/getproducts";
 
 type Product = {
   _id: string;
@@ -27,6 +30,7 @@ interface state {
   message: string | null;
   getProducts: () => Promise<void>;
   productsArray: Product[];
+  disableProduct: (id: string, body: {}) => Promise<void>;
 }
 
 export const useProductsStore = create<state>((set) => {
@@ -59,5 +63,29 @@ export const useProductsStore = create<state>((set) => {
       }
     },
     productsArray: [],
+    disableProduct: async (id: string, body) => {
+      set({ isLoading: true });
+      try {
+        const res = await disableProductService(id, body);
+        if (!res.data) {
+          set({
+            isLoading: false,
+            errors: true,
+            message: "No se pudo desactivar el producto",
+          });
+          throw new Error("No se pudo desactivar el producto");
+        }
+        set({ isLoading: false, productsArray: res.data });
+      } catch (error) {
+        set({
+          isLoading: false,
+          errors: true,
+          message: `Ha ocurrido algo inesperado`,
+        });
+        console.error(
+          `Ha ocurrido algo inesperado: mas informacion del error: ${error}`
+        );
+      }
+    },
   };
 });

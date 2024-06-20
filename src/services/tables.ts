@@ -42,3 +42,8 @@ export const resetTablesService = async () => {
   const response = await axios.put(TABLES_RESET_PATH);
   return response;
 };
+
+export const joinTablesService = async (body: any) => {
+  const res = await axios.put(`${TABLES_PATH}/join`, body);
+  return res;
+};
