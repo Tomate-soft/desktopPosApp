@@ -133,7 +133,7 @@ export default function TableBox({
     <div
       className={styles.table}
       style={
-        joinedInInTable.some((i: any) => i == item.tableNum)
+        joinedInInTable?.some((i: any) => i == item.tableNum)
           ? {
               filter: "drop-shadow(0px 0px 6px #fff",
               opacity: "1",
@@ -236,10 +236,7 @@ export default function TableBox({
         </button>
       </div>
       {splitTablesModal.isOpen && splitTablesModal.modalName === current ? (
-        <SplitTables
-          item={item}
-          openModal={openModal} // aca lo que debo pasar el el oppen modal del conmfirm changes
-        ></SplitTables>
+        <SplitTables item={item} openModal={openModal}></SplitTables>
       ) : null}
     </div>
   );
