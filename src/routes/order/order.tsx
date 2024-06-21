@@ -93,11 +93,11 @@ export default function Order() {
   const location = useLocation();
   const { _id, billCurrent, tableItem, type, toGoOrder } = location.state || {};
   const { currentPeriod } = UseVerify();
-  const managementNotes = tableItem.bill[0]?.notes.filter(
+  const managementNotes = tableItem?.bill[0]?.notes?.filter(
     (element: any) => element.status === ENABLE_STATUS
   );
 
-  const userName = authData?.payload?.user._id;
+  const userName = authData?.payload?.user?.name;
   const initialOrderTogo: ToGoOrder = {
     code: "1016",
     user: userName,
@@ -107,7 +107,7 @@ export default function Order() {
     payment: [],
   };
 
-  const isWithNotes = tableItem.bill[0]?.notes?.length > 0;
+  const isWithNotes = tableItem?.bill[0]?.notes?.length > 0;
   const mainKeyboard = useModal(MAIN_KEYBOARD);
 
   // ZUSTAND /////////////////
@@ -176,21 +176,28 @@ export default function Order() {
   useEffect(() => {
     getProducts();
     const filteredProducts = productsArray.filter(
-      (item) => item.category === categoriesMap[0]
+      (item) => item?.category === categoriesMap[0]
     );
     setCommandArray(filteredProducts);
 
     if (type === ON_SITE_ORDER) {
-      if (tableItem.bill[0]?.notes && tableItem.bill[0]?.notes?.length > 0) {
-        setSelectNote(managementNotes[0]); // HEALTCHECK
-        setBillCurrentCommand(managementNotes[0]); // HEALTCHECK
+      // Acceder de manera segura a las propiedades de tableItem y bill
+      if (tableItem?.bill?.[0]?.notes && tableItem.bill[0].notes.length > 0) {
+        const managementNotes = tableItem.bill[0].notes.filter(
+          (element) => element.status === ENABLE_STATUS
+        );
+        setSelectNote(managementNotes[0]); // Asignar la primera nota como selectNote
+        setBillCurrentCommand(managementNotes[0]); // Asignar la primera nota como billCurrentCommand
         return;
       }
 
+      // Si hay un bill[0], asignarlo como billCurrentCommand
       if (tableItem.bill[0]) {
         setBillCurrentCommand(tableItem.bill[0]);
         return;
       }
+
+      // Si no hay bill[0], configurar un nuevo billCurrentCommand
       setBillCurrentCommand({
         ...billCurrentCommand,
         tableNum: tableItem.tableNum,
@@ -201,13 +208,18 @@ export default function Order() {
     }
 
     if (type === TO_GO_ORDER) {
+      // Configurar billCurrentCommand basado en toGoOrder o initialOrderTogo si toGoOrder no está definido
       if (toGoOrder) {
+        console.log("2");
         setBillCurrentCommand(toGoOrder);
         return;
+      } else {
+        console.log("3");
+        setBillCurrentCommand(initialOrderTogo);
       }
-      setBillCurrentCommand(initialOrderTogo);
     }
 
+    // Función de limpieza del efecto
     return () => {
       setBillCurrentCommand({
         ...billCurrentCommand,
@@ -215,12 +227,13 @@ export default function Order() {
       });
     };
   }, []);
+
   return (
     <div className={styles.container}>
       <HeaderTwo />
       <main className={styles.mainSection}>
         <section>
-          {tableItem.bill[0] && tableItem.bill[0].notes.length ? (
+          {tableItem?.bill[0] && tableItem.bill[0]?.notes?.length ? (
             <>
               <div>
                 <div className={styles.headAccount}>
@@ -238,8 +251,8 @@ export default function Order() {
                       >
                         <div className={styles.selectTrigger}>
                           <span>
-                            {selectNote.noteName ??
-                              `Nota  ${selectNote.noteNumber}`}
+                            {selectNote?.noteName ??
+                              `Nota  ${selectNote?.noteNumber}`}
                           </span>
                           <img
                             src={arrow}
@@ -512,7 +525,7 @@ export default function Order() {
             onClick={() => {
               if (isWithNotes) {
                 const body = {
-                  accountId: tableItem.bill[0]._id,
+                  accountId: tableItem.bill[0]?._id,
                   body: { status: FOR_PAYMENT_STATUS },
                 };
                 updatePropInNote(selectNote._id, body);
@@ -559,7 +572,7 @@ export default function Order() {
                     products: billCurrentCommand.products,
                     checkTotal: billCurrentCommand.checkTotal,
                   },
-                  accountId: tableItem.bill[0]._id,
+                  accountId: tableItem.bill[0]?._id,
                 };
                 updateNote(selectNote._id, dataTransfer);
                 confirmChanges.openModal();
@@ -591,7 +604,7 @@ export default function Order() {
               logOutRequest();
             }
           }}
-          disabled={billCurrentCommand.products.length < 1}
+          disabled={billCurrentCommand?.products.length < 1}
         >
           <img src={sendIcon} alt="send-icon" />
           Enviar

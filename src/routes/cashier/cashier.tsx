@@ -8,6 +8,8 @@ import enableIcon from "../../assets/icon/enableIcon.svg";
 import paymentIcon from "../../assets/icon/paymentIcon.svg";
 import logOutIcon from "../../assets/icon/logOutIcon.svg";
 import homeIcon from "../../assets/icon/homeIcon.svg";
+import pauseBtn from "../../assets/icon/pauseBtn.svg";
+import playBtn from "../../assets/icon/playBtn.svg";
 
 // Hooks
 import { useModal } from "../../hooks/useModal";
@@ -33,6 +35,8 @@ import { useNotesStore } from "../../store/notes.store";
 import { FOR_PAYMENT_STATUS } from "../../lib/tables.status.lib";
 import { ENTRY_PATH } from "../../lib/routes.paths.lib";
 import { useOperationProcess } from "../../store/operatingPeriod/operatingPeriod.store";
+import { useCashierSession } from "@/store/cashierSession.store";
+import ConfirmChanges from "@/components/modals/confirm/confirmChanges";
 
 export default function Cashier() {
   //exceptions
@@ -45,6 +49,7 @@ export default function Cashier() {
 
   const paymentInterface = useModal(PAYMENT_INTERFACE_MODAL);
   const confirmPayment = useModal(CONFIRM_PAYMENT_MODAL);
+  const confirmChanges = useModal("confirmChanges");
   const { accountArray, getBills } = UseAccount();
   const [currentBill, setCurrentBill] = useState<{}>();
 
@@ -54,6 +59,9 @@ export default function Cashier() {
   const [isLoading, setIsloading] = useState(false);
   const [revolve, setRevolve] = useState<string>("");
   const authData = useAuthStore((state) => state.authData);
+  const pauseResumeSession = useCashierSession(
+    (state) => state.pauseResumeSession
+  );
 
   const notesArray = useNotesStore((state) => state.notesArray);
   const getNotes = useNotesStore((state) => state.getNotes);
@@ -64,6 +72,13 @@ export default function Cashier() {
   const filterSession = operatingPeriod[0]?.sellProcess?.filter(
     (item: any) => item.user === authData.payload.user._id
   );
+  const loadingCashierSession = useCashierSession((state) => state.isLoading);
+  const errorsCashierSession = useCashierSession((state) => state.errors);
+  const refreshFunction = () => {
+    getPeriod();
+    getNotes();
+    getBills();
+  };
   useEffect(() => {
     getPeriod();
     getNotes();
@@ -106,6 +121,18 @@ export default function Cashier() {
               )
             )
           : null}
+        {confirmChanges.isOpen &&
+        confirmChanges.modalName === "confirmChanges" ? (
+          <ConfirmChanges
+            errors={errorsCashierSession}
+            loading={loadingCashierSession}
+            isOpen={confirmChanges.isOpen}
+            onClose={confirmChanges.closeModal}
+            actionType={refreshFunction}
+          >
+            Cambios guardados
+          </ConfirmChanges>
+        ) : null}
         {paymentInterface.isOpen &&
         paymentInterface.modalName === PAYMENT_INTERFACE_MODAL ? (
           <PaymentInterface
@@ -162,6 +189,29 @@ export default function Cashier() {
             Inicio
           </button>
         </div>
+        {filterSession[0]?.enable ? (
+          <button
+            disabled={!filterSession[0]}
+            onClick={() => {
+              confirmChanges.openModal();
+              pauseResumeSession(filterSession[0]._id);
+            }}
+          >
+            <img src={pauseBtn} alt="pause-icon" />
+            Pausar caja
+          </button>
+        ) : (
+          <button
+            disabled={!filterSession[0]}
+            onClick={() => {
+              confirmChanges.openModal();
+              pauseResumeSession(filterSession[0]._id);
+            }}
+          >
+            <img src={playBtn} alt="play-button" />
+            Reanudar caja
+          </button>
+        )}
         <div>
           <span>
             <img src={enableIcon} alt="enable-icon" />

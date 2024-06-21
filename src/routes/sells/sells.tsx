@@ -58,6 +58,7 @@ export default function Sells() {
     }
     if (item.sellType === "toGo") {
       navigate(`/${TO_GO_PATH}`);
+      return;
     }
     console.log("No es para comer aqui, ni para llevar");
   };

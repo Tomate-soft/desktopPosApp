@@ -18,6 +18,7 @@ import {
   PRODUCTS_CANCEL,
   PRODUCTS_DISCOUNTS,
   SEPARATE_CHECKS,
+  TO_GO_PAYMENT,
 } from "./configs/constants";
 import tomateIcon from "../../../../assets/icon/tomatePOSlogo.svg";
 import UseAccount from "../../../../hooks/useAccount";
@@ -56,6 +57,7 @@ import {
   TRANSFER_PRODUCTS_AUTH,
 } from "../../../../lib/authorizations.lib";
 import { TRANSFER_PRODUCTS_PATH } from "../../../../lib/routes.paths.lib";
+import PaymentInterface from "@/components/payments/payments.int";
 interface Props {
   isOpen: any;
   onClose: any;
@@ -386,6 +388,20 @@ export default function MoreActionsMenu({ onClose, item, type }: Props) {
                 >
                   Ingresa descripcion de la cancelacion:
                 </ActionsKeyboard>
+              ) : (
+                <ValidateAuthMessage
+                  allow={authorizations.includes(CANCEL_BILL_AUTH)}
+                >
+                  No autorizado
+                </ValidateAuthMessage>
+              )}
+            </>
+          ) : selectedOption === TO_GO_PAYMENT ? (
+            <>
+              {true ? (
+                <PaymentInterface openModal={confirmChanges.openModal}>
+                  Ingresa descripcion de la cancelacion:
+                </PaymentInterface>
               ) : (
                 <ValidateAuthMessage
                   allow={authorizations.includes(CANCEL_BILL_AUTH)}

@@ -34,6 +34,7 @@ export default function ToGoOrder() {
     });
   };
   useEffect(() => {
+    console.log(toGoOrdersArray);
     getToGoOrders();
   }, []);
   return (

@@ -51,6 +51,7 @@ export default function PaymentInterface({
   const [paymentQuantity, setPaymentQuantity] = useState<string>("0.00");
   const [currentTransaction, setCurrentTransaction] =
     useState<Transaction>(initialTransaction);
+  const [tips, setTips] = useState<string>("0.00");
 
   const handleChange = (value: string) => {
     const currentValue = paymentQuantity === "0.00" ? "" : paymentQuantity;
@@ -235,11 +236,6 @@ export default function PaymentInterface({
                     disabled={currentPayment <= 0}
                     className={styles.denominationBtn}
                     onClick={() => {
-                      console.log(`currentPayment: ${currentPayment}`);
-                      console.log(`item: ${item}`);
-                      console.log(`paymentQuantity: ${paymentQuantity}`);
-                      console.log(currentPayment - parseFloat(item));
-
                       addTransaction({
                         paymentType: paymentType,
                         quantity: item,
@@ -247,6 +243,7 @@ export default function PaymentInterface({
                           currentPayment - parseFloat(item) > 0
                             ? item
                             : currentPayment.toFixed(2).toString(),
+                        tips: tips,
                       });
                     }}
                   >
