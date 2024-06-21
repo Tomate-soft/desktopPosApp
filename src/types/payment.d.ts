@@ -2,6 +2,7 @@ export interface Transaction {
   paymentType: string;
   quantity: string;
   payQuantity?: string;
+  tips?: string;
 }
 
 export interface Payment {
