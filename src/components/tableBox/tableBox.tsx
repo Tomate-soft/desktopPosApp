@@ -133,7 +133,7 @@ export default function TableBox({
     <div
       className={styles.table}
       style={
-        joinedInInTable?.some((i: any) => i == item.tableNum)
+        joinedInInTable?.some((i: any) => i == item.tableNum) && isEdit
           ? {
               filter: "drop-shadow(0px 0px 6px #fff",
               opacity: "1",
@@ -235,7 +235,9 @@ export default function TableBox({
           <img src={moreActionsIcon} alt="more-actions" />
         </button>
       </div>
-      {splitTablesModal.isOpen && splitTablesModal.modalName === current ? (
+      {isEdit &&
+      splitTablesModal.isOpen &&
+      splitTablesModal.modalName === current ? (
         <SplitTables item={item} openModal={openModal}></SplitTables>
       ) : null}
     </div>

@@ -28,7 +28,7 @@ export default function CashierBox({
       </div>
       <img src={tableFree} alt="table-free" />
       <p>{item.tableNum}</p>
-      <span>{/*item.user */}</span>
+      <span>{item.user}</span>
       <div>
         <span>00.00</span>
         <span>
