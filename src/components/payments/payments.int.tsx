@@ -15,12 +15,12 @@ import useDate from "../../hooks/useDate";
 // Utils
 import { denominations, keyboard } from "./utils/denominations";
 import PrintButton from "../buttons/printerButton/printButton";
-import { Bill } from "../../types/account";
 import { ChangeEvent, useEffect, useState } from "react";
 // types
 import { Payment, Transaction } from "../../types/payment";
 import { initialState, initialTransaction } from "./utils/initialState";
-import { parse } from "uuid";
+import { useModal } from "@/shared";
+import AddTips from "../addTips/addTips";
 interface Props {
   setRevolve: (value: string) => void;
   handleLoading: (value: boolean) => void;
@@ -51,7 +51,12 @@ export default function PaymentInterface({
   const [paymentQuantity, setPaymentQuantity] = useState<string>("0.00");
   const [currentTransaction, setCurrentTransaction] =
     useState<Transaction>(initialTransaction);
-  const [tips, setTips] = useState<string>("0.00");
+  const [tips, setTips] = useState<string>("");
+  const addTips = useModal("ADD_TIPS");
+
+  const totalTips = createPayment?.transactions.reduce((acc, item) => {
+    return acc + parseFloat(item?.tips);
+  }, 0);
 
   const handleChange = (value: string) => {
     const currentValue = paymentQuantity === "0.00" ? "" : paymentQuantity;
@@ -108,6 +113,8 @@ export default function PaymentInterface({
     ? currentBill.note?.checkTotal
     : currentBill?.checkTotal;
   const currentPayment = parseFloat(conditionalTotal) - totalTransactions;
+  const [transactionAdded, setTransactionAdded] =
+    useState<Transaction>(initialTransaction);
 
   useEffect(() => {
     if (!paymentQuantity) setPaymentQuantity("0.00");
@@ -236,7 +243,8 @@ export default function PaymentInterface({
                     disabled={currentPayment <= 0}
                     className={styles.denominationBtn}
                     onClick={() => {
-                      addTransaction({
+                      addTips.openModal();
+                      setTransactionAdded({
                         paymentType: paymentType,
                         quantity: item,
                         payQuantity:
@@ -245,6 +253,15 @@ export default function PaymentInterface({
                             : currentPayment.toFixed(2).toString(),
                         tips: tips,
                       });
+                      /* addTransaction({
+                        paymentType: paymentType,
+                        quantity: item,
+                        payQuantity:
+                          currentPayment - parseFloat(item) > 0
+                            ? item
+                            : currentPayment.toFixed(2).toString(),
+                        tips: tips,
+                      }); */
                     }}
                   >
                     ${item}
@@ -253,8 +270,11 @@ export default function PaymentInterface({
                 <button
                   className={styles.denominationBtn}
                   onClick={() => {
+                    addTips.openModal();
+                    /*
                     addTransaction(currentTransaction);
                     setPaymentType("cash");
+                    */
                   }}
                   disabled={
                     currentPayment <= 0 ||
@@ -278,6 +298,18 @@ export default function PaymentInterface({
               Imprimir Ticket
             </button>    */}
           </div>
+          {addTips.isOpen && addTips.modalName === "ADD_TIPS" ? (
+            <AddTips
+              isOpen={addTips.isOpen}
+              onClose={addTips.closeModal}
+              value={tips}
+              setvalue={setTips}
+              transaction={transactionAdded}
+              actionType={addTransaction}
+            >
+              <h1>ADD TIPS</h1>
+            </AddTips>
+          ) : null}
           <div>
             <div>
               <div className={styles.headPayment}>

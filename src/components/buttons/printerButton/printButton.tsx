@@ -32,10 +32,17 @@ const PrintButton = ({
   const { updateBill } = UseAccount();
   const navigate = useNavigate();
   const paymentNote = UsePaymentsStore((state) => state.paymentNote);
+  const totalTips = createCurrentPayment?.transactions
+    ?.flatMap((transaction) => transaction.tips || [])
+    .reduce((acc, tip) => acc + (parseFloat(tip) || 0), 0);
+
+  const revolveCalculate = diference * -1 - totalTips;
 
   useEffect(() => {
+    console.log(totalTips);
     getOneTable(currentBill?.table);
-  }, []);
+    console.log(createCurrentPayment);
+  }, [totalTips, createCurrentPayment]);
 
   return (
     <button
@@ -49,7 +56,7 @@ const PrintButton = ({
               difference: (diference * -1).toString(),
             },
           };
-          setRevolve(constPay.body.difference);
+          setRevolve(revolveCalculate.toFixed(2).toString());
           paymentNote(currentBill.note._id, constPay);
           openModal();
           return;
@@ -67,7 +74,7 @@ const PrintButton = ({
             handleLoading(false);
           }, 400);
           openModal();
-          setRevolve(constPay.difference);
+          setRevolve(revolveCalculate.toFixed(2).toString());
           handlePrint("ticket", currentBill), onClose();
           return;
           //navigate("/"); ////////////vERIFICAR LA NAVEGACION
