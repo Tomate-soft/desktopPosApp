@@ -10,3 +10,8 @@ export const resetTablesInUsersService = async () => {
   const response = axios.put(TABLE_IN_USER_PATH);
   return response;
 };
+
+export const getusersService = async () => {
+  const response = await axios.get(USERS_PATH);
+  return response;
+};

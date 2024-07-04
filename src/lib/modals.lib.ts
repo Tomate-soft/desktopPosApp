@@ -16,6 +16,7 @@ export const CONFIRM_PAYMENT_MODAL = "CONFIRM_PAYMENT_MODAL";
 export const CONFIRM_PAYMENT = "CONFIRM_PAYMENT";
 export const SPLIT_TABLES = "SPLIT_TABLES";
 export const INTERACTIVE_MODAL = "INTERACTIVE_MODAL";
+export const ADD_TIPS = "ADD_TIPS";
 
 // Main menu
 export const OPEN_CASHIER_SESSION = "OPEN_CASHIER_SESSION"; // Apertura de caja

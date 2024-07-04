@@ -21,6 +21,7 @@ import {
   CASH_OUT_PROCESS,
   CLOSE_CASHIER_SESSION,
   CLOSE_OPERATIONS_PERIOD,
+  CONFIRM_CHANGES,
   DISABLED_PRODUCTS,
   OPEN_CASHIER_SESSION,
 } from "../../../lib/modals.lib";
@@ -32,6 +33,8 @@ import CloseOperationsPeriod from "../../closeOperations/closePeriod";
 import { useAuthStore } from "../../../shared";
 import { ADMIN, CASHIER } from "../../tools/confirmPassword/lib";
 import UseVerify from "../../../hooks/verifications/useVerify";
+import { usePayStore } from "@/store/payments/payments.store";
+import ConfirmChanges from "@/components/modals/confirm/confirmChanges";
 
 interface Props {
   isOpen: any;
@@ -52,6 +55,9 @@ export default function MainMenu({ isOpen, onClose, children }: Props) {
   const closeOperations = useModal(CLOSE_OPERATIONS_PERIOD);
   const navigate = useNavigate();
   const { isCashierEnable } = UseVerify();
+  const confirmChanges = useModal(CONFIRM_CHANGES);
+  const isLoading = usePayStore((state) => state.isLoading);
+  const errors = usePayStore((state) => state.errors);
 
   return (
     <div className={styles.screen}>
@@ -135,9 +141,21 @@ export default function MainMenu({ isOpen, onClose, children }: Props) {
           </button>
         </section>
       </section>
-
+      {confirmChanges.isOpen && confirmChanges.modalName === CONFIRM_CHANGES ? (
+        <ConfirmChanges
+          loading={isLoading}
+          errors={errors}
+          isOpen={confirmChanges.isOpen}
+          onClose={confirmChanges.closeModal}
+        >
+          Exitoso
+        </ConfirmChanges>
+      ) : null}
       {cashMoves.isOpen && cashMoves.modalName === CASH_MOVES ? (
-        <CashMoves onClose={cashMoves.closeModal}></CashMoves>
+        <CashMoves
+          onClose={cashMoves.closeModal}
+          openModal={confirmChanges.openModal}
+        ></CashMoves>
       ) : null}
       {disableProducts.isOpen && disableProducts.modalName ? (
         <DisableProducts

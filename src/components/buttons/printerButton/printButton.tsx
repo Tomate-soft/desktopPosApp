@@ -7,6 +7,8 @@ import { useEffect } from "react";
 import UsePayment from "../../../hooks/usePayments";
 import { Payment } from "../../../types/payment";
 import { UsePaymentsStore } from "../../../store/payments/paymenNote.store";
+import { usePayStore } from "@/store/payments/payments.store";
+import { create } from "zustand";
 
 interface Props {
   setRevolve: (value: string) => void;
@@ -15,9 +17,11 @@ interface Props {
   onClose: () => void;
   currentBill: any;
   diference: number;
-  createCurrentPayment: Payment;
+  createCurrentPayment: any;
+  isDelivery?: boolean;
 }
 const PrintButton = ({
+  isDelivery,
   setRevolve,
   handleLoading,
   openModal,
@@ -26,12 +30,20 @@ const PrintButton = ({
   diference,
   createCurrentPayment,
 }: Props) => {
+  const createPay = usePayStore((state) => state.payTogo);
   const { createPayment, errors } = UsePayment();
   const { handlePrint } = UseAccount();
   const { updateTable, getOneTable, currentTable } = UseTable();
   const { updateBill } = UseAccount();
   const navigate = useNavigate();
   const paymentNote = UsePaymentsStore((state) => state.paymentNote);
+  const totalTips = createCurrentPayment?.transactions
+    ?.flatMap((transaction) => transaction.tips || [])
+    .reduce((acc, tip) => acc + (parseFloat(tip) || 0), 0);
+
+  const revolveCalculate = totalTips
+    ? diference * -1 - totalTips
+    : diference * -1;
 
   useEffect(() => {
     getOneTable(currentBill?.table);
@@ -41,43 +53,52 @@ const PrintButton = ({
     <button
       disabled={diference > 0}
       onClick={() => {
-        if (currentBill?.note) {
-          const constPay = {
-            accountId: currentBill?.note?.accountId,
-            body: {
-              ...createCurrentPayment,
-              difference: (diference * -1).toString(),
-            },
-          };
-          setRevolve(constPay.body.difference);
-          paymentNote(currentBill.note._id, constPay);
+        if (isDelivery) {
+          setRevolve(revolveCalculate.toFixed(2).toString());
+          createPay(createCurrentPayment);
           openModal();
           return;
-        }
-        handleLoading(true);
-        onClose();
-        const constPay = {
-          ...createCurrentPayment,
-          accountId: currentBill._id,
-          difference: (diference * -1).toString(),
-        };
-        createPayment(constPay);
-        if (!errors) {
+        } else {
+          if (currentBill?.note) {
+            const constPay = {
+              accountId: currentBill?.note?.accountId,
+              body: {
+                ...createCurrentPayment,
+                difference: (diference * -1).toString(),
+              },
+            };
+            setRevolve(revolveCalculate.toFixed(2).toString());
+            paymentNote(currentBill.note._id, constPay);
+            openModal();
+            return;
+          }
+          handleLoading(true);
+          onClose();
+          const constPay = {
+            ...createCurrentPayment,
+            accountId: currentBill._id,
+            difference: (diference * -1).toString(),
+          };
+          console.log("pago");
+          console.log(constPay);
+          createPayment(constPay);
+          if (!errors) {
+            setTimeout(() => {
+              handleLoading(false);
+            }, 400);
+            openModal();
+            setRevolve(revolveCalculate.toFixed(2).toString());
+            handlePrint("ticket", currentBill), onClose();
+            return;
+            //navigate("/"); ////////////vERIFICAR LA NAVEGACION
+          }
           setTimeout(() => {
             handleLoading(false);
           }, 400);
-          openModal();
-          setRevolve(constPay.difference);
-          handlePrint("ticket", currentBill), onClose();
-          return;
+          setRevolve("error");
+          onClose();
           //navigate("/"); ////////////vERIFICAR LA NAVEGACION
         }
-        setTimeout(() => {
-          handleLoading(false);
-        }, 400);
-        setRevolve("error");
-        onClose();
-        //navigate("/"); ////////////vERIFICAR LA NAVEGACION
       }}
       className={styles.printBtn}
     >

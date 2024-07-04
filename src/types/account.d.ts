@@ -10,6 +10,7 @@ export interface Printer {
 export interface Bill {
   sellType?: "onSite" | "toGo" | "phone" | "rappi" | "n/A";
   user?: string;
+  userId?: string;
   checkTotal?: string;
   products?: Product[];
   status?: "enable" | "free" | "forPayment" | "pending";

@@ -10,6 +10,7 @@
     z-index: 1000;
     transition: 1s;
     background: rgba(0, 0, 0, 0.616);
+    border: 2px solid yellow;
 
     >div{
         display: flex;
@@ -32,6 +33,7 @@
             display: flex;
             font-size: 24px;
         }
+        
         >div:nth-child(3){
             height: 633px;
             padding: 32px;
@@ -136,5 +138,16 @@
     box-shadow: 2px 2px 8px 0px rgba(0, 0, 0, 0.25);
     background: rgba(249, 249, 249, 0.2);
 
+  }
+
+  .userLine{
+    background-color: rgba(240, 248, 255, 0.151);
+    border-radius: 8px;
+    padding: 16px;
+
+  }
+
+  .hidden{
+    padding: 16px;
   }
 

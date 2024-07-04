@@ -74,6 +74,7 @@ export default function Cashier() {
   );
   const loadingCashierSession = useCashierSession((state) => state.isLoading);
   const errorsCashierSession = useCashierSession((state) => state.errors);
+
   const refreshFunction = () => {
     getPeriod();
     getNotes();
@@ -194,7 +195,7 @@ export default function Cashier() {
             disabled={!filterSession[0]}
             onClick={() => {
               confirmChanges.openModal();
-              pauseResumeSession(filterSession[0]._id);
+              pauseResumeSession(filterSession[0]?._id);
             }}
           >
             <img src={pauseBtn} alt="pause-icon" />
@@ -205,7 +206,7 @@ export default function Cashier() {
             disabled={!filterSession[0]}
             onClick={() => {
               confirmChanges.openModal();
-              pauseResumeSession(filterSession[0]._id);
+              pauseResumeSession(filterSession[0]?._id);
             }}
           >
             <img src={playBtn} alt="play-button" />

@@ -58,14 +58,26 @@ import {
 } from "../../../../lib/authorizations.lib";
 import { TRANSFER_PRODUCTS_PATH } from "../../../../lib/routes.paths.lib";
 import PaymentInterface from "@/components/payments/payments.int";
+import GenericPaymentInterface from "@/components/genericPaymentInterface/genericPaymentInterface";
+import { CASHIER } from "@/components/tools/confirmPassword/lib";
 interface Props {
   isOpen: any;
   onClose: any;
   item: any;
   type: string;
+  setRevolve?: any;
+  setIsloading?: any;
+  openModal?: any;
 }
 
-export default function MoreActionsMenu({ onClose, item, type }: Props) {
+export default function MoreActionsMenu({
+  onClose,
+  item,
+  type,
+  setRevolve,
+  setIsloading,
+  openModal,
+}: Props) {
   const [selectedOption, setSelectedOption] = useState<string>("");
 
   const updateCommentBill = UseActions((state) => state.updateComments);
@@ -78,6 +90,7 @@ export default function MoreActionsMenu({ onClose, item, type }: Props) {
   const authData = useAuthStore((state) => state.authData);
   const authorizations =
     authData?.payload?.user?.authorizations?.pos?.sellTypes?.restaurant ?? [];
+  const allowRole = authData.payload.user.role.role.name;
 
   const confirmChanges = useModal(CONFIRM_ACTIONS);
   useEffect(() => {
@@ -398,10 +411,16 @@ export default function MoreActionsMenu({ onClose, item, type }: Props) {
             </>
           ) : selectedOption === TO_GO_PAYMENT ? (
             <>
-              {true ? (
-                <PaymentInterface openModal={confirmChanges.openModal}>
-                  Ingresa descripcion de la cancelacion:
-                </PaymentInterface>
+              {allowRole === CASHIER ? (
+                <GenericPaymentInterface
+                  handleLoading={setIsloading}
+                  onClose={setSelectedOption}
+                  currentBill={item}
+                  setRevolve={setRevolve}
+                  openModal={openModal}
+                >
+                  Pagar
+                </GenericPaymentInterface>
               ) : (
                 <ValidateAuthMessage
                   allow={authorizations.includes(CANCEL_BILL_AUTH)}
