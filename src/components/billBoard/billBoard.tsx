@@ -19,6 +19,7 @@ import UseTable from "@/hooks/useTable";
 import { UseTableStore } from "@/store/tables.store";
 import { table } from "@/shared";
 import { ENABLE_STATUS } from "@/lib/tables.status.lib";
+import UseAccount from "@/hooks/useAccount";
 interface Props {
   isOpen: any;
   onClose: any;
@@ -27,6 +28,7 @@ interface Props {
 export default function BillBoard({ isOpen, onClose, children }: Props) {
   const [order, setOrder] = useState<OrderType>(SELL_TYPE_ORDER);
   const [filter, setFilter] = useState<FilterType>("");
+  const { handlePrint } = UseAccount();
 
   const getTables = UseTableStore((state) => state.getTables);
   const tableArray = UseTableStore((state) => state.tablesArray);
@@ -122,7 +124,17 @@ export default function BillBoard({ isOpen, onClose, children }: Props) {
           </div>
         </div>
         <div>
-          <button>
+          <button
+            onClick={() => {
+              console.log("ejecucion de impresion");
+              console.log(accountEnables);
+              if (accountEnables.length > 0) {
+                for (const account of accountEnables) {
+                  handlePrint("billPrint", account);
+                }
+              }
+            }}
+          >
             <img src={printButton} alt="" />
             Imprimir todas
           </button>

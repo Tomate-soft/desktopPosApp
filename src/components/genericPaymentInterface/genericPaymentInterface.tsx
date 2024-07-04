@@ -1,4 +1,4 @@
-import styles from "./payment.int.module.css";
+import styles from "./genericPaymentInterface.module.css";
 // Icons
 import cashCircle from "../../assets/icon/cashCircle.svg";
 import closeIcon from "../../assets/icon/closeIcon.svg";
@@ -13,14 +13,18 @@ import deleteIcon from "../../assets/icon/deleteIcon.svg";
 // Hooks
 import useDate from "../../hooks/useDate";
 // Utils
-import { denominations, keyboard } from "./utils/denominations";
+import { denominations, keyboard } from "../payments/utils/denominations";
 import PrintButton from "../buttons/printerButton/printButton";
 import { ChangeEvent, useEffect, useState } from "react";
 // types
 import { Payment, Transaction } from "../../types/payment";
-import { initialState, initialTransaction } from "./utils/initialState";
-import { useModal } from "@/shared";
+import {
+  initialState,
+  initialTransaction,
+} from "../payments/utils/initialState";
+import { useAuthStore, useModal } from "@/shared";
 import AddTips from "../addTips/addTips";
+
 interface Props {
   setRevolve: (value: string) => void;
   handleLoading: (value: boolean) => void;
@@ -28,10 +32,10 @@ interface Props {
   isOpen?: any;
   onClose: any;
   children: any;
-  currentBill: any; // aca hay que extender el modelo con "._id" y lo que haga falta
+  currentBill: any;
 }
 
-export default function PaymentInterface({
+export default function GenericPaymentInterface({
   setRevolve,
   handleLoading,
   openModal,
@@ -53,6 +57,13 @@ export default function PaymentInterface({
     useState<Transaction>(initialTransaction);
   const [tips, setTips] = useState<string>("");
   const addTips = useModal("ADD_TIPS");
+
+  const authData = useAuthStore((state) => state.authData);
+  const cashierSessionId = authData?.payload?.user?._id;
+  const sendData = {
+    waiterId: currentBill.userId,
+    body: createPayment,
+  };
 
   const totalTips = createPayment?.transactions.reduce((acc, item) => {
     return acc + parseFloat(item?.tips);
@@ -104,6 +115,7 @@ export default function PaymentInterface({
       });
     }
   };
+
   const totalTransactions = createPayment.transactions.reduce(
     (acumulador, elemento) =>
       acumulador + parseFloat(elemento.quantity.replace(/,/g, "")),
@@ -117,14 +129,15 @@ export default function PaymentInterface({
     useState<Transaction>(initialTransaction);
 
   useEffect(() => {
-    if (!paymentQuantity) setPaymentQuantity("0.00");
+    console.log("aca el currentBill");
+    console.log(currentBill);
     setCreatePayment({
       ...createPayment,
-      cashier: "develop",
-      check: "exampleCode",
+      accountId: currentBill._id,
+      cashier: cashierSessionId,
+      checkTotal: currentBill.checkTotal,
       paymentDate: new Date().toISOString(),
-      paymentTotal: currentBill?.note?.checkTotal ?? currentBill.checkTotal,
-      accountId: currentBill.bill?._id ?? currentBill.bill?._id,
+      check: "example",
     });
 
     return setPaymentQuantity("0.00");
@@ -139,17 +152,18 @@ export default function PaymentInterface({
             <h1>{children}</h1>
           </div>
           <span>{formattedFecha}</span>
-          <button className={styles.closeButton} onClick={onClose}>
+          <button
+            className={styles.closeButton}
+            onClick={() => {
+              onClose("");
+            }}
+          >
             <img src={closeIcon} alt="close-icon" />
           </button>
         </div>
         <div>
           <div>
-            {currentBill.note ? (
-              <h3>{`Mesa  0${currentBill.bill.tableNum}   -   Nota: ${currentBill.note.noteNumber}`}</h3>
-            ) : (
-              <h3>{`Mesa  0${currentBill.tableNum}`}</h3>
-            )}
+            <h3>{`Código de pedido: ${currentBill.code}`}</h3>
             <div className={styles.sectionRight}>
               {currentBill.note ? (
                 <h3>{`Total: ${currentBill.note.checkTotal}`}</h3>
@@ -361,11 +375,12 @@ export default function PaymentInterface({
               </div>
             </div>
             <PrintButton
+              isDelivery={true}
               setRevolve={setRevolve}
               handleLoading={handleLoading}
               openModal={openModal}
               onClose={onClose}
-              createCurrentPayment={createPayment}
+              createCurrentPayment={sendData}
               diference={currentPayment}
               currentBill={currentBill}
             />

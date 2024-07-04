@@ -78,6 +78,8 @@ export default function AddTips({
                 className={styles.checkButton}
                 onClick={() => {
                   actionType({ ...transaction, tips: value });
+                  setvalue("");
+                  onClose();
                 }}
               >
                 <img src={minCheck} alt="check-icon" />

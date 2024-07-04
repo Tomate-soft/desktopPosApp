@@ -55,10 +55,12 @@ import UseVerify from "../../hooks/verifications/useVerify";
 interface ToGoOrder {
   code: string /* esto despues sera automatico, agregar un unique*/;
   user: string;
+  userId: string;
   checkTotal: string;
   status: "enable" | "free" | "forPayment" | "pending";
   products: [];
   payment: [];
+  orderName?: string;
 }
 
 export default function Order() {
@@ -91,7 +93,8 @@ export default function Order() {
   const { updateTable } = UseTable();
   const navigate = useNavigate();
   const location = useLocation();
-  const { _id, billCurrent, tableItem, type, toGoOrder } = location.state || {};
+  const { _id, billCurrent, tableItem, type, toGoOrder, orderName } =
+    location.state || {};
   const { currentPeriod } = UseVerify();
   const managementNotes = tableItem?.bill[0]?.notes?.filter(
     (element: any) => element.status === ENABLE_STATUS
@@ -101,10 +104,12 @@ export default function Order() {
   const initialOrderTogo: ToGoOrder = {
     code: "1016",
     user: userName,
+    userId: authData?.payload?.user?._id,
     checkTotal: "0.00",
     status: "enable",
     products: [],
     payment: [],
+    orderName: orderName,
   };
 
   const isWithNotes = tableItem?.bill[0]?.notes?.length > 0;
@@ -204,13 +209,13 @@ export default function Order() {
         table: tableItem._id,
         payment: [],
         user: userName,
+        userId: authData?.payload?.user?._id,
       });
     }
 
     if (type === TO_GO_ORDER) {
       // Configurar billCurrentCommand basado en toGoOrder o initialOrderTogo si toGoOrder no está definido
       if (toGoOrder) {
-        console.log("2");
         setBillCurrentCommand(toGoOrder);
         return;
       } else {

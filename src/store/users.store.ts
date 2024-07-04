@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import {
+  getusersService,
   injectPropInUser,
   resetTablesInUsersService,
 } from "../services/users.services";
@@ -9,6 +10,8 @@ interface state {
   errors: boolean;
   updateUser: (args: any, id: string) => Promise<void>;
   resetTables: () => Promise<void>;
+  getUsers: () => Promise<void>;
+  usersArray: any[];
 }
 
 export const useUsersStore = create<state>((set) => {
@@ -38,5 +41,16 @@ export const useUsersStore = create<state>((set) => {
         set({ isLoading: false, errors: true });
       }
     },
+    getUsers: async () => {
+      set({ isLoading: true });
+      try {
+        const res = await getusersService();
+        set({ isLoading: false, usersArray: res.data });
+        return res;
+      } catch (error) {
+        set({ isLoading: false, errors: true });
+      }
+    },
+    usersArray: [],
   };
 });

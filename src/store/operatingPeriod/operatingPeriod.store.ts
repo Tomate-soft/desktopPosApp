@@ -8,6 +8,7 @@ interface state {
   messages: string;
   operatingPeriod: [];
   getCurrentPeriod: () => Promise<void>;
+  totalSells: () => Promise<void>;
 }
 
 export const useOperationProcess = create<state>((set) => {
@@ -22,6 +23,20 @@ export const useOperationProcess = create<state>((set) => {
         const res = await getCurrentProcessService();
         set({ operatingPeriod: res.data, isLoading: false });
         return res.data;
+      } catch (error) {
+        set({
+          messages: "No se pudieron traer los reportes",
+          isLoading: false,
+        });
+      }
+    },
+
+    totalSells: async () => {
+      set({ isLoading: true });
+      try {
+        const res = await getCurrentProcessService();
+        set({ operatingPeriod: res.data, isLoading: false });
+        const currentPeriod = res.data[0];
       } catch (error) {
         set({
           messages: "No se pudieron traer los reportes",

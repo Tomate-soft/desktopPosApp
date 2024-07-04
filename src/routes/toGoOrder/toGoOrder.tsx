@@ -16,15 +16,31 @@ import { useEffect, useState } from "react";
 import { TO_GO_ORDER } from "../../lib/orders.lib";
 import { useToGoOrders } from "../../store/orders/togoOrder.store";
 import { useModal } from "../sells/imports";
-import { MORE_ACTIONS_MENU } from "../../lib/modals.lib";
+import { CONFIRM_PAYMENT_MODAL, MORE_ACTIONS_MENU } from "../../lib/modals.lib";
 import MoreActionsMenu from "../../components/menus/mainMenu/moreActions/moreActionsMenu";
+import ConfirmPayment from "@/components/modals/confirmPayments/confirmPayments";
+import { GENERIC_KEYBOARD_ACTIVE } from "@/components/genericKeyboard/config";
+import { GenericKeyboard } from "@/components/genericKeyboard/genericKeyboard";
+import { keyboard } from "@/components/payments/utils/denominations";
+import { ENABLE_STATUS } from "@/lib/tables.status.lib";
 
 export default function ToGoOrder() {
+  const confirmPayment = useModal(CONFIRM_PAYMENT_MODAL);
+  const [isLoading, setIsloading] = useState(false);
+  const [revolve, setRevolve] = useState<string>("");
   // MODALS
   const moreActionMenu = useModal(MORE_ACTIONS_MENU);
   const getToGoOrders = useToGoOrders((state) => state.getOrders);
   const toGoOrdersArray = useToGoOrders((state) => state.toGoOrderArray);
+  const [currentOrder, setCurrentOrder] = useState<any>();
   const navigate = useNavigate();
+  const genericKeyboard = useModal(GENERIC_KEYBOARD_ACTIVE);
+  const [orderName, setOrderName] = useState<string>("");
+
+  const managementOrders = toGoOrdersArray?.filter((element) => {
+    return element.status === ENABLE_STATUS;
+  });
+
   const handleClick = (element: any) => {
     navigate("/restaurant-order/:item", {
       state: {
@@ -33,6 +49,14 @@ export default function ToGoOrder() {
       },
     });
   };
+
+  const setNewOrder = () => {
+    console.log("setNewOrder");
+    navigate("/restaurant-order/:item", {
+      state: { type: TO_GO_ORDER, orderName: orderName },
+    });
+  };
+
   useEffect(() => {
     console.log(toGoOrdersArray);
     getToGoOrders();
@@ -41,7 +65,7 @@ export default function ToGoOrder() {
     <div className={styles.container}>
       <HeaderTwo />
       <main className={styles.mainSection}>
-        {toGoOrdersArray?.map((element) => (
+        {managementOrders?.map((element) => (
           <div className={styles.orderBox}>
             {element.status === "enable" ? (
               <img src={enableOrder} alt="enable-order-icon" />
@@ -49,9 +73,12 @@ export default function ToGoOrder() {
               <img src={paymentOrder} alt="payment-order-icon" />
             )}
             <span className={styles.timeValue}>{"#Time"}</span>
-
             <img
-              onClick={moreActionMenu.openModal}
+              onClick={() => {
+                console.log(element);
+                moreActionMenu.openModal();
+                setCurrentOrder(element);
+              }}
               className={styles.moreActions}
               src={moreActionsIcon}
               alt="more-actions-icon"
@@ -82,9 +109,7 @@ export default function ToGoOrder() {
         </div>
         <button
           onClick={() => {
-            navigate("/restaurant-order/:item", {
-              state: { type: TO_GO_ORDER },
-            });
+            genericKeyboard.openModal();
           }}
         >
           <img src={addIcon} alt="add-icon" />
@@ -101,14 +126,43 @@ export default function ToGoOrder() {
           </span>
         </div>
       </footer>
+      {genericKeyboard.isOpen &&
+      genericKeyboard.modalName === GENERIC_KEYBOARD_ACTIVE ? (
+        <GenericKeyboard
+          out={true}
+          isOpen={genericKeyboard.isOpen}
+          onClose={genericKeyboard.closeModal}
+          openModal={() => {}}
+          actionType={setNewOrder}
+          keyAction="NEW_TOGO_ORDER"
+          setValue={setOrderName}
+        >
+          Agregar nombre de la cuenta
+        </GenericKeyboard>
+      ) : null}
       {moreActionMenu.isOpen &&
       moreActionMenu.modalName === MORE_ACTIONS_MENU ? (
         <MoreActionsMenu
           type={TO_GO_ORDER}
-          item={ToGoOrder}
+          item={currentOrder}
           isOpen={moreActionMenu.isOpen}
           onClose={moreActionMenu.closeModal}
+          setRevolve={setRevolve}
+          setIsloading={setIsloading}
+          openModal={confirmPayment.openModal}
         ></MoreActionsMenu>
+      ) : null}
+      {confirmPayment.isOpen &&
+      confirmPayment.modalName === CONFIRM_PAYMENT_MODAL ? (
+        <ConfirmPayment
+          setIsLoading={setIsloading}
+          revolve={revolve}
+          isLoading={isLoading}
+          isOpen={confirmPayment.isOpen}
+          onClose={confirmPayment.closeModal}
+        >
+          {revolve}
+        </ConfirmPayment>
       ) : null}
     </div>
   );

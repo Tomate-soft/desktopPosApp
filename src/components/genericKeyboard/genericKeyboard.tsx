@@ -25,6 +25,7 @@ interface Props {
   data?: any;
   keyAction?: string;
   payload?: {};
+  out: boolean;
 }
 export function GenericKeyboard({
   children,
@@ -36,6 +37,7 @@ export function GenericKeyboard({
   data,
   keyAction,
   payload,
+  out,
 }: Props) {
   const [mayus, setMayus] = useState(true);
   const [text, setText] = useState("");
@@ -46,7 +48,7 @@ export function GenericKeyboard({
   const rowFour = ["Z", "X", "C", "V", "B", "N", "M", ",", "."];
 
   return (
-    <main className={styles.screen}>
+    <main className={styles.screen} style={out ? { left: "0%" } : {}}>
       <article className={styles.container}>
         <div className={styles.noteNav}>
           <strong>{children}</strong>
@@ -189,6 +191,9 @@ export function GenericKeyboard({
             }
             className={styles.checkBtn}
             onClick={() => {
+              if (keyAction === "NEW_TOGO_ORDER") {
+                actionType();
+              }
               if (keyAction === NOTES_CANCEL) {
                 actionType({ ...data, cancellationReason: text });
                 openModal();
