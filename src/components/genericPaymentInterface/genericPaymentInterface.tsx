@@ -24,6 +24,7 @@ import {
 } from "../payments/utils/initialState";
 import { useAuthStore, useModal } from "@/shared";
 import AddTips from "../addTips/addTips";
+import { RAPPI_ORDER } from "@/lib/orders.lib";
 
 interface Props {
   setRevolve: (value: string) => void;

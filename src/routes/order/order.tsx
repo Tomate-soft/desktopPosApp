@@ -1,6 +1,7 @@
 // styles //
 import "../../styles/global/global.css";
 import styles from "./order.module.css";
+
 // Icons
 import backIcon from "../../assets/icon/backArrow.svg";
 import backtwo from "../../assets/icon/backTwo.svg";
@@ -18,8 +19,10 @@ import { v4 as uuidv4 } from "uuid";
 // Hooks
 import useProducts from "../../hooks/useProducts";
 import { useEffect, useState } from "react";
+
 // Types and interfaces
 import { Product } from "../../types/products";
+
 //Hooks
 import UseAccount from "../../hooks/useAccount";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -31,7 +34,7 @@ import { useModal } from "../../hooks/useModal";
 import MainKeyboard from "../../components/tools/mainKeyboard/mainKeyboard";
 import { useAuthStore } from "../../store/auth/auth.store";
 import { SELL_TYPES_PATH } from "../../lib/routes.paths.lib";
-import { ON_SITE_ORDER, TO_GO_ORDER } from "../../lib/orders.lib";
+import { ON_SITE_ORDER, RAPPI_ORDER, TO_GO_ORDER } from "../../lib/orders.lib";
 import { useToGoOrders } from "../../store/orders/togoOrder.store";
 import AddModifier from "../../components/modifiers/addModifier";
 import {
@@ -44,13 +47,10 @@ import trashBtn from "../../assets/icon/trashIcon.svg";
 import arrow from "../../assets/icon/selectArrow.svg";
 import { useNotesStore } from "../../store/notes.store";
 import ConfirmChanges from "../../components/modals/confirm/confirmChanges";
-import {
-  ENABLE_STATUS,
-  FINISHED_STATUS,
-  FOR_PAYMENT_STATUS,
-} from "../../lib/tables.status.lib";
+import { ENABLE_STATUS, FOR_PAYMENT_STATUS } from "../../lib/tables.status.lib";
 import { useCashierSessionStore } from "../../store/operatingPeriod/cashierSession.store";
 import UseVerify from "../../hooks/verifications/useVerify";
+import { useRappiOrders } from "@/store/orders/rappiOrders.store";
 
 interface ToGoOrder {
   code: string /* esto despues sera automatico, agregar un unique*/;
@@ -78,7 +78,9 @@ export default function Order() {
   const authData = useAuthStore((state) => state.authData);
   const logOutRequest = useAuthStore((state) => state.logOutRequest);
   const createToGoOrder = useToGoOrders((state) => state.createNewOrder);
+  const createRappiOrder = useRappiOrders((state) => state.createNewOrder);
   const updateToGoOrder = useToGoOrders((state) => state.updateOrder);
+  const updateRappiOrder = useRappiOrders((state) => state.updateOrder);
   const addBillForPayment = useCashierSessionStore(
     (state) => state.addBillForPayment
   );
@@ -213,13 +215,12 @@ export default function Order() {
       });
     }
 
-    if (type === TO_GO_ORDER) {
+    if (type === TO_GO_ORDER || type === RAPPI_ORDER) {
       // Configurar billCurrentCommand basado en toGoOrder o initialOrderTogo si toGoOrder no está definido
       if (toGoOrder) {
         setBillCurrentCommand(toGoOrder);
         return;
       } else {
-        console.log("3");
         setBillCurrentCommand(initialOrderTogo);
       }
     }
@@ -606,6 +607,15 @@ export default function Order() {
                 return;
               }
               createToGoOrder(billCurrentCommand);
+              logOutRequest();
+            }
+            if (type === RAPPI_ORDER) {
+              if (toGoOrder) {
+                updateRappiOrder(toGoOrder._id, billCurrentCommand);
+                logOutRequest();
+                return;
+              }
+              createRappiOrder(billCurrentCommand);
               logOutRequest();
             }
           }}

@@ -17,9 +17,10 @@ import { SellType } from "../../types/props/sellType";
 import { useModal } from "../../hooks/useModal";
 import MainMenu from "../../components/menus/mainMenu/mainMenu";
 import { useAuthStore } from "../../store/auth/auth.store";
-import { sells } from "../../lib/sellTypes.lib";
+import { RAPPI, sells } from "../../lib/sellTypes.lib";
 import {
   HOST_PATH,
+  RAPPI_PATH,
   RESTAURANT_PATH,
   TO_GO_PATH,
 } from "../../lib/routes.paths.lib";
@@ -60,7 +61,10 @@ export default function Sells() {
       navigate(`/${TO_GO_PATH}`);
       return;
     }
-    console.log("No es para comer aqui, ni para llevar");
+    if (item.sellType === "rappi") {
+      navigate(`/${RAPPI_PATH}`);
+      return;
+    }
   };
   // modals
   const mainMenu = useModal(MAIN_MENU);
@@ -70,7 +74,6 @@ export default function Sells() {
   UseCashierException(cashierSessionException.openModal);
 
   useEffect(() => {
-    console.log("PRODUCTOS ACTUALIES EN LA COMANDA");
     console.log(billCurrentCommand);
     setBillCurrentCommand(billInitialState);
   }, []);

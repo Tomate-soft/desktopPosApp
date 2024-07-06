@@ -17,4 +17,10 @@ export const paymentsService = async (data: TogoPayment) => {
   return response;
 };
 
+export const paymentRappiService = async (data: TogoPayment) => {
+  console.log(data);
+  const response = axios.post(`${PAYMENTS_PATH}/rappi/pay`, data);
+  return response;
+};
+
 // REVISAR SI ACA NOS QUEDAMOS - AL PARECER TRABAJABAMOS EN LOCAL UNA VES TEMRINADO MIGRAR AL NUEVO BACKEND

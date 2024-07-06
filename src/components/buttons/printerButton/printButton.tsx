@@ -2,13 +2,11 @@ import { useNavigate } from "react-router-dom";
 import UseAccount from "../../../hooks/useAccount";
 import UseTable from "../../../hooks/useTable";
 import styles from "./printButton.module.css";
-import { Bill } from "../../../types/account";
 import { useEffect } from "react";
 import UsePayment from "../../../hooks/usePayments";
-import { Payment } from "../../../types/payment";
 import { UsePaymentsStore } from "../../../store/payments/paymenNote.store";
 import { usePayStore } from "@/store/payments/payments.store";
-import { create } from "zustand";
+import { RAPPI_ORDER, TO_GO_ORDER } from "@/lib/orders.lib";
 
 interface Props {
   setRevolve: (value: string) => void;
@@ -19,6 +17,7 @@ interface Props {
   diference: number;
   createCurrentPayment: any;
   isDelivery?: boolean;
+  sellType?: string;
 }
 const PrintButton = ({
   isDelivery,
@@ -29,8 +28,10 @@ const PrintButton = ({
   currentBill,
   diference,
   createCurrentPayment,
+  sellType: string,
 }: Props) => {
   const createPay = usePayStore((state) => state.payTogo);
+  const rappiPay = usePayStore((state) => state.payRappi);
   const { createPayment, errors } = UsePayment();
   const { handlePrint } = UseAccount();
   const { updateTable, getOneTable, currentTable } = UseTable();
@@ -54,9 +55,19 @@ const PrintButton = ({
       disabled={diference > 0}
       onClick={() => {
         if (isDelivery) {
-          setRevolve(revolveCalculate.toFixed(2).toString());
-          createPay(createCurrentPayment);
-          openModal();
+          console.log(createCurrentPayment);
+          if (currentBill?.sellType === TO_GO_ORDER) {
+            setRevolve(revolveCalculate.toFixed(2).toString());
+            createPay(createCurrentPayment);
+            openModal();
+            return;
+          }
+          if (currentBill?.sellType === RAPPI_ORDER) {
+            setRevolve(revolveCalculate.toFixed(2).toString());
+            rappiPay(createCurrentPayment);
+            openModal();
+            return;
+          }
           return;
         } else {
           if (currentBill?.note) {
