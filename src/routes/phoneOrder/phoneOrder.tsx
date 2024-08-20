@@ -1,7 +1,7 @@
 // Styles
 import HeaderTwo from "../../components/headers/headerTwo/headerTwo";
 import "../../styles/global/global.css";
-import styles from "../toGoOrder/toGoOrder.module.css";
+import styles from "./phoneOrder.module.css";
 // Icons
 import enableOrder from "../../assets/icon/togoEnable.svg";
 import paymentOrder from "../../assets/icon/togoPayment.svg";
@@ -13,8 +13,7 @@ import homeIcon from "../../assets/icon/homeIcon.svg";
 import { useNavigate } from "react-router-dom";
 import { SELL_TYPES_PATH } from "../../lib/routes.paths.lib";
 import { useEffect, useState } from "react";
-import { TO_GO_ORDER } from "../../lib/orders.lib";
-import { useToGoOrders } from "../../store/orders/togoOrder.store";
+import { PHONE_ORDER, RAPPI_ORDER, TO_GO_ORDER } from "../../lib/orders.lib";
 import { useModal } from "../sells/imports";
 import { CONFIRM_PAYMENT_MODAL, MORE_ACTIONS_MENU } from "../../lib/modals.lib";
 import MoreActionsMenu from "../../components/menus/mainMenu/moreActions/moreActionsMenu";
@@ -22,46 +21,49 @@ import ConfirmPayment from "@/components/modals/confirmPayments/confirmPayments"
 import { GENERIC_KEYBOARD_ACTIVE } from "@/components/genericKeyboard/config";
 import { GenericKeyboard } from "@/components/genericKeyboard/genericKeyboard";
 import { ENABLE_STATUS } from "@/lib/tables.status.lib";
+import { useRappiOrders } from "@/store/orders/rappiOrders.store";
+import { usePhoneOrders } from "@/store/orders/phoneOrder.store";
 
-export default function ToGoOrder() {
+export default function PhoneOrders() {
   const confirmPayment = useModal(CONFIRM_PAYMENT_MODAL);
   const [isLoading, setIsloading] = useState(false);
   const [revolve, setRevolve] = useState<string>("");
   // MODALS
   const moreActionMenu = useModal(MORE_ACTIONS_MENU);
-  const getToGoOrders = useToGoOrders((state) => state.getOrders);
-  const toGoOrdersArray = useToGoOrders((state) => state.toGoOrderArray);
+  const getPhoneOrders = usePhoneOrders((state) => state.getOrders); ///
+  const phoneOrdersArray = usePhoneOrders((state) => state.phoneOrdersArray); ///
   const [currentOrder, setCurrentOrder] = useState<any>();
   const navigate = useNavigate();
   const genericKeyboard = useModal(GENERIC_KEYBOARD_ACTIVE);
   const [orderName, setOrderName] = useState<string>("");
-
-  const managementOrders = toGoOrdersArray?.filter((element) => {
+  const managementOrders = phoneOrdersArray?.filter((element) => {
     return element.status === ENABLE_STATUS;
   });
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   const handleClick = (element: any) => {
     navigate("/restaurant-order/:item", {
       state: {
         toGoOrder: element,
-        type: TO_GO_ORDER,
+        type: PHONE_ORDER,
       },
     });
   };
 
   const setNewOrder = () => {
     navigate("/restaurant-order/:item", {
-      state: { type: TO_GO_ORDER, orderName: orderName },
+      state: { type: PHONE_ORDER, orderName: orderName },
     });
   };
 
   useEffect(() => {
-    getToGoOrders();
+    console.log("PHONE_PATH");
+    getPhoneOrders();
   }, []);
 
   return (
     <div className={styles.container}>
-      <HeaderTwo sellType="Pedido Para Llevar" />
+      <HeaderTwo sellType="Pedido Telefonico" />
       <main className={styles.mainSection}>
         {managementOrders?.map((element) => (
           <div className={styles.orderBox}>
@@ -73,7 +75,6 @@ export default function ToGoOrder() {
             <span className={styles.timeValue}>{"#Time"}</span>
             <img
               onClick={() => {
-                console.log(element);
                 moreActionMenu.openModal();
                 setCurrentOrder(element);
               }}

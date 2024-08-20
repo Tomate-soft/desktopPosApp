@@ -1,6 +1,5 @@
 import { Payment } from "./payment";
 import { Product } from "./products";
-import { SellType } from "./props/sellType";
 
 export interface Printer {
   printerName: string;
@@ -8,7 +7,7 @@ export interface Printer {
 }
 
 export interface Bill {
-  sellType?: "onSite" | "toGo" | "phone" | "rappi" | "n/A";
+  sellType?: string;
   user?: string;
   userId?: string;
   checkTotal?: string;
@@ -18,4 +17,5 @@ export interface Bill {
   tableNum?: string;
   table?: string | undefined;
   accountId?: string;
+  operatingPeriod?: string;
 }

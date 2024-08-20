@@ -54,6 +54,7 @@ export default function Restaurant() {
   const cashierSessionException = useModal(
     EXCEPTION_MESSAGES_CASHIER_SESSION_MODAL
   );
+
   UseCashierException(cashierSessionException.openModal);
   useEffect(() => {
     getTables();
@@ -71,7 +72,7 @@ export default function Restaurant() {
   }, []);
   return (
     <div className={styles.container}>
-      <HeaderTwo />
+      <HeaderTwo sellType="Restaurante" />
       <main className={styles.mainSection}>
         {openMoreActions.isOpen &&
         openMoreActions.modalName === OPEN_MORE_ACTIONS ? (

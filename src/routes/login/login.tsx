@@ -13,7 +13,7 @@ import bullet from "../../assets/icon/bullet.svg";
 import Pinboard from "../../components/tools/pinBoard/Pinboard";
 import HeaderOne from "../../components/headers/headerOne/headerOne";
 // Dependencies
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ConfirmPassword from "../../components/tools/confirmPassword/confirmPassword";
 import { CONFIRM_PASSWORD } from "../../components/tools/confirmPassword/lib";
 import { useModal } from "../../hooks/useModal";
@@ -28,6 +28,8 @@ import ConfirmEntryDaily from "../../components/confirmDailyEntry/confirmDailyEn
 import ConfirmShift from "../../components/modals/confirmShift/confirmShift";
 import { useEntryDaily } from "../../store/dailyRegisterStore";
 import ExceptionMessages from "../../components/modals/exceptionMessages/exceptionMessages";
+import UseFingerCapture from "@/hooks/useFingerCapture";
+import UseFingerSignIn from "@/hooks/useFingerSignIn";
 
 export default function Login() {
   // Modals
@@ -48,6 +50,12 @@ export default function Login() {
   const isErrorsShift = useEntryDaily((state) => state.errors);
   const createRegister = useEntryDaily((state) => state.createEntryDaily);
   const messages = useEntryDaily((state) => state.message);
+
+  const { initReader } = UseFingerSignIn(confirmEntry.openModal);
+
+  useEffect(() => {
+    initReader();
+  }, []);
 
   return (
     <div className={styles.container}>

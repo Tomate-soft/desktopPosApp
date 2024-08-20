@@ -6,7 +6,7 @@ interface state {
   isLoading: boolean;
   errors: boolean;
   messages: string;
-  operatingPeriod: [];
+  operatingPeriod: any[];
   getCurrentPeriod: () => Promise<void>;
   totalSells: () => Promise<void>;
 }
@@ -21,7 +21,8 @@ export const useOperationProcess = create<state>((set) => {
       set({ isLoading: true });
       try {
         const res = await getCurrentProcessService();
-        set({ operatingPeriod: res.data, isLoading: false });
+        console.log("res", res.data);
+        set({ operatingPeriod: res.data, isLoading: false, errors: false });
         return res.data;
       } catch (error) {
         set({

@@ -9,6 +9,8 @@ export const RESTAURANT_ORDER_PATH = "restaurant-order/:item";
 export const BIOMETRICS_PATH = "biometrics";
 export const REPORTS_PATH = "reports";
 export const TO_GO_PATH = "TO_GO_PATH";
+export const RAPPI_PATH = "rappi";
+export const PHONE_PATH = "phone";
 
 //Requests paths
 export const DAILY_REGISTER_PATH = "/daily-register";
@@ -19,6 +21,8 @@ export const CASHIER_SESSION_PATH = "/cashier-session";
 export const OPERATING_PERIOD_CURRENT = "/operating-period/current";
 export const NOTES_PATH = "/notes";
 export const TOGO_ORDER_PATH = "/togo-order";
+export const RAPPI_ORDER_PATH = "/rappi-order";
+export const PHONE_ORDER_PATH = "/phone-order";
 export const CANCELLATION_REASON_PATH = "/cancellation-reason";
 export const CATEGORIES_PATH = "/categories";
 export const DISHES_PATH = "/dishes";

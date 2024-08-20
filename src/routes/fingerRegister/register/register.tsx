@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { User } from "../../../types/User";
 import styles from "./register.module.css";
-import { FingerprintReader, SampleFormat } from "@digitalpersona/devices";
 // Icons
 import trashIcon from "../../../assets/icon/trashIcon.svg";
 import finger from "./../../../assets/icon/fingerIcon.svg";
@@ -9,7 +8,6 @@ import leftHand from "./../../../assets/icon/leftHand.svg";
 import rightHand from "./../../../assets/icon/rightHand.svg";
 import crossCancel from "./../../../assets/icon/crossCancel.svg";
 import UseFingerCapture from "../../../hooks/useFingerCapture";
-import sendIcon from "../../../assets/icon/sendIcon.svg";
 import confirm from "../../../assets/icon/checkIcon.svg";
 import notConfirm from "../../../assets/icon/notConfirm.svg";
 import Loader from "../../../components/loader/loader";
@@ -21,15 +19,8 @@ interface Props {
   setUser: (argument: any) => void;
 }
 export default function Register({ user, setUser }: Props) {
-  const {
-    initReader,
-    huella,
-    setHuella,
-    message,
-    saveSamples,
-    isLoading,
-    errors,
-  } = UseFingerCapture();
+  const { initReader, huella, setHuella, saveSamples, isLoading, errors } =
+    UseFingerCapture();
   const [startCapture, setStartCapture] = useState(false);
   const [active, setActive] = useState(false);
   const confirmChanges = useModal("confirmChanges");

@@ -27,6 +27,7 @@ export default function MojeCalculate({
     (parseFloat(item.tipAmount) * mojePercentage) /
     100
   ).toFixed(2);
+
   return (
     <main className={styles.screen}>
       <div>

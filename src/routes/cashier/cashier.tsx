@@ -72,6 +72,7 @@ export default function Cashier() {
   const filterSession = operatingPeriod[0]?.sellProcess?.filter(
     (item: any) => item.user === authData.payload.user._id
   );
+
   const loadingCashierSession = useCashierSession((state) => state.isLoading);
   const errorsCashierSession = useCashierSession((state) => state.errors);
 
@@ -80,21 +81,19 @@ export default function Cashier() {
     getNotes();
     getBills();
   };
+
   useEffect(() => {
     getPeriod();
     getNotes();
     getBills();
-    /*
-    return () => {
-      getPeriod();
-    }; */
   }, []);
+
   return (
     <div className={styles.container}>
       <HeaderTwo />
       <main className={styles.mainSection}>
         {filterSession && filterSession.length > 0
-          ? filterSession[0]?.bills?.map((item) =>
+          ? filterSession[0].bills?.map((item) =>
               item.status === FOR_PAYMENT_STATUS && !item.notes.length ? (
                 <div key={item.id}>
                   <CashierBox
@@ -190,7 +189,9 @@ export default function Cashier() {
             Inicio
           </button>
         </div>
-        {filterSession[0]?.enable ? (
+        {filterSession &&
+        filterSession.length > 0 &&
+        filterSession[0]?.enable ? (
           <button
             disabled={!filterSession[0]}
             onClick={() => {
@@ -203,7 +204,7 @@ export default function Cashier() {
           </button>
         ) : (
           <button
-            disabled={!filterSession[0]}
+            disabled={!filterSession || !filterSession[0]}
             onClick={() => {
               confirmChanges.openModal();
               pauseResumeSession(filterSession[0]?._id);

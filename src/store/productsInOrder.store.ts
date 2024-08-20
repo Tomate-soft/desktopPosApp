@@ -1,3 +1,4 @@
+import { ON_SITE_ORDER } from "@/lib/orders.lib";
 import { Bill } from "../types/account";
 import { create } from "zustand";
 
@@ -10,7 +11,6 @@ export const useCurrentCommand = create<state>((set) => {
   // Typescript va a fallar cuando mandes para el pedido para llevar, por que tiene menos keys que un pedido normal.
   return {
     BillCommandCurrent: {
-      sellType: "n/A",
       user: "Moises",
       checkTotal: "0.00",
       products: [],
