@@ -15,6 +15,7 @@ import {
   BIOMETRICS_PATH,
   ENTRY_PATH,
   HOST_PATH,
+  PHONE_PATH,
   RAPPI_PATH,
   REPORTS_PATH,
   RESTAURANT_ORDER_PATH,
@@ -27,6 +28,7 @@ import TablesControl from "./routes/tablesControl/tablesControl.tsx";
 import { CASHIER } from "./components/tools/confirmPassword/lib.ts";
 import ToGoOrder from "./routes/toGoOrder/toGoOrder.tsx";
 import RappiOrders from "./routes/rappiOrder/rappiOrder.tsx";
+import PhoneOrders from "./routes/phoneOrder/phoneOrder.tsx";
 
 const App = () => {
   const isAuth = useAuthStore((state) => state.isAuth);
@@ -78,6 +80,10 @@ const App = () => {
         {
           path: RAPPI_PATH,
           element: <RappiOrders />,
+        },
+        {
+          path: PHONE_PATH, ///
+          element: <PhoneOrders />,
         },
       ],
     },

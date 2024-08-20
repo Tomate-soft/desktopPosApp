@@ -10,6 +10,7 @@ export const BIOMETRICS_PATH = "biometrics";
 export const REPORTS_PATH = "reports";
 export const TO_GO_PATH = "TO_GO_PATH";
 export const RAPPI_PATH = "rappi";
+export const PHONE_PATH = "phone";
 
 //Requests paths
 export const DAILY_REGISTER_PATH = "/daily-register";

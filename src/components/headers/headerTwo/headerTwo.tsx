@@ -9,7 +9,11 @@ import signal from "../../../assets/icon/signal.svg";
 import useDate from "../../../hooks/useDate";
 import { useAuthStore } from "../../../store/auth/auth.store";
 
-export default function HeaderTwo() {
+interface Props {
+  sellType?: string | null;
+}
+
+export default function HeaderTwo({ sellType }: Props) {
   const authData = useAuthStore((state) => state.authData);
   // Date
   const { currentDateTime, opcionesFecha, opcionesHora }: any = useDate();
@@ -29,6 +33,7 @@ export default function HeaderTwo() {
         <img src={logoDivider} alt="logo-divider" />
         <h3>PUNTO DE VENTA</h3>
       </div>
+      {sellType ? <h2 className={styles.sellHead}>{sellType}</h2> : null}
       <div>
         <h3>{authData.payload?.user.employeeNumber}</h3>
         <h3>{`${authData.payload?.user.name.toUpperCase()} ${authData?.payload?.user?.lastName

@@ -62,7 +62,7 @@ export default function RappiOrders() {
 
   return (
     <div className={styles.container}>
-      <HeaderTwo />
+      <HeaderTwo sellType="Rappi" />
       <main className={styles.mainSection}>
         {managementOrders?.map((element) => (
           <div className={styles.orderBox}>

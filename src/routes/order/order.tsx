@@ -34,7 +34,12 @@ import { useModal } from "../../hooks/useModal";
 import MainKeyboard from "../../components/tools/mainKeyboard/mainKeyboard";
 import { useAuthStore } from "../../store/auth/auth.store";
 import { SELL_TYPES_PATH } from "../../lib/routes.paths.lib";
-import { ON_SITE_ORDER, RAPPI_ORDER, TO_GO_ORDER } from "../../lib/orders.lib";
+import {
+  ON_SITE_ORDER,
+  PHONE_ORDER,
+  RAPPI_ORDER,
+  TO_GO_ORDER,
+} from "../../lib/orders.lib";
 import { useToGoOrders } from "../../store/orders/togoOrder.store";
 import AddModifier from "../../components/modifiers/addModifier";
 import {
@@ -51,6 +56,7 @@ import { ENABLE_STATUS, FOR_PAYMENT_STATUS } from "../../lib/tables.status.lib";
 import { useCashierSessionStore } from "../../store/operatingPeriod/cashierSession.store";
 import UseVerify from "../../hooks/verifications/useVerify";
 import { useRappiOrders } from "@/store/orders/rappiOrders.store";
+import { usePhoneOrders } from "@/store/orders/phoneOrder.store";
 
 interface ToGoOrder {
   code: string /* esto despues sera automatico, agregar un unique*/;
@@ -61,6 +67,7 @@ interface ToGoOrder {
   products: [];
   payment: [];
   orderName?: string;
+  operatingPeriod: string;
 }
 
 export default function Order() {
@@ -73,6 +80,7 @@ export default function Order() {
   const [selectNote, setSelectNote] = useState([]);
   const [toggleStatus, setToggleStatus] = useState(false);
   const [selectQuantity, setSelectQuantity] = useState<number | null>(null);
+
   // MODALS
   const addModifier = useModal(ADD_MODIFIER_MODAL);
   const authData = useAuthStore((state) => state.authData);
@@ -81,6 +89,8 @@ export default function Order() {
   const createRappiOrder = useRappiOrders((state) => state.createNewOrder);
   const updateToGoOrder = useToGoOrders((state) => state.updateOrder);
   const updateRappiOrder = useRappiOrders((state) => state.updateOrder);
+  const createPhoneOrder = usePhoneOrders((state) => state.createNewOrder);
+  const updatePhoneOrder = usePhoneOrders((state) => state.updateOrder);
   const addBillForPayment = useCashierSessionStore(
     (state) => state.addBillForPayment
   );
@@ -112,6 +122,7 @@ export default function Order() {
     products: [],
     payment: [],
     orderName: orderName,
+    operatingPeriod: currentPeriod[0]?._id,
   };
 
   const isWithNotes = tableItem?.bill[0]?.notes?.length > 0;
@@ -137,13 +148,11 @@ export default function Order() {
     const updatedProducts = [...billCurrentCommand.products];
     const currentQuantity = updatedProducts[index].quantity;
     let newQuantity;
-
     if (increment) {
       newQuantity = currentQuantity >= 99 ? 99 : currentQuantity + 1;
     } else {
       newQuantity = currentQuantity <= 1 ? 1 : currentQuantity - 1;
     }
-
     updatedProducts[index] = {
       ...updatedProducts[index],
       quantity: newQuantity,
@@ -180,6 +189,13 @@ export default function Order() {
     });
   };
 
+  const sellTypeHead =
+    billCurrentCommand.sellType === ON_SITE_ORDER
+      ? "Restaurante"
+      : billCurrentCommand.sellType === RAPPI_ORDER
+      ? "Rappi"
+      : null;
+
   useEffect(() => {
     getProducts();
     const filteredProducts = productsArray.filter(
@@ -212,10 +228,11 @@ export default function Order() {
         payment: [],
         user: userName,
         userId: authData?.payload?.user?._id,
+        operatingPeriod: currentPeriod[0]?._id,
       });
     }
 
-    if (type === TO_GO_ORDER || type === RAPPI_ORDER) {
+    if (type === TO_GO_ORDER || type === RAPPI_ORDER || type === PHONE_ORDER) {
       // Configurar billCurrentCommand basado en toGoOrder o initialOrderTogo si toGoOrder no está definido
       if (toGoOrder) {
         setBillCurrentCommand(toGoOrder);
@@ -236,7 +253,7 @@ export default function Order() {
 
   return (
     <div className={styles.container}>
-      <HeaderTwo />
+      <HeaderTwo sellType={sellTypeHead} />
       <main className={styles.mainSection}>
         <section>
           {tableItem?.bill[0] && tableItem.bill[0]?.notes?.length ? (
@@ -616,6 +633,15 @@ export default function Order() {
                 return;
               }
               createRappiOrder(billCurrentCommand);
+              logOutRequest();
+            }
+            if (type === PHONE_ORDER) {
+              if (toGoOrder) {
+                updatePhoneOrder(toGoOrder._id, billCurrentCommand);
+                logOutRequest();
+                return;
+              }
+              createPhoneOrder(billCurrentCommand);
               logOutRequest();
             }
           }}

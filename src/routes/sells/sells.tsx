@@ -20,6 +20,7 @@ import { useAuthStore } from "../../store/auth/auth.store";
 import { RAPPI, sells } from "../../lib/sellTypes.lib";
 import {
   HOST_PATH,
+  PHONE_PATH,
   RAPPI_PATH,
   RESTAURANT_PATH,
   TO_GO_PATH,
@@ -65,7 +66,12 @@ export default function Sells() {
       navigate(`/${RAPPI_PATH}`);
       return;
     }
+    if (item.sellType === "phone") {
+      navigate(`/${PHONE_PATH}`);
+      return;
+    }
   };
+
   // modals
   const mainMenu = useModal(MAIN_MENU);
   const billBoard = useModal(BILLBOARD_MODAL);

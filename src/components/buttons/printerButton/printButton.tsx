@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import UsePayment from "../../../hooks/usePayments";
 import { UsePaymentsStore } from "../../../store/payments/paymenNote.store";
 import { usePayStore } from "@/store/payments/payments.store";
-import { RAPPI_ORDER, TO_GO_ORDER } from "@/lib/orders.lib";
+import { PHONE_ORDER, RAPPI_ORDER, TO_GO_ORDER } from "@/lib/orders.lib";
 
 interface Props {
   setRevolve: (value: string) => void;
@@ -32,6 +32,7 @@ const PrintButton = ({
 }: Props) => {
   const createPay = usePayStore((state) => state.payTogo);
   const rappiPay = usePayStore((state) => state.payRappi);
+  const phonePay = usePayStore((state) => state.payPhone);
   const { createPayment, errors } = UsePayment();
   const { handlePrint } = UseAccount();
   const { updateTable, getOneTable, currentTable } = UseTable();
@@ -68,6 +69,12 @@ const PrintButton = ({
             openModal();
             return;
           }
+          if (currentBill?.sellType === PHONE_ORDER) {
+            setRevolve(revolveCalculate.toFixed(2).toString());
+            phonePay(createCurrentPayment);
+            openModal();
+            return;
+          }
           return;
         } else {
           if (currentBill?.note) {
@@ -90,8 +97,6 @@ const PrintButton = ({
             accountId: currentBill._id,
             difference: (diference * -1).toString(),
           };
-          console.log("pago");
-          console.log(constPay);
           createPayment(constPay);
           if (!errors) {
             setTimeout(() => {

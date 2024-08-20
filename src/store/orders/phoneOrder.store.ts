@@ -1,10 +1,15 @@
+import {
+  createPhoneOrderService,
+  getPhoneOrdersService,
+  updatePhone,
+} from "@/services/orders/phoneOrders.services";
 import { create } from "zustand";
 
 interface state {
   isLoading: boolean;
   errors: boolean;
   message: string | null;
-  rappiOrdersArray: [];
+  phoneOrdersArray: [];
   getOrders: () => Promise<void>;
   createNewOrder: (body: any) => Promise<void>;
   updateOrder: (id: string, body: any) => Promise<void>;
@@ -15,11 +20,11 @@ export const usePhoneOrders = create<state>((set) => {
     isLoading: false,
     errors: false,
     message: null,
-    rappiOrdersArray: [],
+    phoneOrdersArray: [],
     getOrders: async () => {
       set({ isLoading: true });
       try {
-        const res = await getRappiOrdersService();
+        const res = await getPhoneOrdersService();
         if (!res.data) {
           set({
             isLoading: false,
@@ -28,7 +33,7 @@ export const usePhoneOrders = create<state>((set) => {
           });
           throw new Error(`No se encontraron ordenes`);
         }
-        set({ isLoading: false, rappiOrdersArray: res.data });
+        set({ isLoading: false, phoneOrdersArray: res.data });
         return res;
       } catch (error) {
         set({
@@ -42,7 +47,7 @@ export const usePhoneOrders = create<state>((set) => {
     createNewOrder: async (body) => {
       set({ isLoading: true });
       try {
-        const res = await createRappiOrderService(body);
+        const res = await createPhoneOrderService(body);
         if (!res.data) {
           set({
             isLoading: false,
@@ -66,7 +71,7 @@ export const usePhoneOrders = create<state>((set) => {
     updateOrder: async (id, body) => {
       set({ isLoading: true });
       try {
-        const res = await updateRappi(id, body);
+        const res = await updatePhone(id, body);
         if (!res.data) {
           set({
             isLoading: false,

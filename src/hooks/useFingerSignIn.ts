@@ -3,7 +3,7 @@ import { useState } from "react";
 import axios from "../configs/axios";
 import { USERS_PATH } from "../lib/routes.paths.lib";
 
-export default function UseFingerCapture() {
+export default function UseFingerSignIn(openModal: any) {
   const [reader, setReader] = useState<FingerprintReader | null>(null);
   const [message, setMessage] = useState<string>();
   const [complete, setComplete] = useState(false);
@@ -17,11 +17,11 @@ export default function UseFingerCapture() {
       setReader(fingerprintReader);
       console.log("Fingerprint reader initialized:", fingerprintReader);
 
-      fingerprintReader.on("SamplesAcquired", onSamplesAcquired);
       fingerprintReader.on("QualityReported", onQualityReported);
+      fingerprintReader.on("SamplesAcquired", onSamplesAcquired);
 
       await fingerprintReader.startAcquisition(
-        SampleFormat.Raw,
+        SampleFormat.PngImage,
         "D10C5D6F-6A62-A447-89B7-A4BB77B7BA10"
       );
       console.log("Fingerprint acquisition started successfully.");
@@ -30,37 +30,16 @@ export default function UseFingerCapture() {
     }
   };
 
-  const onSamplesAcquired = async (event: any) => {
-    try {
-      const samples = event.samples;
-      console.log(samples);
-
-      const fingercapture = samples[0].Data.replace(/_/g, "/").replace(
-        /-/g,
-        "+"
-      );
-
-      // Actualizar el estado proporcionando un nuevo array con las nuevas muestras
-      setHuella((prevHuella) => {
-        const fingersArray = prevHuella?.length
-          ? [...prevHuella, fingercapture]
-          : [fingercapture];
-        return fingersArray;
-      });
-
-      setReader(null);
-    } catch (error) {
-      console.error("Error al procesar muestras de huellas dactilares:", error);
-    }
-  };
-
   const onQualityReported = async (event: any) => {
     const quality = event.quality;
+    const sample = event.samples;
     try {
       if (quality !== 0) {
         console.log("La calidad de la muestra no es buena.");
       } else {
         setMessage("Captura exitosa");
+        openModal();
+
         setTimeout(() => {
           setMessage("");
         }, 800);
@@ -71,7 +50,6 @@ export default function UseFingerCapture() {
       try {
         // Asegurarse de que stopAcquisition siempre se llame, incluso en caso de un error.
         await reader?.stopAcquisition("D10C5D6F-6A62-A447-89B7-A4BB77B7BA10");
-        console.log("Adquisición detenida correctamente.");
       } catch (error) {
         console.error("Error al detener la adquisición:", error);
       } finally {
@@ -81,30 +59,20 @@ export default function UseFingerCapture() {
     }
   };
 
-  const saveSamples = async (id: string, data: any) => {
-    console.log(data);
-    setIsLoading(true);
+  const onSamplesAcquired = async (event: any) => {
     try {
-      const res = await axios.put(`${USERS_PATH}/${id}`, { samples: data });
-      if (!res.data) {
-        setIsLoading(false);
-        setErrors("No se ha podido actualizar");
-        throw new Error(`No se pudo actualizar`);
-      }
+      const samples = event.samples;
+      console.log(samples);
+      const fingercapture = samples[0].replace(/_/g, "/").replace(/-/g, "+");
 
-      setIsLoading(false);
-      const userUpdated = res.data;
-      return userUpdated;
+      const res = axios.post("https://localhost:7228/extract-features", {
+        fingerprintSample: fingercapture,
+      });
+
+      setReader(null);
+      return (await res).data;
     } catch (error) {
-      setIsLoading(false);
-      if (axios.isAxiosError(error)) {
-        setErrors("Error de red. Verifica tu conexión a Internet.");
-        return;
-      }
-      setErrors("Ha ocurrido algo inesperado");
-      console.error(`Ha ocurrido algo inesperado ${error}`);
-    } finally {
-      setIsLoading(false);
+      console.error("Error al procesar muestras de huellas dactilares:", error);
     }
   };
 
@@ -115,7 +83,6 @@ export default function UseFingerCapture() {
     message,
     setReader,
     complete,
-    saveSamples,
     isLoading,
     errors,
     onQualityReported,

@@ -11,6 +11,9 @@ export default function UseCashierException(openModal: any) {
     (state) => state.getCurrentPeriod
   );
   useEffect(() => {
+    console.log("periodsArray", periodsArray);
+    console.log("cashierSession", cashierSession);
+    console.log("sessionsEnables", sessionsEnables);
     getCurrentPeriod();
     if (!cashierSession || sessionsEnables.length === 0) {
       openModal();
