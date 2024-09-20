@@ -8,11 +8,11 @@
     align-items: center;
     position: relative;
     transition: 150ms;
+
     .table div {
         width: 75%;
         display: flex;
         z-index: 100;
-    
     }
 }
 
@@ -96,6 +96,5 @@
     > button:hover{
         background-color: rgba(0, 0, 0, 0.103);
     }
-   
 
 }
