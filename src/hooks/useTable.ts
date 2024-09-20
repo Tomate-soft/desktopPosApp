@@ -10,6 +10,8 @@ export default function UseTable() {
   const [currentTable, setCurrentTable] = useState();
 
   async function getTables() {
+    console.log("getTables");
+    console.log(tables);
     setIsLoading(true);
     try {
       const res = await axios(TABLES_PATH);

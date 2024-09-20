@@ -18,4 +18,5 @@ export interface Bill {
   table?: string | undefined;
   accountId?: string;
   operatingPeriod?: string;
+  diners?: number;
 }

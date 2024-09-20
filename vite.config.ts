@@ -32,4 +32,10 @@ export default defineConfig({
       WebSdk: "/src/core/modules/WebSdk",
     },
   },
+
+  build: {
+    rollupOptions: {
+      external: ["@nestjs/core"],
+    },
+  },
 });

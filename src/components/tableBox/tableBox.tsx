@@ -8,6 +8,7 @@ import tableEnable from "../../assets/icon/tableActive.svg";
 import tablePayment from "../../assets/icon/tableForPayment.svg";
 import moreActionsIcon from "../../assets/icon/moreActionsIcon.svg";
 import tableSelected from "@/assets/icon/tableSelected.svg";
+import personIcon from "@/assets/icon/personIcon.svg";
 import tableIcon from "@/assets/icon/table.svg";
 // types
 import { useAuthStore } from "../../store/auth/auth.store";
@@ -22,6 +23,7 @@ import { ON_SITE_ORDER } from "../../lib/orders.lib";
 import UseVerify from "../../hooks/verifications/useVerify";
 import SplitTables from "@/routes/host/modal/splitTables";
 import { useModal } from "@/shared";
+import { useEffect } from "react";
 interface Props {
   item?: any;
   route?: string;
@@ -119,6 +121,10 @@ export default function TableBox({
   };
 
   if (!loading && newAccount?.code === 200) handleclick; /* que es esto? */
+
+  useEffect(() => {
+    console.log("item", item);
+  }, [item]);
   return (
     <div
       className={styles.table}
@@ -134,11 +140,13 @@ export default function TableBox({
       }
     >
       <div>
-        <span>00.00</span>
-        <span>
-          <img src="" alt="" />
-          04
-        </span>
+        {item.status != FREE_STATUS && <span>00.00</span>}
+        {item.status != FREE_STATUS && (
+          <span>
+            <img src={personIcon} alt="person-icon" />
+            <span>{item.diners}</span>
+          </span>
+        )}
       </div>
       <>
         {isEdit ? (
@@ -185,7 +193,7 @@ export default function TableBox({
         }}
       >
         <p>{item.tableNum}</p>
-        <span>{item.server}</span>
+        <span className={styles.serverName}>{item.user?.name ?? ""}</span>
       </div>
       <div
         className={
@@ -211,20 +219,22 @@ export default function TableBox({
           </button>
         )}
 
-        <button
-          onClick={() => {
-            if (!item.availability) return;
-            if (isEdit) {
-              return;
-            } else {
-              if (item.status != ENABLE_STATUS) return;
-              if (set) set(item);
-              if (openModal) openModal();
-            }
-          }}
-        >
-          <img src={moreActionsIcon} alt="more-actions" />
-        </button>
+        {item.status != FREE_STATUS && (
+          <button
+            onClick={() => {
+              if (!item.availability) return;
+              if (isEdit) {
+                return;
+              } else {
+                if (item.status != ENABLE_STATUS) return;
+                if (set) set(item);
+                if (openModal) openModal();
+              }
+            }}
+          >
+            <img src={moreActionsIcon} alt="more-actions" />
+          </button>
+        )}
       </div>
       {isEdit &&
       splitTablesModal.isOpen &&

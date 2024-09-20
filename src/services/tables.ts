@@ -24,7 +24,6 @@ export const updateTablesService = async (
   try {
     const responses = [];
     for (const updateTable of tablesArgs) {
-      console.log(updateTable);
       const res = await axios.patch(`${TABLES_PATH}/${updateTable._id}`, {
         assigned: true,
         user: userId,
@@ -50,5 +49,10 @@ export const joinTablesService = async (body: any) => {
 
 export const splitTablesService = async (id: string) => {
   const res = await axios.put(`${TABLES_PATH}/split/${id}`);
+  return res;
+};
+
+export const enableTableService = async (id: string, body: any) => {
+  const res = await axios.patch(`${TABLES_PATH}/enable/${id}`, body);
   return res;
 };
