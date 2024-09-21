@@ -229,6 +229,7 @@ export default function Order() {
         user: userName,
         userId: authData?.payload?.user?._id,
         operatingPeriod: currentPeriod[0]?._id,
+        diners: tableItem.diners,
       });
     }
 

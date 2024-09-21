@@ -28,16 +28,19 @@ import { ADMIN } from "@/components/tools/confirmPassword/lib";
 import JoinTables from "@/components/joinTables/joinTables";
 import { UseTableStore } from "@/store/tables.store";
 import ConfirmChanges from "@/components/modals/confirm/confirmChanges";
+import { DISABLE_MODAL, ENABLE_MODAL } from "./openTableModal/consts";
+import OpenTable from "./openTableModal/openTable";
 // Dependecies
 
 export default function Host() {
   //////////////////////
   /*    Edit tables   */
   //////////////////////
+
   const [allowEdit, setAllowEdit] = useState(false);
   const [tableSelectedArray, setTableSelectedArray] = useState([]);
   const joinTables = UseTableStore((state) => state.joinTables);
-  const [current, setCurrent] = useState(""); // [2
+  const [current, setCurrent] = useState(); // [2
 
   const [joinTableArray, setJoinTableArray] = useState([]);
   const loading = UseTableStore((state) => state.isLoading);
@@ -57,7 +60,7 @@ export default function Host() {
   const authData = useAuthStore((state) => state.authData);
   const allowRole = authData.payload.user.role.role.name;
   const joinTablesModal = useModal("JOIN_TABLES");
-
+  const openTableModal = useModal(ENABLE_MODAL);
   useEffect(() => {
     getTables();
   }, []);
@@ -82,6 +85,7 @@ export default function Host() {
                 joinedInInTable={joinTableArray}
                 setting={setJoinTableArray}
                 openModal={confirmChanges.openModal}
+                enableTable={openTableModal.openModal}
               />
             </div>
           );
@@ -119,6 +123,13 @@ export default function Host() {
           Join tables
         </JoinTables>
       ) : null}
+      {openTableModal.isOpen && openTableModal.modalName === ENABLE_MODAL && (
+        <OpenTable
+          item={current}
+          isOpen={openTableModal.isOpen}
+          onClose={openTableModal.closeModal}
+        ></OpenTable>
+      )}
       <footer className={styles.footer}>
         <div>
           <button

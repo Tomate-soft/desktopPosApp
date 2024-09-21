@@ -8,9 +8,9 @@ import tableEnable from "../../assets/icon/tableActive.svg";
 import tablePayment from "../../assets/icon/tableForPayment.svg";
 import moreActionsIcon from "../../assets/icon/moreActionsIcon.svg";
 import tableSelected from "@/assets/icon/tableSelected.svg";
+import personIcon from "@/assets/icon/personIcon.svg";
 import tableIcon from "@/assets/icon/table.svg";
 // types
-import UseTable from "../../hooks/useTable";
 import { useAuthStore } from "../../store/auth/auth.store";
 import {
   ENABLE_STATUS,
@@ -20,14 +20,10 @@ import {
 } from "../../lib/tables.status.lib";
 import { HOSTESS, WAITER } from "../tools/confirmPassword/lib";
 import { ON_SITE_ORDER } from "../../lib/orders.lib";
-import { useEffect, useState } from "react";
 import UseVerify from "../../hooks/verifications/useVerify";
-import { isButtonElement } from "react-router-dom/dist/dom";
-import { backIcon, useModal } from "@/shared";
-import { SPLIT_TABLES } from "@/lib/modals.lib";
 import SplitTables from "@/routes/host/modal/splitTables";
-import { UseTableStore } from "@/store/tables.store";
-import JoinTables from "../joinTables/joinTables";
+import { useModal } from "@/shared";
+import { useEffect } from "react";
 interface Props {
   item?: any;
   route?: string;
@@ -39,6 +35,7 @@ interface Props {
   joinedInInTable?: any;
   current?: any;
   setCurrent?: any;
+  enableTable?: any;
 }
 export default function TableBox({
   item,
@@ -51,19 +48,14 @@ export default function TableBox({
   joinedInInTable,
   current,
   setCurrent,
+  enableTable,
 }: Props) {
-  const [forceRender, setForceRender] = useState(false); // [1
-  const logOutRequest = useAuthStore((state) => state.logOutRequest);
   const authData = useAuthStore((state) => state.authData);
   const { loading, newAccount }: any = useAccount();
   const navigate = useNavigate();
-  const { updateTable } = UseTable();
   const userRole = authData.payload?.user?.role?.role.value;
   const { cashierAvailable } = UseVerify();
   const splitTablesModal = useModal(item.tableNum);
-  const splitTables = UseTableStore((state) => state.splitTables);
-  const isLoadingTable = UseTableStore((state) => state.isLoading);
-  const errors = UseTableStore((state) => state.errors);
   const mainTable =
     selectedArray?.some((i) => i.status === ENABLE_STATUS) ?? false;
   const handleclick = () => {
@@ -77,8 +69,8 @@ export default function TableBox({
       }
       if (userRole === HOSTESS) {
         // Esto lo vamos a quitar por que, la hostess debe de cambiar desde el panel de mesas no de aca
-        updateTable(PENDING_STATUS, item._id);
-        logOutRequest();
+        setCurrent(item);
+        enableTable();
       }
       if (userRole === WAITER) {
         if (item.status === FREE_STATUS || item.status === FOR_PAYMENT_STATUS) {
@@ -129,6 +121,10 @@ export default function TableBox({
   };
 
   if (!loading && newAccount?.code === 200) handleclick; /* que es esto? */
+
+  useEffect(() => {
+    console.log("item", item);
+  }, [item]);
   return (
     <div
       className={styles.table}
@@ -144,11 +140,13 @@ export default function TableBox({
       }
     >
       <div>
-        <span>00.00</span>
-        <span>
-          <img src="" alt="" />
-          04
-        </span>
+        {item.status != FREE_STATUS && <span>00.00</span>}
+        {item.status != FREE_STATUS && (
+          <span>
+            <img src={personIcon} alt="person-icon" />
+            <span>{item.diners}</span>
+          </span>
+        )}
       </div>
       <>
         {isEdit ? (
@@ -195,7 +193,7 @@ export default function TableBox({
         }}
       >
         <p>{item.tableNum}</p>
-        <span>{item.server}</span>
+        <span className={styles.serverName}>{item.user?.name ?? ""}</span>
       </div>
       <div
         className={
@@ -205,7 +203,7 @@ export default function TableBox({
         {item.joinedTables.length > 0 && isEdit && (
           <button
             onClick={() => {
-              setCurrent(item.tableNum);
+              setCurrent(item);
               if (setting) {
                 if (joinedInInTable.length <= 0) {
                   splitTablesModal.openModal();
@@ -220,24 +218,27 @@ export default function TableBox({
             <img src={tableIcon} alt="more-actions" />
           </button>
         )}
-        <button
-          onClick={() => {
-            if (!item.availability) return;
-            if (isEdit) {
-              return;
-            } else {
-              if (item.status != ENABLE_STATUS) return;
-              set(item);
-              openModal();
-            }
-          }}
-        >
-          <img src={moreActionsIcon} alt="more-actions" />
-        </button>
+
+        {item.status != FREE_STATUS && (
+          <button
+            onClick={() => {
+              if (!item.availability) return;
+              if (isEdit) {
+                return;
+              } else {
+                if (item.status != ENABLE_STATUS) return;
+                if (set) set(item);
+                if (openModal) openModal();
+              }
+            }}
+          >
+            <img src={moreActionsIcon} alt="more-actions" />
+          </button>
+        )}
       </div>
       {isEdit &&
       splitTablesModal.isOpen &&
-      splitTablesModal.modalName === current ? (
+      splitTablesModal.modalName === current.tableNum ? (
         <SplitTables item={item} openModal={openModal}></SplitTables>
       ) : null}
     </div>

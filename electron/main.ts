@@ -1,3 +1,4 @@
+import { bootstrap } from "../src/printer_api/src/main";
 import { app, BrowserWindow } from "electron";
 import path from "node:path";
 
@@ -41,28 +42,14 @@ function createWindow() {
   }
 }
 
-// Quit when all windows are closed, except on macOS. There, it's common
-// for applications and their menu bar to stay active until the user quits
-// explicitly with Cmd + Q.
-
-app.whenReady().then(async () => {
-  try {
-    alert("Aqui haremos la creacion del identificador");
-    console.log("Base de datos actualizada con éxito");
-  } catch (error) {
-    console.error("Error al actualizar la base de datos:", error);
-    // Puedes decidir cómo manejar el error, como mostrar un mensaje al usuario.
-    return;
-  }
-
-  createWindow();
-});
-
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
     app.quit();
     win = null;
   }
+});
+app.whenReady().then(async () => {
+  await bootstrap();
 });
 
 app.on("activate", () => {

@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import {
   UpdateTable,
+  enableTableService,
   getTablesService,
   joinTablesService,
   resetTablesService,
@@ -18,6 +19,7 @@ interface state {
   resetTables: () => Promise<void>;
   joinTables: (body: any) => Promise<void>;
   splitTables: (id: string) => Promise<void>;
+  enableTable: (id: string, body: any) => Promise<void>;
 }
 
 export const UseTableStore = create<state>((set) => {
@@ -89,6 +91,20 @@ export const UseTableStore = create<state>((set) => {
       set({ isLoading: true });
       try {
         const res = await splitTablesService(id);
+        if (!res) {
+          set({ isLoading: false, errors: true });
+        }
+        set({ isLoading: false, errors: false });
+        return res;
+      } catch (error) {
+        set({ isLoading: false, errors: true });
+      }
+    },
+
+    enableTable: async (id, body) => {
+      set({ isLoading: true });
+      try {
+        const res = await enableTableService(id, body);
         if (!res) {
           set({ isLoading: false, errors: true });
         }

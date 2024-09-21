@@ -8,19 +8,40 @@
     align-items: center;
     position: relative;
     transition: 150ms;
+   
+
     .table div {
         width: 75%;
         display: flex;
         z-index: 100;
-    
     }
 }
 
-.table div {
+.table>div {
     width: 80%;
     display: flex;
     justify-content: space-between;
     z-index: 100;
+
+
+    >span:last-child {
+      width: 50px;
+      align-items: center;
+      justify-content: center;
+      display: flex;
+      gap: 2px;
+      font-size: 20px;
+
+      >img {
+        width: 16px;
+      }
+
+      
+    }
+    >span:first-child {
+
+        font-size: 20px;
+         }
 
 }
 
@@ -31,27 +52,31 @@
 }
 .table div:last-child {
     width: 85%;
+
   
 
 }
 
+
 .table p {
     font-size: 40px;
     margin-top: 20px;
+
 }
 .openTable{
+    height: 90px;
     display: flex;
-    flex-direction: column;
-    align-items: center;
     justify-content: center;
-
+    align-items: center;
+    flex-direction: column;
+    padding: 16px;
 }
 .table p,
 .table span {
     z-index: 100;
 }
 
-.table img {
+.table>img {
     position: absolute;
     z-index: 10;
 }
@@ -92,10 +117,16 @@
         padding: 5px;
         transition: .3s ease;
         margin-left: 2px;
-    }
+       
+   }
     > button:hover{
         background-color: rgba(0, 0, 0, 0.103);
     }
-   
 
+}
+
+.serverName {
+    font-size: 16px !important;
+    width: 150px !important;
+    height: 20px;
 }
