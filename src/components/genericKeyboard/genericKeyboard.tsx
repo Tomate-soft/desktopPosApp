@@ -221,7 +221,6 @@ export function GenericKeyboard({
                   },
                   body: dataSend,
                 };
-                console.log(transferObject);
                 actionType(transferObject);
                 openModal();
               }
@@ -297,3 +296,4 @@ export function GenericKeyboard({
     </main>
   );
 }
+// no se esta enviando la nueva Prop totalDiscountQuantity hay que revisar por que.

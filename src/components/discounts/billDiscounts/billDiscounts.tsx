@@ -32,6 +32,7 @@ export default function BillDiscount({ item, openModal, children }: Props) {
     setting: mode,
     discountByUser: user,
     discountFor: "Validacion futura",
+    cost: item.bill[0].checkTotal,
   };
 
   return (

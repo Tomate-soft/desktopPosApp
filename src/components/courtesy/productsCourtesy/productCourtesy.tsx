@@ -33,6 +33,7 @@ export default function ProductsCourtesy({ item, openModal, children }: Props) {
     setting: SET_PERCENT,
     discountByUser: user,
     discountFor: "Validacion futura",
+    totalDiscountQuantity: "blablabla",
   };
 
   const discountForBillRoute = {

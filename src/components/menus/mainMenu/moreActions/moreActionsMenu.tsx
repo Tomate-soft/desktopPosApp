@@ -231,7 +231,7 @@ export default function MoreActionsMenu({
                   item={item}
                   openModal={confirmChanges.openModal}
                 >
-                  ESTE ES EL CHILDREN
+                  ""
                 </TransferProducts>
               ) : (
                 <ValidateAuthMessage

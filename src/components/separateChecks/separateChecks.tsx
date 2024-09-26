@@ -40,9 +40,7 @@ export default function SeparateChecks({ item, openModal }: Props) {
   }
 
   const NOTE_TEMPLATE = {
-    checkCode: `0${
-      item.bill[0]?.tableNum
-    }00${item.bill[0]?.billCode.toString()}`,
+    checkCode: `0${item.bill[0]?.tableNum}00${item.bill[0]?.billCode}`,
     accountId: item.bill[0]?._id,
     paymentCode: "aca clavamos el pago",
     sellType: item.bill[0]?.sellType,

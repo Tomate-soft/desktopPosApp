@@ -35,6 +35,7 @@ export default function NotesDiscounts({ item, openModal, children }: Props) {
     setting: mode,
     discountByUser: user,
     discountFor: "Validacion futura",
+    cost: noteForDiscount?.checkTotal,
   };
 
   return (
