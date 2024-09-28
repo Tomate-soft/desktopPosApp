@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import styles from "./genericKeyboard.module.css";
 import backspace from "../../assets/icon/backspaceIcon.svg";
 import cleanIcon from "../../assets/icon/cleanIcon.svg";
@@ -221,7 +220,6 @@ export function GenericKeyboard({
                   },
                   body: dataSend,
                 };
-                console.log(transferObject);
                 actionType(transferObject);
                 openModal();
               }
@@ -297,3 +295,4 @@ export function GenericKeyboard({
     </main>
   );
 }
+// no se esta enviando la nueva Prop totalDiscountQuantity hay que revisar por que.

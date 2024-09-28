@@ -12,6 +12,7 @@ import { SET_PERCENT, SET_QUANTITY } from "../../discountBoard/constants";
 import { useAuthStore } from "../../../shared";
 import { PRODUCTS_DISCOUNTS } from "../../menus/mainMenu/moreActions/configs/constants";
 import { UseActions } from "../../../store/moreActions/moreActions.store";
+import { calculateDiscount } from "@/lib/calculateDiscount";
 // update new
 
 interface Props {
@@ -31,7 +32,6 @@ export default function ProductsDiscounts({
   const [percent, setPercent] = useState("");
   const genericKeyboard = useModal(GENERIC_KEYBOARD_ACTIVE);
   const [mode, setMode] = useState<string>(SET_PERCENT);
-
   const authData = useAuthStore((state) => state.authData);
   const user = authData.payload.user._id;
   const createDiscount = UseActions((state) => state.createDiscount);
@@ -52,12 +52,18 @@ export default function ProductsDiscounts({
           parseFloat(productSelection?.priceInSite) - parseFloat(percent)
         ).toString();
 
+  const productPrice =
+    productSelection?.quantity > 1
+      ? productSelection?.priceInSiteBill
+      : productSelection?.priceInSite;
+
   const data = {
     accountId: item.bill[0].notes?.length < 0 ? selectedNote : item.bill[0]._id,
     discountMount: percent,
     setting: mode,
     discountByUser: user,
     discountFor: "Validacion futura",
+    cost: productPrice,
   };
 
   const discountForBillRoute = {
@@ -66,7 +72,14 @@ export default function ProductsDiscounts({
       if (element.unique === productSelection?.unique) {
         return {
           ...element,
-          discount: data,
+          discount: {
+            ...data,
+            discountedAmount: calculateDiscount(
+              parseFloat(data.cost),
+              parseFloat(data.discountMount),
+              data.setting
+            ),
+          },
           priceInSite:
             mode === SET_QUANTITY
               ? discountApply
@@ -445,11 +458,13 @@ export default function ProductsDiscounts({
                                     discount: null,
                                     priceInSiteBill: originalQuantity,
                                   };
+
                                   // aca vamos a juntar los productos y mandarlos
                                   const sendProducts = [
                                     ...updateProducts,
                                     currentProduct,
                                   ];
+
                                   const checkTotalNew = sendProducts
                                     .reduce(
                                       (a, b) =>
@@ -463,7 +478,6 @@ export default function ProductsDiscounts({
                                     )
                                     .toFixed(2)
                                     .toString();
-                                  console.log(checkTotalNew);
 
                                   // cambio de metodo
                                   removeBillPorductDiscount(item.bill[0]?._id, {
@@ -569,9 +583,7 @@ export default function ProductsDiscounts({
             payload={data}
             keyAction={PRODUCTS_DISCOUNTS}
             actionType={createDiscount}
-          >
-            Ingresa la descripción del descuento
-          </GenericKeyboard>
+          ></GenericKeyboard>
         </>
       ) : null}
     </div>

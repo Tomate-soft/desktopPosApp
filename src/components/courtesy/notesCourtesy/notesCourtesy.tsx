@@ -31,6 +31,7 @@ export default function NotesCourtesy({ item, openModal, children }: Props) {
     setting: SET_PERCENT,
     discountByUser: user,
     discountFor: "Validacion futura",
+    cost: noteForDiscount?.checkTotal,
   };
 
   return (

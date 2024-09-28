@@ -56,6 +56,7 @@ export function ActionsKeyboard({
     setting: SET_PERCENT,
     discountByUser: user,
     discountFor: "Validacion futura",
+    cost: item.bill[0].checkTotal,
   };
   const disableValue =
     option === BILL_NAME

@@ -42,6 +42,11 @@ export default function ProductsCancel({ item, openModal, children }: Props) {
   const authData = useAuthStore((state) => state.authData);
   const user = authData.payload.user._id;
 
+  const disAmount =
+    productSelection?.quantity > 1
+      ? parseFloat(productSelection?.priceInSiteBill)
+      : parseFloat(productSelection?.priceInSite);
+
   const dataSend =
     item.bill[0].notes.length > 0
       ? {
@@ -54,6 +59,7 @@ export default function ProductsCancel({ item, openModal, children }: Props) {
             cancellationFor: "Pendiente",
             cancellationReason: active,
             description: description,
+            cancelledAmount: disAmount,
           },
         }
       : {
@@ -65,6 +71,7 @@ export default function ProductsCancel({ item, openModal, children }: Props) {
             cancellationFor: "Pendiente",
             cancellationReason: active,
             description: description,
+            cancelledAmount: disAmount,
           },
         };
 
@@ -73,7 +80,7 @@ export default function ProductsCancel({ item, openModal, children }: Props) {
     if (item.bill[0].notes.length > 0) {
       setSelectedNote(item.bill[0].notes[0]);
     }
-    console.log(description);
+    console.log(productSelection);
   }, [description]);
 
   return (
@@ -175,6 +182,8 @@ export default function ProductsCancel({ item, openModal, children }: Props) {
                           onChange={() => {
                             console.log(productSelection);
                             console.log(managementProducts);
+                            console.log(disAmount);
+
                             if (
                               setproductSelection &&
                               setproductSelection.unique === element.unique
