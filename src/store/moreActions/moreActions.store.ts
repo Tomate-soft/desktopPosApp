@@ -211,7 +211,7 @@ export const UseActions = create<state>((set) => {
       set({ isLoading: true });
       try {
         const res = await cancelProductService(args);
-        set({ isLoading: false });
+        set({ isLoading: false, errors: false });
         return res;
       } catch (error) {
         set({ isLoading: false, errors: true });

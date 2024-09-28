@@ -10,6 +10,7 @@ import { COURTESY_APPLY_PRODUCTS } from "../../menus/mainMenu/moreActions/config
 import { SET_PERCENT } from "../../discountBoard/constants";
 import { useAuthStore } from "../../../shared";
 import { UseActions } from "../../../store/moreActions/moreActions.store";
+import { calculateDiscount } from "@/lib/calculateDiscount";
 
 interface Props {
   item: any;
@@ -27,13 +28,18 @@ export default function ProductsCourtesy({ item, openModal, children }: Props) {
   const user = authData.payload.user._id;
   const createDiscount = UseActions((state) => state.createDiscount);
 
+  const productPrice =
+    productSelection?.quantity > 1
+      ? productSelection?.priceInSiteBill
+      : productSelection?.priceInSite;
+
   const data = {
     accountId: item.bill[0].notes?.length < 0 ? selectedNote : item.bill[0]._id,
     discountMount: "100",
     setting: SET_PERCENT,
     discountByUser: user,
     discountFor: "Validacion futura",
-    totalDiscountQuantity: "blablabla",
+    cost: productPrice,
   };
 
   const discountForBillRoute = {
@@ -44,6 +50,11 @@ export default function ProductsCourtesy({ item, openModal, children }: Props) {
           ...element,
           discount: data,
           priceInSite: "0.00",
+          discountedAmount: calculateDiscount(
+            parseFloat(data.cost),
+            parseFloat(data.discountMount),
+            data.setting
+          ),
         };
       }
       return element;

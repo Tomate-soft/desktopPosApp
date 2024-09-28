@@ -62,7 +62,6 @@ export default function Login() {
       <HeaderOne />
       <main className={styles.mainSection}>
         <section className={styles.sectionOne}>
-          <h2>Bienvenido</h2>
           <img src={posLogo} alt="pos-logo" />
         </section>
         <section className={styles.sectionTwo}>

@@ -35,11 +35,12 @@ export default function NotesCancellation({
     cancellationBy: authData.payload.user._id,
     cancellationFor: "Validacion futura",
   };
-  const [cancelData, setyCancelData] = useState({});
+  const [cancelData, setCancelData] = useState({});
 
   useEffect(() => {
     setSelectedNote(item.bill[0].notes[0]);
-  }, []);
+    console.log(cancelData);
+  }, [setCancelData]);
 
   return (
     <div className={styles.container}>
@@ -69,7 +70,7 @@ export default function NotesCancellation({
                         type="radio"
                         name="notes"
                         onChange={() => {
-                          setyCancelData({
+                          setCancelData({
                             ...requestData,
                             noteId: element._id,
                           });
@@ -101,7 +102,6 @@ export default function NotesCancellation({
             onClose={genericKeyboard.closeModal}
             openModal={openModal}
             data={cancelData}
-            setValue={setyCancelData}
             actionType={cancelNote}
             keyAction={NOTES_CANCEL}
           >

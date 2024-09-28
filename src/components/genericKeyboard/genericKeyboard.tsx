@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import styles from "./genericKeyboard.module.css";
 import backspace from "../../assets/icon/backspaceIcon.svg";
 import cleanIcon from "../../assets/icon/cleanIcon.svg";
