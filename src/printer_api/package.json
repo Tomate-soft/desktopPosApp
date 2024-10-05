@@ -1,6 +1,7 @@
 {
   "name": "printer_api",
   "version": "0.0.1",
+  "type": "module",
   "description": "",
   "author": "",
   "private": true,
@@ -36,6 +37,7 @@
     "kafkajs": "^2.2.4",
     "mqtt": "^5.10.1",
     "nats": "^2.28.2",
+    "node-thermal-printer": "^4.4.3",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1"
   },

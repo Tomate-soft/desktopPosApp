@@ -24,6 +24,7 @@ import UseVerify from "../../hooks/verifications/useVerify";
 import SplitTables from "@/routes/host/modal/splitTables";
 import { useModal } from "@/shared";
 import { useEffect } from "react";
+import useTimeAgo from "@/hooks/useTimeAgo";
 interface Props {
   item?: any;
   route?: string;
@@ -119,11 +120,13 @@ export default function TableBox({
       }
     }
   };
+  const times = new Date(item.updatedAt.toString()); // item.updatedAt
+  const timing = useTimeAgo(times, "es");
 
   if (!loading && newAccount?.code === 200) handleclick; /* que es esto? */
 
   useEffect(() => {
-    console.log("item", item);
+    console.log("Variable del tiempoo", item.updatedAt);
   }, [item]);
   return (
     <div
@@ -140,7 +143,9 @@ export default function TableBox({
       }
     >
       <div>
-        {item.status != FREE_STATUS && <span>00.00</span>}
+        {item.status != FREE_STATUS && (
+          <span style={{ fontSize: "15px", paddingTop: "3px" }}>{timing}</span>
+        )}
         {item.status != FREE_STATUS && (
           <span>
             <img src={personIcon} alt="person-icon" />
