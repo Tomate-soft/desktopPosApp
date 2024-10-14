@@ -24,6 +24,7 @@ export default defineConfig({
       renderer: {},
     }),
   ],
+
   optimizeDeps: {
     exclude: ["WebSdk"],
   },

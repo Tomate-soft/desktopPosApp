@@ -30,7 +30,8 @@ export default function NotesDiscounts({ item, openModal, children }: Props) {
   const deleteDiscount = UseActions((state) => state.deleteDiscount);
 
   const data = {
-    accountId: noteForDiscount?._id,
+    accountId: item.bill[0]._id,
+    noteAccountId: noteForDiscount?._id,
     discountMount: percent,
     setting: mode,
     discountByUser: user,
