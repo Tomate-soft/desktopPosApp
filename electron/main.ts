@@ -1,6 +1,7 @@
-import { bootstrap } from "../src/printer_api/src/main";
+import * as PrinterApi from "../src/printer_api/dist/main";
 import { app, BrowserWindow } from "electron";
 import path from "node:path";
+import { spawn } from "child_process";
 
 // The built directory structure
 //
@@ -42,23 +43,40 @@ function createWindow() {
   }
 }
 
+// Inicia tu API de NestJS
+function startNest() {
+  const nestPath = path.join(__dirname, "../src/printer_api/dist/main.js"); // Cambia la ruta según sea necesario
+  const nestProcess = spawn("node", [nestPath]);
+
+  nestProcess.stdout.on("data", (data) => {
+    console.log(`NestJS: ${data}`);
+  });
+
+  nestProcess.stderr.on("data", (data) => {
+    console.error(`Error en NestJS: ${data}`);
+  });
+
+  nestProcess.on("close", (code) => {
+    console.log(`NestJS terminó con código ${code}`);
+  });
+}
+
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
     app.quit();
     win = null;
   }
 });
+
 app.whenReady().then(async () => {
-  await bootstrap();
+  await PrinterApi.bootstrap(); // Inicializa tu API de Printer si es necesario
+  startNest(); // Inicia la API de NestJS
+  createWindow(); // Crea la ventana de Electron
 });
 
 app.on("activate", () => {
-  // On OS X it's common to re-create a window in the app when the
-  // dock icon is clicked and there are no other windows open.
+  // En OS X es común recrear una ventana en la app cuando el icono del dock es clicado y no hay otras ventanas abiertas.
   if (BrowserWindow.getAllWindows().length === 0) {
     createWindow();
   }
 });
-
-app.whenReady().then(createWindow);
-// update

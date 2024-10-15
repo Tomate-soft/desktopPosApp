@@ -24,6 +24,7 @@ export default defineConfig({
       renderer: {},
     }),
   ],
+
   optimizeDeps: {
     exclude: ["WebSdk"],
   },
@@ -35,7 +36,7 @@ export default defineConfig({
 
   build: {
     rollupOptions: {
-      external: ["@nestjs/core"],
+      external: ["@nestjs/core", "@/printer_api/dist/main.js"],
     },
   },
 });

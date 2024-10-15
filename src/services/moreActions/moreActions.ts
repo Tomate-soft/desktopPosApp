@@ -51,6 +51,8 @@ export const createDiscountService = async (data: any) => {
     ...data,
     body: discountBody,
   };
+  console.log("por aca la data to send");
+  console.log(dataToSend);
 
   const response = await axios.post(DISCOUNTS_PATH, dataToSend);
   return response;
