@@ -41,3 +41,4 @@ export const DISCOUNTS_PATH = "/discounts";
 export const CLOUSURES_OPERATIONS_PATH = "/clousures-of-operations";
 export const CASH_WITHDRAWAL_PATH = "/cash-withdrawal";
 export const PAUSE_RESUME_PATH = "/pause/resume";
+export const REOPEN_BILL_PATH = "/reopen";

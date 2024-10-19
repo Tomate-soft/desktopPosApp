@@ -19,7 +19,7 @@ import { ChangeEvent, useEffect, useState } from "react";
 // types
 import { Payment, Transaction } from "../../types/payment";
 import { initialState, initialTransaction } from "./utils/initialState";
-import { useModal } from "@/shared";
+import { useAuthStore, useModal } from "@/shared";
 import AddTips from "../addTips/addTips";
 interface Props {
   setRevolve: (value: string) => void;
@@ -53,7 +53,8 @@ export default function PaymentInterface({
     useState<Transaction>(initialTransaction);
   const [tips, setTips] = useState<string>("");
   const addTips = useModal("ADD_TIPS");
-
+  const authData = useAuthStore((state) => state.authData);
+  const user = authData?.payload.user._id;
   const totalTips = createPayment?.transactions.reduce((acc, item) => {
     return acc + parseFloat(item?.tips);
   }, 0);
@@ -117,11 +118,12 @@ export default function PaymentInterface({
     useState<Transaction>(initialTransaction);
 
   useEffect(() => {
+    console.log(currentBill);
     if (!paymentQuantity) setPaymentQuantity("0.00");
     setCreatePayment({
       ...createPayment,
-      cashier: "develop",
-      check: "exampleCode",
+      cashier: user,
+      check: currentBill?.bill?.code ?? currentBill.code,
       paymentDate: new Date().toISOString(),
       paymentTotal: currentBill?.note?.checkTotal ?? currentBill.checkTotal,
       accountId: currentBill.bill?._id ?? currentBill.bill?._id,

@@ -56,7 +56,6 @@ const PrintButton = ({
       disabled={diference > 0}
       onClick={() => {
         if (isDelivery) {
-          console.log(createCurrentPayment);
           if (currentBill?.sellType === TO_GO_ORDER) {
             setRevolve(revolveCalculate.toFixed(2).toString());
             createPay(createCurrentPayment);
@@ -81,10 +80,13 @@ const PrintButton = ({
             const constPay = {
               accountId: currentBill?.note?.accountId,
               body: {
+                noteAccountId: currentBill?.note?._id,
+
                 ...createCurrentPayment,
                 difference: (diference * -1).toString(),
               },
             };
+
             setRevolve(revolveCalculate.toFixed(2).toString());
             paymentNote(currentBill.note._id, constPay);
             openModal();

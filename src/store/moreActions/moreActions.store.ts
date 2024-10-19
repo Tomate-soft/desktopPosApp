@@ -7,7 +7,9 @@ import {
   deleteBillProductDiscounService,
   deleteDiscountService,
   deleteNoteProductDiscounService,
+  getReopensService,
   productsToBillServices,
+  reopenBillService,
 } from "../../services/moreActions/moreActions";
 import {
   addComments,
@@ -37,6 +39,7 @@ export interface state {
   deleteDiscount: (id: string, body: { case: string }) => Promise<void>;
   deleteNoteProductDiscount: (id: string, body: {}) => Promise<void>;
   deleteBillProductDiscount: (id: string, body: {}) => Promise<void>;
+  reopenBill: (body: {}) => Promise<void>;
 }
 
 export const UseActions = create<state>((set) => {
@@ -241,6 +244,16 @@ export const UseActions = create<state>((set) => {
       set({ isLoading: true });
       try {
         const res = await deleteBillProductDiscounService(id, body);
+        set({ isLoading: false });
+        return res;
+      } catch (error) {
+        set({ isLoading: false, errors: true });
+      }
+    },
+    reopenBill: async (body) => {
+      set({ isLoading: true });
+      try {
+        const res = await reopenBillService(body);
         set({ isLoading: false });
         return res;
       } catch (error) {
