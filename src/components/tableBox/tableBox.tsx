@@ -231,9 +231,13 @@ export default function TableBox({
               if (isEdit) {
                 return;
               } else {
-                if (item.status != ENABLE_STATUS) return;
-                if (set) set(item);
-                if (openModal) openModal();
+                if (
+                  item.status != ENABLE_STATUS ||
+                  item.status != FOR_PAYMENT_STATUS
+                ) {
+                  if (set) set(item);
+                  if (openModal) openModal();
+                }
               }
             }}
           >

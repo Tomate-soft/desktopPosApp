@@ -130,8 +130,6 @@ export default function GenericPaymentInterface({
     useState<Transaction>(initialTransaction);
 
   useEffect(() => {
-    console.log("aca el currentBill");
-    console.log(currentBill);
     setCreatePayment({
       ...createPayment,
       accountId: currentBill._id,

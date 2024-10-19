@@ -17,6 +17,8 @@ import {
   NOTES_NAME,
   PRODUCTS_CANCEL,
   PRODUCTS_DISCOUNTS,
+  REOPEN_ORDER,
+  REPRINT_ORDER,
   SEPARATE_CHECKS,
   TO_GO_PAYMENT,
 } from "./configs/constants";
@@ -56,10 +58,11 @@ import {
   SEPARATE_NOTES_AUTH,
   TRANSFER_PRODUCTS_AUTH,
 } from "../../../../lib/authorizations.lib";
-import { TRANSFER_PRODUCTS_PATH } from "../../../../lib/routes.paths.lib";
-import PaymentInterface from "@/components/payments/payments.int";
 import GenericPaymentInterface from "@/components/genericPaymentInterface/genericPaymentInterface";
-import { CASHIER } from "@/components/tools/confirmPassword/lib";
+import { ADMIN, CASHIER } from "@/components/tools/confirmPassword/lib";
+import ReopenModal from "./components/reopen/reopen";
+import ReprintModal from "./components/reprint/reprint";
+import { ENABLE_STATUS, FOR_PAYMENT_STATUS } from "@/lib/tables.status.lib";
 interface Props {
   isOpen: any;
   onClose: any;
@@ -91,6 +94,7 @@ export default function MoreActionsMenu({
   const authorizations =
     authData?.payload?.user?.authorizations?.pos?.sellTypes?.restaurant ?? [];
   const allowRole = authData.payload.user.role.role.name;
+  const userId = authData.payload.user._id;
 
   const confirmChanges = useModal(CONFIRM_ACTIONS);
   useEffect(() => {
@@ -114,10 +118,10 @@ export default function MoreActionsMenu({
             X
           </button>
           <div className={styles.actionsContainer}>
-            {
-              /* type && */ type === ON_SITE_ORDER &&
-                actionsMenu.map((element, index) => (
-                  <>
+            {type === ON_SITE_ORDER &&
+              actionsMenu.map((element, index) => {
+                if (element?.enable?.includes(item.status)) {
+                  return (
                     <button
                       key={index}
                       style={
@@ -131,9 +135,11 @@ export default function MoreActionsMenu({
                     >
                       {element.option}
                     </button>
-                  </>
-                ))
-            }
+                  );
+                }
+                return null;
+              })}
+
             {
               /* type && */ type === TO_GO_ORDER &&
                 actionsTogoMenu.map((element, index) => (
@@ -421,6 +427,43 @@ export default function MoreActionsMenu({
                 >
                   Pagar
                 </GenericPaymentInterface>
+              ) : (
+                <ValidateAuthMessage
+                  allow={authorizations.includes(CANCEL_BILL_AUTH)}
+                >
+                  No autorizado
+                </ValidateAuthMessage>
+              )}
+            </>
+          ) : selectedOption === REPRINT_ORDER ? (
+            <>
+              {allowRole === CASHIER || allowRole === ADMIN ? (
+                <ReprintModal
+                  handleLoading={setIsloading}
+                  currentBill={item}
+                  openModal={confirmChanges.openModal}
+                >
+                  Pagar
+                </ReprintModal>
+              ) : (
+                <ValidateAuthMessage
+                  allow={authorizations.includes(CANCEL_BILL_AUTH)}
+                >
+                  No autorizado
+                </ValidateAuthMessage>
+              )}
+            </>
+          ) : selectedOption === REOPEN_ORDER ? (
+            <>
+              {allowRole === CASHIER || allowRole === ADMIN ? (
+                <ReopenModal
+                  handleLoading={setIsloading}
+                  currentBill={item.bill[0]}
+                  openModal={confirmChanges.openModal}
+                  userId={userId}
+                >
+                  Reopen Modal
+                </ReopenModal>
               ) : (
                 <ValidateAuthMessage
                   allow={authorizations.includes(CANCEL_BILL_AUTH)}

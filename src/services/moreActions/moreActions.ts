@@ -3,10 +3,10 @@ import axios from "../../configs/axios";
 import {
   BILLS_PATH,
   DISCOUNTS_PATH,
+  REOPEN_BILL_PATH,
   TABLES_UPT_PATH,
   TRANSFER_PRODUCTS_PATH,
 } from "../../lib/routes.paths.lib";
-import { parse } from "uuid";
 
 export const SaveBillInTableService = async (id: string, data: {}) => {
   const response = await axios.put(`${TABLES_UPT_PATH}/${id}`, data);
@@ -76,5 +76,10 @@ export const deleteBillProductDiscounService = async (
   body: any
 ) => {
   const response = await axios.put(`${DISCOUNTS_PATH}/d/bill/${id}`, body);
+  return response;
+};
+
+export const reopenBillService = async (body) => {
+  const response = await axios.post(REOPEN_BILL_PATH, body);
   return response;
 };
