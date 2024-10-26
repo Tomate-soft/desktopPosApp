@@ -39,8 +39,7 @@ export default function NotesCancellation({
 
   useEffect(() => {
     setSelectedNote(item.bill[0].notes[0]);
-    console.log(cancelData);
-  }, [setCancelData]);
+  }, []);
 
   return (
     <div className={styles.container}>
@@ -104,6 +103,7 @@ export default function NotesCancellation({
             data={cancelData}
             actionType={cancelNote}
             keyAction={NOTES_CANCEL}
+            item={selectedNote}
           >
             Descripción de la cancelacion:
           </GenericKeyboard>

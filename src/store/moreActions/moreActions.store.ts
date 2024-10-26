@@ -116,10 +116,7 @@ export const UseActions = create<state>((set) => {
           noteName: arg,
         };
         const res = await addNameInNote(id, data);
-        if (!res.data) {
-          set({ isLoading: false, errors: true });
-          throw new Error("No se ha podido guardar");
-        }
+
         set({ isLoading: false });
       } catch (error) {
         set({ isLoading: false, errors: true });
@@ -168,14 +165,9 @@ export const UseActions = create<state>((set) => {
       }
     },
     cancelBill: async (body) => {
-      console.log(body);
       set({ isLoading: true });
       try {
-        const res = await cancelBillService(body);
-        if (!res.data) {
-          set({ isLoading: false, errors: true });
-          throw new Error("No se pudo cancelar");
-        }
+        await cancelBillService(body);
         set({ isLoading: false });
         return;
       } catch (error) {

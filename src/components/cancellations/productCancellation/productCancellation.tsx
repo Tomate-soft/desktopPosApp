@@ -56,7 +56,7 @@ export default function ProductsCancel({ item, openModal, children }: Props) {
             noteId: selectedNote?._id,
             product: productSelection,
             cancellationBy: user,
-            cancellationFor: "Pendiente",
+            cancellationFor: item.bill[0].user,
             cancellationReason: active,
             description: description,
             cancelledAmount: disAmount,
@@ -68,7 +68,7 @@ export default function ProductsCancel({ item, openModal, children }: Props) {
             accountId: item.bill[0]._id,
             product: productSelection,
             cancellationBy: user,
-            cancellationFor: "Pendiente",
+            cancellationFor: item.bill[0].user,
             cancellationReason: active,
             description: description,
             cancelledAmount: disAmount,
@@ -180,10 +180,6 @@ export default function ProductsCancel({ item, openModal, children }: Props) {
                           type="radio"
                           name="productSelection"
                           onChange={() => {
-                            console.log(productSelection);
-                            console.log(managementProducts);
-                            console.log(disAmount);
-
                             if (
                               setproductSelection &&
                               setproductSelection.unique === element.unique
