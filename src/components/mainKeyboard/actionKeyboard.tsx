@@ -255,6 +255,8 @@ export function ActionsKeyboard({
                 cancellationBy: authData.payload.user._id,
                 cancellationFor: "Validacion futura",
                 cancellationReason: text,
+                cancelledAmount: item.bill[0].checkTotal,
+                cancelType: "BILL_CANCELLATION",
               };
               actionType(body);
               openModal();

@@ -26,6 +26,7 @@ interface Props {
   keyAction?: string;
   payload?: {};
   out: boolean;
+  item: any;
 }
 export function GenericKeyboard({
   children,
@@ -38,6 +39,7 @@ export function GenericKeyboard({
   keyAction,
   payload,
   out,
+  item,
 }: Props) {
   const [mayus, setMayus] = useState(true);
   const [text, setText] = useState("");
@@ -195,7 +197,13 @@ export function GenericKeyboard({
                 actionType();
               }
               if (keyAction === NOTES_CANCEL) {
-                actionType({ ...data, cancellationReason: text });
+                const cancelledAmount = item.checkTotal;
+                actionType({
+                  ...data,
+                  cancellationReason: text,
+                  cancelType: "NOTES_CANCELLATION",
+                  cancelledAmount: cancelledAmount,
+                });
                 openModal();
               }
               if (keyAction === PRODUCTS_DISCOUNTS) {

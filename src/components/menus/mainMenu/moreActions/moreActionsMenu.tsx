@@ -23,7 +23,6 @@ import {
   TO_GO_PAYMENT,
 } from "./configs/constants";
 import tomateIcon from "../../../../assets/icon/tomatePOSlogo.svg";
-import UseAccount from "../../../../hooks/useAccount";
 import { useModal } from "../../../../hooks/useModal";
 import ConfirmChanges from "../../../modals/confirm/confirmChanges";
 import { CONFIRM_ACTIONS } from "../../../../configs/consts";
@@ -139,7 +138,6 @@ export default function MoreActionsMenu({
                 }
                 return null;
               })}
-
             {
               /* type && */ type === TO_GO_ORDER &&
                 actionsTogoMenu.map((element, index) => (
