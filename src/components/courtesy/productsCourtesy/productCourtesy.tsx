@@ -34,7 +34,9 @@ export default function ProductsCourtesy({ item, openModal, children }: Props) {
       : productSelection?.priceInSite;
 
   const data = {
-    accountId: item.bill[0].notes?.length < 0 ? selectedNote : item.bill[0]._id,
+    accountId: item.bill[0]._id,
+    noteAccountId: selectedNote?._id,
+    productName: productSelection?.productName,
     discountMount: "100",
     setting: SET_PERCENT,
     discountByUser: user,

@@ -26,7 +26,8 @@ export default function NotesCourtesy({ item, openModal, children }: Props) {
   const createDiscount = UseActions((state) => state.createDiscount);
 
   const data = {
-    accountId: noteForDiscount?._id,
+    accountId: item.bill[0]._id,
+    noteAccountId: noteForDiscount?._id,
     discountMount: "100",
     setting: SET_PERCENT,
     discountByUser: user,

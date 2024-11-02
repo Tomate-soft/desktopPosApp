@@ -304,4 +304,3 @@ export function GenericKeyboard({
     </main>
   );
 }
-// no se esta enviando la nueva Prop totalDiscountQuantity hay que revisar por que.
