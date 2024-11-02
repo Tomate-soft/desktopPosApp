@@ -5,11 +5,16 @@ import backSpace from "../../assets/icon/backspaceIcon.svg";
 import minCheck from "../../assets/icon/minCheck.svg";
 
 import { useState } from "react";
-import { User } from "@digitalpersona/core";
 import { useAuthStore, useModal } from "@/shared";
 import { useCashWithdrawalStore } from "@/services/closuresOfOperations/cashWithdrawal.store";
 import { CONFIRM_CHANGES } from "@/lib/modals.lib";
 import ConfirmChanges from "../modals/confirm/confirmChanges";
+import {
+  EOperationType,
+  ICreatedTransaction,
+  TransactionType,
+} from "@/bussines/entities/Transactions/types";
+import { transactionModel } from "@/bussines/models/transactionModel";
 
 interface Props {
   isOpen: any;
@@ -29,12 +34,6 @@ export default function CashOut({ isOpen, onClose, children }: Props) {
   const errors = useCashWithdrawalStore((state) => state.errors);
   const message = useCashWithdrawalStore((state) => state.message);
   const logOutRequest = useAuthStore((state) => state.logOutRequest);
-
-  const withdraw = {
-    amount: value,
-    user: userId,
-    authUser: "663ab2ddbddc8ff76b01fa18",
-  };
 
   return (
     <main className={styles.screen}>
@@ -81,8 +80,16 @@ export default function CashOut({ isOpen, onClose, children }: Props) {
               </button>
               <button
                 onClick={() => {
+                  const session = authData?.payload?.user?.cashierSession._id;
+                  if (!session) return;
+                  const transaction: ICreatedTransaction = transactionModel(
+                    TransactionType.CASH_TRANSACTION,
+                    value,
+                    EOperationType.IN,
+                    session
+                  );
                   confirmChanges.openModal();
-                  createWithdraw(withdraw);
+                  createWithdraw(transaction);
                 }}
               >
                 <img src={minCheck} alt="check" />

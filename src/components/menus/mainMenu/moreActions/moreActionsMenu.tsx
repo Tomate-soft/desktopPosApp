@@ -61,7 +61,6 @@ import GenericPaymentInterface from "@/components/genericPaymentInterface/generi
 import { ADMIN, CASHIER } from "@/components/tools/confirmPassword/lib";
 import ReopenModal from "./components/reopen/reopen";
 import ReprintModal from "./components/reprint/reprint";
-import { ENABLE_STATUS, FOR_PAYMENT_STATUS } from "@/lib/tables.status.lib";
 interface Props {
   isOpen: any;
   onClose: any;
