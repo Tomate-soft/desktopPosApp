@@ -24,6 +24,7 @@ type Product = {
   updatedAt: string;
   __v: number;
 };
+
 interface state {
   isLoading: boolean;
   errors: boolean;

@@ -1,5 +1,5 @@
 import axios from "@/configs/axios";
-import { PAYMENTS_PATH, REPORTS_PATH } from "@/lib/routes.paths.lib";
+import { PAYMENTS_PATH } from "@/lib/routes.paths.lib";
 
 export const payTipService = async (id: string, body: any) => {
   const response = await axios.post(`${PAYMENTS_PATH}/pay/tips/${id}`, body);

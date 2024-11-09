@@ -1,14 +1,9 @@
 //styles
 import "../../styles/global/global.css";
 import styles from "./restaurant.module.css";
-// Icons
-import pendingIcon from "../../assets/icon/pending.svg";
-import enableIcon from "../../assets/icon/enableIcon.svg";
-import paymentIcon from "../../assets/icon/paymentIcon.svg";
-import freeIcon from "../../assets/icon/freeIcon.svg";
+
 import HeaderTwo from "../../components/headers/headerTwo/headerTwo";
-import homeIcon from "../../assets/icon/homeIcon.svg";
-import logOutIcon from "../../assets/icon/logOutIcon.svg";
+
 // Vars
 import TableBox from "../../components/tableBox/tableBox";
 import { useEffect, useState } from "react";
@@ -19,24 +14,15 @@ import MoreActionsMenu from "../../components/menus/mainMenu/moreActions/moreAct
 // Dependecies
 // Hooks
 import { useAuthStore } from "../../store/auth/auth.store";
-import { useNavigate } from "react-router-dom";
 import { ADMIN } from "../../components/tools/confirmPassword/lib";
 import { ON_SITE_ORDER } from "../../lib/orders.lib";
-import { SELL_TYPES_PATH } from "../../lib/routes.paths.lib";
 import ExceptionMessages from "../../components/modals/exceptionMessages/exceptionMessages";
 import { EXCEPTION_MESSAGES_CASHIER_SESSION_MODAL } from "../../lib/modals.lib";
 import UseCashierException from "../../hooks/exceptions/useCashierException";
-import { useOperationProcess } from "../../store/operatingPeriod/operatingPeriod.store";
 import { useCurrentCommand } from "../sells/imports";
-import { initialState } from "../../components/payments/utils/initialState";
+import RestaurantFooter from "./footer";
 
 export default function Restaurant() {
-  const getOperatingPeriod = useOperationProcess(
-    (state) => state.getCurrentPeriod
-  );
-  const currentPeriod = useOperationProcess((state) => state.operatingPeriod);
-  const logOutRequest = useAuthStore((state) => state.logOutRequest);
-  const navigate = useNavigate();
   const authData = useAuthStore((state) => state.authData);
   //! TODO SWR ✨
   // const { data } = useSWR()
@@ -105,44 +91,7 @@ export default function Restaurant() {
           No hay cajas abiertas
         </ExceptionMessages>
       ) : null}
-      <footer className={styles.footer}>
-        <div>
-          <button
-            onClick={() => {
-              logOutRequest();
-            }}
-          >
-            <img src={logOutIcon} alt="back-icon" />
-            Salir
-          </button>
-          <button
-            onClick={() => {
-              navigate(`/${SELL_TYPES_PATH}`);
-            }}
-          >
-            <img src={homeIcon} alt="home-icon" />
-            Inicio
-          </button>
-        </div>
-        <div>
-          <span>
-            <img src={pendingIcon} alt="pending-icon" />
-            En espera
-          </span>
-          <span>
-            <img src={enableIcon} alt="enable-icon" />
-            Activa
-          </span>
-          <span>
-            <img src={paymentIcon} alt="payment-icon" />
-            Por pagar
-          </span>
-          <span>
-            <img src={freeIcon} alt="free-icon" />
-            Libre
-          </span>
-        </div>
-      </footer>
+      <RestaurantFooter />
     </div>
   );
 }

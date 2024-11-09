@@ -1,7 +1,7 @@
-import * as PrinterApi from "../src/printer_api/dist/main";
 import { app, BrowserWindow } from "electron";
 import path from "node:path";
-import { spawn } from "child_process";
+import { NestFactory } from "@nestjs/core";
+import { AppModule } from "./app.module";
 
 // The built directory structure
 //
@@ -42,36 +42,50 @@ function createWindow() {
     win.loadFile(path.join(process.env.DIST, "index.html"));
   }
 }
-
+let nestApp: any;
 // Inicia tu API de NestJS
-function startNest() {
-  const nestPath = path.join(__dirname, "../src/printer_api/dist/main.js"); // Cambia la ruta según sea necesario
-  const nestProcess = spawn("node", [nestPath]);
+async function startNest() {
+  try {
+    nestApp = await NestFactory.create(AppModule, {
+      logger: ["error", "warn"],
+      cors: true, // Habilita CORS si es necesario
+    });
 
-  nestProcess.stdout.on("data", (data) => {
-    console.log(`NestJS: ${data}`);
-  });
+    // Agrega cualquier configuración adicional de NestJS aquí
+    // como middleware, controladores, servicios, etc.
 
-  nestProcess.stderr.on("data", (data) => {
-    console.error(`Error en NestJS: ${data}`);
-  });
-
-  nestProcess.on("close", (code) => {
-    console.log(`NestJS terminó con código ${code}`);
-  });
+    await nestApp.listen(3000);
+    console.log("NestJS API is running on port 3000");
+  } catch (error) {
+    console.error("Error starting NestJS:", error);
+    throw error;
+  }
 }
 
-app.on("window-all-closed", () => {
+async function cleanup() {
+  if (nestApp) {
+    await nestApp.close();
+  }
+}
+
+app.on("window-all-closed", async () => {
   if (process.platform !== "darwin") {
+    await cleanup();
     app.quit();
     win = null;
   }
 });
 
 app.whenReady().then(async () => {
-  await PrinterApi.bootstrap(); // Inicializa tu API de Printer si es necesario
-  startNest(); // Inicia la API de NestJS
+  // startNest(); // Inicia la API de NestJS
   createWindow(); // Crea la ventana de Electron
+  try {
+    await startNest();
+    // Crea la ventana de Electron y otras inicializaciones
+  } catch (error) {
+    console.error("Error starting the application:", error);
+    app.quit();
+  }
 });
 
 app.on("activate", () => {
