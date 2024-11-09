@@ -1,7 +1,7 @@
 import { ESellTypeOrder } from "../sellTypes/types";
-import { EProductStatus, ICommandProduct, IPrices } from "./types";
+import { EProductStatus, IPrices } from "./types";
 
-export class CommandProduct implements ICommandProduct {
+export class CommandProduct implements ICommandProductr {
   productName: string;
   prices: IPrices;
   status: EProductStatus;

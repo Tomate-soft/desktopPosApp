@@ -14,12 +14,14 @@ interface Props {
   onClose: any;
   children: any;
   product: any;
+  action: (args: any) => void;
 }
 export default function AddModifier({
   isOpen,
   onClose,
   children,
   product,
+  action,
 }: Props) {
   const getDishes = useDishesStore((state) => state.getDishes);
   const dishesArray = useDishesStore((state) => state.dishesArray);
@@ -29,10 +31,10 @@ export default function AddModifier({
   const [selectedModifier, setSelectedModifier] = useState();
 
   useEffect(() => {
-    console.log(modifiersArray);
     getModifiers();
     getDishes();
   }, []);
+
   return (
     <main className={styles.screen}>
       <div>
@@ -46,7 +48,7 @@ export default function AddModifier({
           </button>
         </div>
         <div>
-          <h3>{product.productName}</h3>
+          <h3>{product.product.productName}</h3>
           <div>
             {dishes?.map((element, index) => (
               <div>
@@ -129,7 +131,15 @@ export default function AddModifier({
             <img src={cleanIcon} alt="clean-icon" />
             Borrar todo
           </button>
-          <button className={styles.saveBtn}>
+          <button
+            className={styles.saveBtn}
+            onClick={() =>
+              action({
+                product: { ...product.product, dishes: dishes },
+                index: product.index,
+              })
+            }
+          >
             <img src={saveIcon} alt="save-icon" />
             Guardar
           </button>

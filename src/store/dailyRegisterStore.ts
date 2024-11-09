@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { createEntryService } from "../services/dailyRegister.services";
+import { text } from "pdfkit";
 
 interface state {
   isLoading: boolean;
@@ -22,6 +23,10 @@ export const useEntryDaily = create<state>((set) => {
         }
         const newMessage = new Date().toLocaleTimeString().slice(0, 8);
         set({ isLoading: false, message: newMessage });
+        fetch("http://localhost:3000/shift", {
+          method: "POST",
+          /* body: JSON.stringify({ text: employeeNumber }),*/
+        });
         return res.data;
       } catch (error) {
         set({ isLoading: false, errors: true });

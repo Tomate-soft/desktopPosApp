@@ -1,26 +1,37 @@
-import { ESellTypeOrder } from "../sellTypes/types";
-import { EStatusOrder, ICreateOnSiteOrder } from "./types.";
+import { IProduct } from "../products/types";
+import { IOrder } from "./types.";
 
-export class OnSiteOrder implements ICreateOnSiteOrder {
+class Order implements IOrder {
   user: string;
-  userId: string;
-  checkTotal: string;
-  status: EStatusOrder; // Se asigna ENABLE por defecto
-  products: any[]; // Se inicializa vacia
-  payment: any[]; // Se inicializa vacia
-  selltype: ESellTypeOrder;
-  tableNum: string;
+  products: IProduct[];
+
+  constructor(order: IOrder) {
+    this.user = order.user;
+    this.products = order.products;
+  }
+}
+
+export class ToGoOrder extends Order {
+  constructor(order: IOrder) {
+    super(order);
+  }
+}
+
+export class OnSiteOrder extends Order {
   table: string;
 
-  constructor(onsiteOrder: ICreateOnSiteOrder) {
-    this.user = onsiteOrder.user;
-    this.userId = onsiteOrder.userId;
-    this.checkTotal = "0.00";
-    this.status = EStatusOrder.ENABLE;
-    this.products = [];
-    this.payment = [];
-    this.selltype = ESellTypeOrder.ON_SITE_ORDER;
-    this.tableNum = onsiteOrder.tableNum;
-    this.table = onsiteOrder.table;
+  constructor(order: IOrder, table: string) {
+    super(order);
+    this.table = table;
   }
+}
+
+class CreateOrder {
+  createNewOrder() {
+    throw new Error("Method not implemented.");
+  }
+}
+
+class CreateOnSiteOrder extends CreateOrder {
+  createNewOrder(order: IOrder, tableNum: string) {}
 }

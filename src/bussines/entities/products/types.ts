@@ -7,7 +7,7 @@ export enum EProductStatus {
 
 type TPrice = {
   name: string;
-  status: boolean;
+  price: number;
 };
 
 export interface IPrices {
@@ -18,18 +18,7 @@ export interface IPrices {
 }
 
 export interface IProduct {
-  _id?: string;
-  code?: string;
+  quanity: number;
   productName: string;
   prices: IPrices;
-  status: EProductStatus;
-  createdAt?: Date;
-  updatedAt?: Date;
-}
-
-export interface ICommandProduct extends IProduct {
-  quantity: number;
-  sellType: ESellTypeOrder;
-  unique?: string; // Todo evaluar el echo de hacerlo requerido
-  active: boolean;
 }

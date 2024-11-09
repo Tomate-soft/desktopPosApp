@@ -13,7 +13,7 @@ import homeIcon from "../../assets/icon/homeIcon.svg";
 import { useNavigate } from "react-router-dom";
 import { SELL_TYPES_PATH } from "../../lib/routes.paths.lib";
 import { useEffect, useState } from "react";
-import { PHONE_ORDER, RAPPI_ORDER, TO_GO_ORDER } from "../../lib/orders.lib";
+import { PHONE_ORDER, TO_GO_ORDER } from "../../lib/orders.lib";
 import { useModal } from "../sells/imports";
 import { CONFIRM_PAYMENT_MODAL, MORE_ACTIONS_MENU } from "../../lib/modals.lib";
 import MoreActionsMenu from "../../components/menus/mainMenu/moreActions/moreActionsMenu";
@@ -21,7 +21,6 @@ import ConfirmPayment from "@/components/modals/confirmPayments/confirmPayments"
 import { GENERIC_KEYBOARD_ACTIVE } from "@/components/genericKeyboard/config";
 import { GenericKeyboard } from "@/components/genericKeyboard/genericKeyboard";
 import { ENABLE_STATUS } from "@/lib/tables.status.lib";
-import { useRappiOrders } from "@/store/orders/rappiOrders.store";
 import { usePhoneOrders } from "@/store/orders/phoneOrder.store";
 
 export default function PhoneOrders() {
