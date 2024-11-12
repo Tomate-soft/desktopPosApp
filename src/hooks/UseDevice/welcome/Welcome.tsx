@@ -2,7 +2,6 @@ import RequestButton from "@/components/customElements/saveButton/savebutton";
 import styles from "./welcome.module.css";
 import tomateLogo from "@/assets/icon/tomatePOSlogo.svg";
 import { useEffect, useState } from "react";
-import { Post } from "@nestjs/common";
 import { CONFIRM_CHANGES } from "@/lib/modals.lib";
 import { useModal } from "@/shared";
 import ConfirmChanges from "@/components/modals/confirm/confirmChanges";
@@ -15,10 +14,11 @@ export default function Welcome() {
   const [error, setError] = useState<null | Error>(null);
   const [data, setData] = useState(null);
   const [device, setDevice] = useState(null);
+  const URL_BASE = import.meta.env.VITE_API_URL_PATH;
 
   async function searchBussiness(key: string) {
     setIsLoading(true);
-    await fetch(`http://localhost:8000/business/${key}`)
+    await fetch(`${URL_BASE}/business/${key}`)
       .then((response) => response.json())
       .then((data) => {
         setIsLoading(false);
