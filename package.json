@@ -9,8 +9,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@digitalpersona/authentication": "^0.2.6",
-    "@digitalpersona/devices": "^0.2.6",
     "@formkit/drag-and-drop": "^0.0.38",
     "@grpc/grpc-js": "^1.11.3",
     "@grpc/proto-loader": "^0.7.13",

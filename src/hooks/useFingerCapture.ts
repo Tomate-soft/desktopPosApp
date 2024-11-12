@@ -1,3 +1,5 @@
+export default function UseFingerCapture() {}
+/*
 import { FingerprintReader, SampleFormat } from "@digitalpersona/devices";
 import { useState } from "react";
 import axios from "../configs/axios";
@@ -121,3 +123,5 @@ export default function UseFingerCapture() {
     onQualityReported,
   };
 }
+
+*/

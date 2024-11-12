@@ -52,11 +52,10 @@ export default function Login() {
   const createRegister = useEntryDaily((state) => state.createEntryDaily);
   const messages = useEntryDaily((state) => state.message);
 
-  const { initReader } = UseFingerSignIn(confirmEntry.openModal);
+  // const { initReader } = UseFingerSignIn(confirmEntry.openModal);
   const { isLoading, error, data } = useDevice();
   useEffect(() => {
-    initReader();
-    console.log(error);
+    //initReader();
   }, [error]);
 
   return (

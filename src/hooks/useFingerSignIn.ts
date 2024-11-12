@@ -1,3 +1,5 @@
+export default function UseFingerSignIn(openModal: any) {}
+/* 
 import { FingerprintReader, SampleFormat } from "@digitalpersona/devices";
 import { useState } from "react";
 import axios from "../configs/axios";
@@ -88,3 +90,5 @@ export default function UseFingerSignIn(openModal: any) {
     onQualityReported,
   };
 }
+
+*/
