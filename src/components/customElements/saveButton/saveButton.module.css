@@ -1,0 +1,17 @@
+
+
+.requestButton{
+    background-color: var(--color-accent-red-primary);
+    padding: 8px 16px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+    height: 48px;
+
+   
+}
+

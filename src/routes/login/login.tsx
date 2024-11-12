@@ -28,8 +28,9 @@ import ConfirmEntryDaily from "../../components/confirmDailyEntry/confirmDailyEn
 import ConfirmShift from "../../components/modals/confirmShift/confirmShift";
 import { useEntryDaily } from "../../store/dailyRegisterStore";
 import ExceptionMessages from "../../components/modals/exceptionMessages/exceptionMessages";
-import UseFingerCapture from "@/hooks/useFingerCapture";
 import UseFingerSignIn from "@/hooks/useFingerSignIn";
+import useDevice from "@/hooks/UseDevice/UseDevice";
+import Welcome from "@/hooks/UseDevice/welcome/Welcome";
 
 export default function Login() {
   // Modals
@@ -52,159 +53,164 @@ export default function Login() {
   const messages = useEntryDaily((state) => state.message);
 
   const { initReader } = UseFingerSignIn(confirmEntry.openModal);
-
+  const { isLoading, error, data } = useDevice();
   useEffect(() => {
     initReader();
-  }, []);
+    console.log(error);
+  }, [error]);
 
   return (
-    <div className={styles.container}>
-      <HeaderOne />
-      <main className={styles.mainSection}>
-        <section className={styles.sectionOne}>
-          <img src={posLogo} alt="pos-logo" />
-        </section>
-        <section className={styles.sectionTwo}>
-          <h4>ingresar código</h4>
-          <div className={styles.nums}>
-            {employeeNumber.length > 0 &&
-            employeeNumber.length < 2 &&
-            employeeNumber.length === 1 ? (
-              <div className={styles.sign}>
-                <span>{employeeNumber.slice(0, 1)}</span>
-                <span>.</span>
-                <span>.</span>
-                <span>.</span>
-              </div>
-            ) : employeeNumber.length > 1 &&
-              employeeNumber.length < 3 &&
-              employeeNumber.length === 2 ? (
-              <div className={styles.sign}>
-                <span>{employeeNumber.slice(0, 1)}</span>
-                <span>{employeeNumber.slice(1, 2)}</span>
-                <span>.</span>
-                <span>.</span>
-              </div>
-            ) : employeeNumber.length > 2 &&
-              employeeNumber.length < 4 &&
-              employeeNumber.length === 3 ? (
-              <div className={styles.sign}>
-                <span>{employeeNumber.slice(0, 1)}</span>
-                <span>{employeeNumber.slice(1, 2)}</span>
-                <span>{employeeNumber.slice(2, 3)}</span>
-                <span>.</span>
-              </div>
-            ) : employeeNumber.length > 3 &&
-              employeeNumber.length < 5 &&
-              employeeNumber.length === 4 ? (
-              <div className={styles.sign}>
-                <span>{employeeNumber.slice(0, 1)}</span>
-                <span>{employeeNumber.slice(1, 2)}</span>
-                <span>{employeeNumber.slice(2, 3)}</span>
-                <span>{employeeNumber.slice(3, 4)}</span>
-              </div>
-            ) : (
-              <div className={styles.sign}>
-                <span>.</span>
-                <span>.</span>
-                <span>.</span>
-                <span>.</span>
-              </div>
-            )}
+    <>
+      {error && <Welcome />}
+      <div className={styles.container}>
+        <HeaderOne />
+        <main className={styles.mainSection}>
+          <section className={styles.sectionOne}>
+            <img src={posLogo} alt="pos-logo" />
+          </section>
+          <section className={styles.sectionTwo}>
+            <h4>ingresar código</h4>
+            <div className={styles.nums}>
+              {employeeNumber.length > 0 &&
+              employeeNumber.length < 2 &&
+              employeeNumber.length === 1 ? (
+                <div className={styles.sign}>
+                  <span>{employeeNumber.slice(0, 1)}</span>
+                  <span>.</span>
+                  <span>.</span>
+                  <span>.</span>
+                </div>
+              ) : employeeNumber.length > 1 &&
+                employeeNumber.length < 3 &&
+                employeeNumber.length === 2 ? (
+                <div className={styles.sign}>
+                  <span>{employeeNumber.slice(0, 1)}</span>
+                  <span>{employeeNumber.slice(1, 2)}</span>
+                  <span>.</span>
+                  <span>.</span>
+                </div>
+              ) : employeeNumber.length > 2 &&
+                employeeNumber.length < 4 &&
+                employeeNumber.length === 3 ? (
+                <div className={styles.sign}>
+                  <span>{employeeNumber.slice(0, 1)}</span>
+                  <span>{employeeNumber.slice(1, 2)}</span>
+                  <span>{employeeNumber.slice(2, 3)}</span>
+                  <span>.</span>
+                </div>
+              ) : employeeNumber.length > 3 &&
+                employeeNumber.length < 5 &&
+                employeeNumber.length === 4 ? (
+                <div className={styles.sign}>
+                  <span>{employeeNumber.slice(0, 1)}</span>
+                  <span>{employeeNumber.slice(1, 2)}</span>
+                  <span>{employeeNumber.slice(2, 3)}</span>
+                  <span>{employeeNumber.slice(3, 4)}</span>
+                </div>
+              ) : (
+                <div className={styles.sign}>
+                  <span>.</span>
+                  <span>.</span>
+                  <span>.</span>
+                  <span>.</span>
+                </div>
+              )}
+            </div>
+            <Pinboard
+              action={confirmPassword.openModal}
+              set={setEmployeeNumber}
+              value={employeeNumber}
+            />
+          </section>
+        </main>
+        <footer className={styles.footer}>
+          <div>
+            <button>
+              <img src={fingerprintIco} alt="fingerprint-icon" />
+            </button>
+            <img src={dividerBtn} alt="divider-icon" />
+            <button
+              onClick={() => {
+                registerShift.openModal();
+                setRegShift(true);
+              }}
+              style={regShift ? { background: "rgba(94, 135, 8, 1)" } : {}}
+            >
+              <img src={startShift} alt="start-shift-icon" />
+            </button>
+            <button>
+              <img src={foodShift} alt="food-shift" />
+            </button>
           </div>
-          <Pinboard
-            action={confirmPassword.openModal}
-            set={setEmployeeNumber}
-            value={employeeNumber}
-          />
-        </section>
-      </main>
-      <footer className={styles.footer}>
-        <div>
-          <button>
-            <img src={fingerprintIco} alt="fingerprint-icon" />
-          </button>
-          <img src={dividerBtn} alt="divider-icon" />
-          <button
-            onClick={() => {
-              registerShift.openModal();
-              setRegShift(true);
-            }}
-            style={regShift ? { background: "rgba(94, 135, 8, 1)" } : {}}
+          <div>
+            <h3>POS</h3>
+            <img src={bullet} alt="bullet-icon" />
+            <h3>LOC Terraza</h3>
+            <img src={bullet} alt="bullet-icon" />
+            <h3>v-Develop</h3>
+          </div>
+        </footer>
+        {confirmPassword.isOpen &&
+        confirmPassword.modalName === CONFIRM_PASSWORD ? (
+          <ConfirmPassword
+            dailyRegisterException={exceptionMessage.openModal}
+            pin={employeeNumber}
+            reset={setEmployeeNumber}
+            set={setPassword}
+            value={password}
+            isOpen={confirmPassword.isOpen}
+            onClose={confirmPassword.closeModal}
           >
-            <img src={startShift} alt="start-shift-icon" />
-          </button>
-          <button>
-            <img src={foodShift} alt="food-shift" />
-          </button>
-        </div>
-        <div>
-          <h3>POS</h3>
-          <img src={bullet} alt="bullet-icon" />
-          <h3>LOC Terraza</h3>
-          <img src={bullet} alt="bullet-icon" />
-          <h3>v-Develop</h3>
-        </div>
-      </footer>
-      {confirmPassword.isOpen &&
-      confirmPassword.modalName === CONFIRM_PASSWORD ? (
-        <ConfirmPassword
-          dailyRegisterException={exceptionMessage.openModal}
-          pin={employeeNumber}
-          reset={setEmployeeNumber}
-          set={setPassword}
-          value={password}
-          isOpen={confirmPassword.isOpen}
-          onClose={confirmPassword.closeModal}
-        >
-          ""
-        </ConfirmPassword>
-      ) : null}
-      {registerShift.isOpen && registerShift.modalName === REGISTER_SHIFT ? (
-        <ShiftRegister
-          openModal={confirmEntry.openModal}
-          isOpen={registerShift.isOpen}
-          onClose={registerShift.closeModal}
-          setStyle={setRegShift}
-          settingEmployeeNumber={setEmployeeNumberShift}
-          employeeNumber={employeeNumberShift}
-        >
-          Registro de turno
-        </ShiftRegister>
-      ) : null}
-      {confirmEntry.isOpen && confirmEntry.modalName === CONFIRM_ENTRY_DAILY ? (
-        <ConfirmEntryDaily
-          createRegister={createRegister}
-          openModal={confirmRegisterDailyShift.openModal}
-          isOpen={confirmEntry.isOpen}
-          onClose={confirmEntry.closeModal}
-          setStyle={setRegShift}
-          settingEmployeeNumber={setEmployeeNumberShift}
-          employeeNumber={employeeNumberShift}
-        >
-          Contraseña
-        </ConfirmEntryDaily>
-      ) : null}
-      {confirmRegisterDailyShift.isOpen &&
-      confirmRegisterDailyShift.modalName === CONFIRM_REGISTER_SHIFT_MODAL ? (
-        <ConfirmShift
-          loading={isLoadingShift}
-          errors={isErrorsShift}
-          isOpen={confirmRegisterDailyShift.isOpen}
-          onClose={confirmRegisterDailyShift.closeModal}
-        >
-          {messages}
-        </ConfirmShift>
-      ) : null}
-      {exceptionMessage.isOpen &&
-      exceptionMessage.modalName === EXCEPTION_MESSAGES_MODAL ? (
-        <ExceptionMessages
-          isOpen={exceptionMessage.isOpen}
-          onClose={exceptionMessage.closeModal}
-        >
-          Es necesario registrar entrada
-        </ExceptionMessages>
-      ) : null}
-    </div>
+            ""
+          </ConfirmPassword>
+        ) : null}
+        {registerShift.isOpen && registerShift.modalName === REGISTER_SHIFT ? (
+          <ShiftRegister
+            openModal={confirmEntry.openModal}
+            isOpen={registerShift.isOpen}
+            onClose={registerShift.closeModal}
+            setStyle={setRegShift}
+            settingEmployeeNumber={setEmployeeNumberShift}
+            employeeNumber={employeeNumberShift}
+          >
+            Registro de turno
+          </ShiftRegister>
+        ) : null}
+        {confirmEntry.isOpen &&
+        confirmEntry.modalName === CONFIRM_ENTRY_DAILY ? (
+          <ConfirmEntryDaily
+            createRegister={createRegister}
+            openModal={confirmRegisterDailyShift.openModal}
+            isOpen={confirmEntry.isOpen}
+            onClose={confirmEntry.closeModal}
+            setStyle={setRegShift}
+            settingEmployeeNumber={setEmployeeNumberShift}
+            employeeNumber={employeeNumberShift}
+          >
+            Contraseña
+          </ConfirmEntryDaily>
+        ) : null}
+        {confirmRegisterDailyShift.isOpen &&
+        confirmRegisterDailyShift.modalName === CONFIRM_REGISTER_SHIFT_MODAL ? (
+          <ConfirmShift
+            loading={isLoadingShift}
+            errors={isErrorsShift}
+            isOpen={confirmRegisterDailyShift.isOpen}
+            onClose={confirmRegisterDailyShift.closeModal}
+          >
+            {messages}
+          </ConfirmShift>
+        ) : null}
+        {exceptionMessage.isOpen &&
+        exceptionMessage.modalName === EXCEPTION_MESSAGES_MODAL ? (
+          <ExceptionMessages
+            isOpen={exceptionMessage.isOpen}
+            onClose={exceptionMessage.closeModal}
+          >
+            Es necesario registrar entrada
+          </ExceptionMessages>
+        ) : null}
+      </div>
+    </>
   );
 }
