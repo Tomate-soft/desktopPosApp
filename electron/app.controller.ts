@@ -40,7 +40,7 @@ export class AppController {
   private async createPrinter() {
     return new ThermalPrinter({
       type: PrinterTypes.EPSON,
-      interface: `tcp://192.168.1.91`,
+      interface: `tcp://192.168.1.69`,
       characterSet: CharacterSet.SLOVENIA,
       removeSpecialCharacters: false,
       width: 42,
