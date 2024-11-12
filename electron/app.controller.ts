@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   InternalServerErrorException,
+  NotFoundException,
   Post,
 } from "@nestjs/common";
 import { AppService } from "./app.service";
@@ -14,6 +15,7 @@ import {
   PrinterTypes,
   ThermalPrinter,
 } from "node-thermal-printer";
+import * as path from "path";
 
 @Controller()
 export class AppController {
@@ -77,6 +79,30 @@ export class AppController {
       throw new InternalServerErrorException(
         "Error al generar o imprimir el reporte"
       );
+    }
+  }
+
+  @Get("config")
+  async getConfig() {
+    console.log("Directorio de trabajo actual:", process.cwd()); // Verifica el directorio de trabajo
+    try {
+      const data = await fs.readFile("./src/device.json", "utf-8");
+      return data;
+    } catch (error) {
+      throw new NotFoundException();
+    }
+  }
+
+  @Post("create-config")
+  async createConfig(@Body() data: any) {
+    const filePath = path.join(process.cwd(), "src", "device.json");
+
+    try {
+      await fs.access(filePath);
+      return { message: "El archivo ya existe." };
+    } catch (error) {
+      await fs.writeFile(filePath, JSON.stringify(data, null, 2), "utf-8");
+      return { message: "Archivo creado correctamente." };
     }
   }
 }

@@ -9,6 +9,7 @@ import crossBtn from "../../assets/icon/crossButton.svg";
 import { useEffect, useState } from "react";
 import { staticModifiers } from "../../lib/modifiers.lib";
 import { useModifiersStore } from "../../store/modifiers.store";
+import { useNavigate } from "react-router-dom";
 interface Props {
   isOpen: any;
   onClose: any;

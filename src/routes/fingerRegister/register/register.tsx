@@ -1,3 +1,11 @@
+import { User } from "@/types/User";
+
+interface Props {
+  user: User;
+  setUser: (argument: any) => void;
+}
+export default function Register({ user, setUser }: Props) {}
+/* 
 import { useEffect, useState } from "react";
 import { User } from "../../../types/User";
 import styles from "./register.module.css";
@@ -237,3 +245,5 @@ export default function Register({ user, setUser }: Props) {
     </main>
   );
 }
+
+*/
