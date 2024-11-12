@@ -51,7 +51,7 @@ export default function Login() {
   const isErrorsShift = useEntryDaily((state) => state.errors);
   const createRegister = useEntryDaily((state) => state.createEntryDaily);
   const messages = useEntryDaily((state) => state.message);
-
+  // update changes
   // const { initReader } = UseFingerSignIn(confirmEntry.openModal);
   const { isLoading, error, data } = useDevice();
   useEffect(() => {
