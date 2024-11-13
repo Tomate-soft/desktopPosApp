@@ -29,6 +29,12 @@ export default defineConfig({
           : {},
     }),
   ],
+  build: {
+    rollupOptions: {
+      external: ["node-thermal-printer"],
+    },
+  },
+
   /*
 
   optimizeDeps: {
