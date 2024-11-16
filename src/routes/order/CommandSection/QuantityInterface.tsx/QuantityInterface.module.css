@@ -1,12 +1,12 @@
 
 .container{
     display: flex;
-    align-items: center;
-    justify-content: center;
     background: rgba(249, 249, 249, 0.1);
     padding: 6px;
     gap: 6px;
     border-radius: 8px;
+    border: 2px solid purple !important;
+
 
 
     >button{
