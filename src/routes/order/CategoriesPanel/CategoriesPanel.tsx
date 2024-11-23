@@ -1,6 +1,5 @@
 import { categoriesMap } from "@/mocks/categories";
 import styles from "./CategoriesPanel.module.css";
-import { useState } from "react";
 
 interface CategoriesPanelProps {
   productsArray: any;

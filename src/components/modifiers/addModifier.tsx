@@ -4,12 +4,9 @@ import saveIcon from "../../assets/icon/disquetIcon.svg";
 import cleanIcon from "../../assets/icon/cleanBtn.svg";
 import dividerOne from "../../assets/icon/divider01000.svg";
 import dividerTwo from "../../assets/icon/divider02000.svg";
-import { useDishesStore } from "../../store/dishes.store";
 import crossBtn from "../../assets/icon/crossButton.svg";
 import { useEffect, useState } from "react";
 import { staticModifiers } from "../../lib/modifiers.lib";
-import { useModifiersStore } from "../../store/modifiers.store";
-import { useNavigate } from "react-router-dom";
 interface Props {
   isOpen: any;
   onClose: any;
@@ -24,16 +21,12 @@ export default function AddModifier({
   product,
   action,
 }: Props) {
-  const getDishes = useDishesStore((state) => state.getDishes);
-  const dishesArray = useDishesStore((state) => state.dishesArray);
-  const getModifiers = useModifiersStore((state) => state.getModifiers);
-  const modifiersArray = useModifiersStore((state) => state.modifiersArray);
   const [dishes, setDishes] = useState<any[]>([]);
+  const [modifiers, setModifiers] = useState<any[]>([]);
   const [selectedModifier, setSelectedModifier] = useState();
 
   useEffect(() => {
-    getModifiers();
-    getDishes();
+    setSelectedModifier(staticModifiers[0]);
   }, []);
 
   return (
@@ -64,6 +57,21 @@ export default function AddModifier({
                 </button>
               </div>
             ))}
+            {modifiers?.map((element, index) => (
+              <div>
+                <h3>{element.modifierName}</h3>
+                <button
+                  onClick={() => {
+                    const filterModifiers = modifiers.filter(
+                      (_, i) => i !== index
+                    );
+                    setModifiers(filterModifiers);
+                  }}
+                >
+                  <img src={crossBtn} alt="cross-button" />
+                </button>
+              </div>
+            ))}
           </div>
         </div>
         <div>
@@ -73,7 +81,7 @@ export default function AddModifier({
               <img src={dividerOne} alt="divider-icon" />
             </div>
             <div>
-              {dishesArray?.map((element, index) => (
+              {product.product.group.dishes?.map((element, index) => (
                 <button
                   key={index}
                   onClick={() => {
@@ -116,8 +124,24 @@ export default function AddModifier({
                 ))}
               </div>
               <div>
-                {modifiersArray?.map((element, index) => (
-                  <button key={index}>{element.modifierName}</button>
+                {product.product.group.modifiers?.map((element, index) => (
+                  <button
+                    key={index}
+                    onClick={() => {
+                      const settingmodifiers = !modifiers.length
+                        ? [element]
+                        : [
+                            ...modifiers,
+                            {
+                              ...element,
+                              modifierName: `${selectedModifier?.tittle} ${element.modifierName}`,
+                            },
+                          ];
+                      setModifiers(settingmodifiers);
+                    }}
+                  >
+                    {element.modifierName}
+                  </button>
                 ))}
               </div>
             </div>
@@ -127,6 +151,7 @@ export default function AddModifier({
           <button
             onClick={() => {
               setDishes([]);
+              setModifiers([]);
             }}
           >
             <img src={cleanIcon} alt="clean-icon" />
@@ -136,7 +161,11 @@ export default function AddModifier({
             className={styles.saveBtn}
             onClick={() =>
               action({
-                product: { ...product.product, dishes: dishes },
+                product: {
+                  ...product.product,
+                  dishes: dishes,
+                  modifiers: modifiers,
+                },
                 index: product.index,
               })
             }
