@@ -318,7 +318,6 @@ export default function Order() {
   // ver si hay notas
   // todo para HOY
   function addExtrasInProduct(product: any) {
-    alert("me ejecute");
     const currentData = { ...billCurrentCommand };
     currentData.products[product.index] = product.product;
     setBillCurrentCommand(currentData);

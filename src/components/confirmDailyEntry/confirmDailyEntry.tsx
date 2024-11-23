@@ -130,10 +130,6 @@ export default function ConfirmEntryDaily({
               disabled={value.length < 4}
               className={styles.check}
               onClick={() => {
-                console.log(`valor de emplooyeeNuMBER ${employeeNumber}`);
-                console.log(employeeNumber);
-                console.log(`valor de value ${value}`);
-                console.log(value);
                 createRegister(parseInt(employeeNumber), parseInt(value));
                 openModal();
                 onClose();
