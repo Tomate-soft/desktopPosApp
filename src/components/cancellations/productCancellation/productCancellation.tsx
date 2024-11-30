@@ -12,6 +12,7 @@ import { cancellationReasonStore } from "../../../store/cancellationReasons.stor
 import { useAuthStore } from "../../../shared";
 import { UseActions } from "../../../store/moreActions/moreActions.store";
 import { PRODUCTS_CANCEL } from "../../menus/mainMenu/moreActions/configs/constants";
+import { calculateBillTotal } from "@/utils/calculateTotals";
 
 interface Props {
   item: any;
@@ -42,10 +43,7 @@ export default function ProductsCancel({ item, openModal, children }: Props) {
   const authData = useAuthStore((state) => state.authData);
   const user = authData.payload.user._id;
 
-  const disAmount =
-    productSelection?.quantity > 1
-      ? parseFloat(productSelection?.priceInSiteBill)
-      : parseFloat(productSelection?.priceInSite);
+
 
   const dataSend =
     item.bill[0].notes.length > 0
@@ -59,7 +57,7 @@ export default function ProductsCancel({ item, openModal, children }: Props) {
             cancellationFor: item.bill[0].user,
             cancellationReason: active,
             description: description,
-            cancelledAmount: disAmount,
+            cancelledAmount: productSelection?.prices[0].price, // esto debera cambiar dependiendo el tipo de venta
           },
         }
       : {
@@ -71,7 +69,7 @@ export default function ProductsCancel({ item, openModal, children }: Props) {
             cancellationFor: item.bill[0].user,
             cancellationReason: active,
             description: description,
-            cancelledAmount: disAmount,
+            cancelledAmount:  productSelection?.prices[0].price, // esto debera cambiar dependiendo el tipo de venta
           },
         };
 
@@ -80,7 +78,6 @@ export default function ProductsCancel({ item, openModal, children }: Props) {
     if (item.bill[0].notes.length > 0) {
       setSelectedNote(item.bill[0].notes[0]);
     }
-    console.log(productSelection);
   }, [description]);
 
   return (

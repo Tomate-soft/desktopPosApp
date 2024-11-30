@@ -273,6 +273,8 @@ export function GenericKeyboard({
                 openModal();
               }
               if (keyAction === COURTESY_APPLY_NOTES) {
+                console.log("paykloade por aca")
+                console.log(payload);
                 const dataSend = {
                   ...payload,
                   discountReason: text,

@@ -3,6 +3,11 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "compilerOptions": {
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build && electron-builder",

@@ -18,7 +18,6 @@ export default function useDevice() {
       }
       const data = await response.json();
 
-      console.log("2");
       setIsLoading(false);
       setData(data);
       setError(null);

@@ -7,7 +7,6 @@ import {
   deleteBillProductDiscounService,
   deleteDiscountService,
   deleteNoteProductDiscounService,
-  getReopensService,
   productsToBillServices,
   reopenBillService,
 } from "../../services/moreActions/moreActions";
@@ -138,6 +137,7 @@ export const UseActions = create<state>((set) => {
       }
     },
     createNotes: async (notesArray, id) => {
+  
       set({ isLoading: true });
       try {
         const noteIds = await createNotes(notesArray);

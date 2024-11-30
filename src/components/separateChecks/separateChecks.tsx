@@ -4,9 +4,9 @@ import divider from "../../assets/icon/dividerInNote.svg";
 import trashIcon from "../../assets/icon/trashIcon.svg";
 import { v4 as uuidv4 } from "uuid";
 import { useEffect, useState } from "react";
-import { updateBillProps } from "../../store/bill.store";
 import { UseActions } from "../../store/moreActions/moreActions.store";
 import { ENABLE_STATUS } from "../../lib/tables.status.lib";
+import { calculateBillTotal } from "@/utils/calculateTotals";
 
 interface Props {
   item: any;
@@ -46,7 +46,7 @@ export default function SeparateChecks({ item, openModal }: Props) {
     sellType: item.bill[0]?.sellType,
     user: item.bill[0]?.user,
     products: [],
-    checkTotal: "esto se renombrar a noteTotal",
+    checkTotal: calculateBillTotal(item.bill[0]?.products),
     status: "enable",
     cashier: "revisar esto",
     paymentDate: "inesceria creo, refvisar...",
@@ -65,32 +65,21 @@ export default function SeparateChecks({ item, openModal }: Props) {
           return { ...element, unique: uuidv4() };
         }
       });
-
-      if (item.bill[0]?.notes.length) {
-        for (let note of item.bill[0]?.notes) {
-          const updatedProducts = note.products.flatMap((element) => {
-            if (element.quantity > 1) {
-              const products = [];
-              for (let i = 0; i < element.quantity; i++) {
-                products.push({ ...element, quantity: 1, unique: uuidv4() });
-              }
-              return products;
-            } else {
-              return { ...element, unique: uuidv4() };
-            }
-          });
-          note.products = updatedProducts;
-        }
-      }
+  
       if (!item.bill[0]) {
         return;
       }
+  
       setSeparateNotes([
-        { ...NOTE_TEMPLATE, products: updatedProducts, noteNumber: 1 },
+        {
+          ...NOTE_TEMPLATE,
+          products: updatedProducts,
+          noteNumber: 1,
+        },
         { ...NOTE_TEMPLATE, noteNumber: 2 },
       ]);
     } else {
-      const updatedNotes = item.bill[0]?.notes.map((note) => {
+      const updatedNotes = item.bill[0]?.notes.map((note, index) => {
         const updatedProducts = note.products.flatMap((element) => {
           if (element.quantity > 1) {
             const products = [];
@@ -102,15 +91,18 @@ export default function SeparateChecks({ item, openModal }: Props) {
             return { ...element, unique: uuidv4() };
           }
         });
+  
         return {
           ...note,
           products: updatedProducts,
           noteNumber: note.noteNumber ?? null,
+          checkTotal: calculateBillTotal(updatedProducts), // Usamos `updatedProducts` en lugar de `updatedNotes`.
         };
       });
       setSeparateNotes(updatedNotes);
     }
   }, []);
+  
 
   return (
     <article className={styles.container}>
@@ -276,16 +268,28 @@ export default function SeparateChecks({ item, openModal }: Props) {
       <div className={styles.footerModal}>
         <h4>Cantidad de notas: {separateNotes?.length}</h4>
         <button
-          disabled={!item.bill[0]}
-          onClick={() => {
-            if (separateNotes?.length) {
-              openModal();
-              createNotes(separateNotes, item.bill[0]._id);
-            }
-          }}
-        >
-          Guardar
-        </button>
+  disabled={!item.bill[0]}
+  onClick={() => {
+    if (separateNotes?.length) {
+      // Crear una copia limpia de los datos y recalcular totales.
+      const sendData = separateNotes.map((element) => ({
+        ...element,
+        checkTotal: calculateBillTotal(element.products),
+      }));
+
+      try {
+        // Asegurarse de ejecutar las acciones correctamente.
+        openModal();
+        createNotes(sendData, item.bill[0]._id);
+      } catch (error) {
+        console.error("Error al guardar las notas:", error);
+      }
+    }
+  }}
+>
+  Guardar
+</button>
+
       </div>
     </article>
   );

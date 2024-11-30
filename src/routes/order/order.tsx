@@ -278,7 +278,7 @@ export default function Order() {
           logOutRequest();
           return;
         }
-        updateBill(ENABLE_STATUS, billCurrent, billCurrentCommand);
+       // updateBill(ENABLE_STATUS, billCurrent, billCurrentCommand);
         handlePrint(billCurrentCommand);
         logOutRequest();
       } catch (error) {
@@ -385,7 +385,7 @@ export default function Order() {
         >
           Buscar
         </MainKeyboard>
-      ) : null}
+      ) : null }
       {confirmChanges.isOpen && confirmChanges.modalName === CONFIRM_CHANGES ? (
         <ConfirmChanges
           actionType={logOutRequest}

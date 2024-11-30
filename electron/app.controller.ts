@@ -9,12 +9,8 @@ import {
 import { AppService } from "./app.service";
 import * as fs from "fs/promises"; // Importación correcta de fs/promises
 import { format, getISOWeek, startOfWeek } from "date-fns";
+import { CharacterSet, PrinterTypes, ThermalPrinter } from "node-thermal-printer";
 
-import {
-  CharacterSet,
-  PrinterTypes,
-  ThermalPrinter,
-} from "node-thermal-printer";
 import * as path from "path";
 
 @Controller()
@@ -40,7 +36,7 @@ export class AppController {
   private async createPrinter() {
     return new ThermalPrinter({
       type: PrinterTypes.EPSON,
-      interface: `tcp://192.168.1.91`,
+      interface: `tcp://192.168.1.66`,
       characterSet: CharacterSet.SLOVENIA,
       removeSpecialCharacters: false,
       width: 42,
@@ -103,6 +99,54 @@ export class AppController {
     } catch (error) {
       await fs.writeFile(filePath, JSON.stringify(data, null, 2), "utf-8");
       return { message: "Archivo creado correctamente." };
+    }
+  }
+
+  @Post("printer/order")
+  async print(@Body() data: any) {
+    const printer = await this.createPrinter();
+
+    // Función para imprimir una imagen y manejar errores
+    const printImage = async (imagePath: string) => {
+      try {
+        // Verificación de existencia del archivo antes de imprimir
+        console.log(`Comprobando la existencia del archivo en: ${imagePath}`);
+        
+        await fs.access(imagePath); // Verifica si el archivo existe
+        console.log(`Imagen encontrada en: ${imagePath}`); // Si la ruta es correcta, se muestra el mensaje
+
+        await printer.printImage(imagePath);
+      } catch (error) {
+        console.error(`Error al imprimir la imagen en ${imagePath}:`, error);
+      }
+    };
+
+    const currentDate = new Date();
+    const currentDateString = currentDate.toISOString();
+
+    try {
+      printer.newLine();
+      printer.alignRight();
+      printer.print(currentDateString);
+      printer.newLine();
+      printer.underline(false);
+
+      // Llamada para imprimir la imagen
+      await printImage('./src/assets/icon/dividerTicket.png'); // Asegúrate de que la ruta es correcta aquí
+      
+      await data.data.forEach(async (item) => {
+        printer.println(item.productName);
+      });
+
+      printer.print("Si se armo la machaca padrino");
+      printer.cut();
+      await printer.execute();
+
+      return { message: "Reporte impreso con éxito" };
+    } catch (error) {
+      throw new InternalServerErrorException(
+        "Error al generar o imprimir el reporte"
+      );
     }
   }
 }

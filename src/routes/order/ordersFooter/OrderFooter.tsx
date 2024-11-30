@@ -22,6 +22,7 @@ export default function OrderFooter({
   sendDisabled,
 }: OrderFooterProps) {
   const navigate = useNavigate();
+
   return (
     <footer className={styles.footer}>
       <button onClick={() => navigate(`/${SELL_TYPES_PATH}`)}>

@@ -1,3 +1,4 @@
+import { calculateBillTotal } from "@/utils/calculateTotals";
 import axios from "../configs/axios";
 import { BILLS_PATH, NOTES_PATH } from "../lib/routes.paths.lib";
 
@@ -25,20 +26,13 @@ export const addComments = async (id: string, comments: Comments) => {
 
 export const createNotes = async (notesArray: any) => {
   const updatedNotes = notesArray.map((note: any) => {
-    const total = note.products
-      .reduce((acc: number, product: any) => {
-        return acc + parseFloat(product.priceInSite);
-      }, 0)
-      .toString();
+    const total = calculateBillTotal(note.products);
     return { ...note, checkTotal: total };
   });
-  console.log(updatedNotes);
   const noteIds = [];
   try {
     for (const note of updatedNotes) {
       if (!note._id) {
-        console.log("Creacion");
-        console.log(note);
         try {
           const res = await axios.post(NOTES_PATH, note);
 
@@ -56,8 +50,7 @@ export const createNotes = async (notesArray: any) => {
             accountId: null,
             body: { products: note.products },
           };
-          console.log("Aca el objeto que anda observanmdo");
-          console.log(transferNote);
+         
           const res = await axios.put(
             `${NOTES_PATH}/${note._id}`,
             transferNote
