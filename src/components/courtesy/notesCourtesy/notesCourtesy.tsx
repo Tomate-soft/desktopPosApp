@@ -2,7 +2,7 @@ import DiscountBoard from "../../discountBoard/discount";
 import styles from "./notesCourtesy.module.css";
 import rightArrow from "../../../assets/icon/arrowRight.svg";
 import divider from "../../../assets/icon/dividerTransfer.svg";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useModal } from "../../../hooks/useModal";
 import { GENERIC_KEYBOARD_ACTIVE } from "../../genericKeyboard/config";
 import { GenericKeyboard } from "../../genericKeyboard/genericKeyboard";
@@ -34,7 +34,9 @@ export default function NotesCourtesy({ item, openModal, children }: Props) {
     discountFor: "Validacion futura",
     cost: noteForDiscount?.checkTotal,
   };
-
+  useEffect(() => {
+  }, [item.bill[0]?.notes]);
+  
   return (
     <div className={styles.container}>
       <div className={styles.discountContainer}>
@@ -65,7 +67,7 @@ export default function NotesCourtesy({ item, openModal, children }: Props) {
                           type="radio"
                           name="notes"
                           onChange={() => {
-                            console.log(element.discount);
+                            console.log(element);
                             if (
                               noteForDiscount &&
                               noteForDiscount.noteNumber === element.noteNumber
@@ -73,6 +75,8 @@ export default function NotesCourtesy({ item, openModal, children }: Props) {
                               return;
                             }
                             setNoteForDiscount(element);
+                            console.log(element);
+                            console.log(noteForDiscount);
                           }}
                         />
                       </div>

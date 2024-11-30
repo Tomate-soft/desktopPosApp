@@ -14,7 +14,7 @@ export default function UseAccount() {
   const [newAccount, setNewAccount] = useState([]);
   const [errors, setErrors] = useState(false);
   const [currentBill, setCurrentBill] = useState();
-
+ /*
   const getLocalDevice = async () => {
     setIsLoading(true);
     try {
@@ -29,6 +29,7 @@ export default function UseAccount() {
       setErrors(true);
     }
   };
+  */
 
   async function createAccount(account: Bill) {
     setIsLoading(true);
@@ -150,10 +151,20 @@ export default function UseAccount() {
   }
 
   const handlePrint = async (process: string, billPrint: Bill | undefined) => {
+    console.log("Este nuevo metodo lo trabajeremos ahoriota solo para quue contoinua el proceso de iompreixon de ñas com,andas")
+    console.log(billPrint)
+    console.log(process)
+
+  }
+    /*
+  // Este es un metodo que funcionabna enteriormente si ya funciona le nuevo hay que eliminarlo y tambien el metodo DeviceIdn ya estan deprecados.
+
+  const handlePrint = async (process: string, billPrint: Bill | undefined) => {
     // const printers = ["192.168.1.88", "192.168.1.82"]; // estas las tomariamos de la cuenta por que vienen dentro ya.
     // Pero debemos saber cual es el proceso de impresion que se esta llevando a cabo primero
     //
-    const serial = await getLocalDevice(); // EL SERIAL LLEGA ACA CORRECTAMENTE
+    // const serial = await getLocalDevice(); // EL SERIAL LLEGA ACA CORRECTAMENTE
+    /*
 
     if (!serial) {
       setIsLoading(false);
@@ -181,7 +192,7 @@ export default function UseAccount() {
           tcp: item,
         };
         try {
-          await axios.post(`http://localhost:8000/print/${process}`, data);
+          await axios.post(`http://localhost:3000/print/${process}`, data);
           console.log("Ticket enviado para impresión");
         } catch (error) {
           console.error("Error al enviar el ticket para impresión", error);
@@ -190,7 +201,10 @@ export default function UseAccount() {
     } catch (error) {
       console.error(error);
     }
+
   };
+    */
+
 
   const changeKey = async (id: string, key: any) => {
     setIsLoading(true);

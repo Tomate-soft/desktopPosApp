@@ -33,13 +33,16 @@ export const productsToBillServices = async (data: Data) => {
 };
 
 export const createDiscountService = async (data: any) => {
+  console.log("lo que llega el servicio es:")
+  console.log(data);
   const discount = data.body;
   const totalAfterDiscount = calculateDiscount(
     parseFloat(discount.cost),
     parseFloat(discount.discountMount),
     discount.setting
   );
-
+ 
+  
   const updateBody = {
     ...discount,
     totalDiscountQuantity: totalAfterDiscount,
@@ -51,8 +54,6 @@ export const createDiscountService = async (data: any) => {
     ...data,
     body: discountBody,
   };
-  console.log("por aca la data to send");
-  console.log(dataToSend);
 
   const response = await axios.post(DISCOUNTS_PATH, dataToSend);
   return response;
