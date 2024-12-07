@@ -21,6 +21,7 @@ import { Payment, Transaction } from "../../types/payment";
 import { initialState, initialTransaction } from "./utils/initialState";
 import { useAuthStore, useModal } from "@/shared";
 import AddTips from "../addTips/addTips";
+import { calculateBillTotal } from "@/utils/calculateTotals";
 interface Props {
   setRevolve: (value: string) => void;
   handleLoading: (value: boolean) => void;
@@ -118,7 +119,6 @@ export default function PaymentInterface({
     useState<Transaction>(initialTransaction);
 
   useEffect(() => {
-    console.log(currentBill);
     if (!paymentQuantity) setPaymentQuantity("0.00");
     setCreatePayment({
       ...createPayment,
@@ -154,9 +154,9 @@ export default function PaymentInterface({
             )}
             <div className={styles.sectionRight}>
               {currentBill.note ? (
-                <h3>{`Total: ${currentBill.note.checkTotal}`}</h3>
+                <h3>{`Total: ${calculateBillTotal(currentBill.note.products)}`}</h3>
               ) : (
-                <h3>{`Total: ${currentBill?.checkTotal}`}</h3>
+                <h3>{`Total: ${calculateBillTotal(currentBill.products)}`}</h3>
               )}
               <button className={styles.actionBtn}>
                 <img src={ActionsIcon} alt="burguer-menu" />
@@ -316,6 +316,7 @@ export default function PaymentInterface({
             <div>
               <div className={styles.headPayment}>
                 <h4>Forma de pago</h4>
+                <h4>Propina</h4>
                 <h4>Importe</h4>
               </div>
               <img src={blueDivider} alt="divider-blue-icon" />
@@ -334,6 +335,8 @@ export default function PaymentInterface({
                         : ""}
                     </span>
                     <div>
+                    <span>{element.tips ? `$${parseFloat(element?.tips).toFixed(2)}` : "$0.00"}</span>
+
                       <span>
                         $
                         {parseFloat(element.quantity.replace(/,/g, ""))

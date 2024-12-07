@@ -81,9 +81,8 @@ const PrintButton = ({
               accountId: currentBill?.note?.accountId,
               body: {
                 noteAccountId: currentBill?.note?._id,
-
                 ...createCurrentPayment,
-                difference: (diference * -1).toString(),
+                difference: ((diference * -1) - totalTips).toString()
               },
             };
 
@@ -97,7 +96,7 @@ const PrintButton = ({
           const constPay = {
             ...createCurrentPayment,
             accountId: currentBill._id,
-            difference: (diference * -1).toString(),
+            difference: ((diference * -1) - totalTips).toString()
           };
           createPayment(constPay);
           if (!errors) {

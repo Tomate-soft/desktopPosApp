@@ -7,6 +7,7 @@ import dividerTwo from "../../assets/icon/divider02000.svg";
 import crossBtn from "../../assets/icon/crossButton.svg";
 import { useEffect, useState } from "react";
 import { staticModifiers } from "../../lib/modifiers.lib";
+import CloseButton from "../buttons/CloseButton/closeButton";
 interface Props {
   isOpen: any;
   onClose: any;
@@ -32,21 +33,22 @@ export default function AddModifier({
   return (
     <main className={styles.screen}>
       <div>
-        <div>
+       {
+        product.product.group ? (
+          <>
+           <div>
           <div>
             <img src={addCircle} alt="tittle-icon" />
             <h3>Complementos y modificadores</h3>
           </div>
-          <button className={styles.closeButton} onClick={onClose}>
-            X
-          </button>
+        <CloseButton onClose={onClose} />
         </div>
         <div>
           <h3>{product.product.productName}</h3>
           <div>
             {dishes?.map((element, index) => (
               <div>
-                <h3>{element.dishesName}</h3>
+                <h3>{element?.dishesName}</h3>
                 <button
                   onClick={() => {
                     const filterDishes = dishes.filter((_, i) => i !== index);
@@ -81,7 +83,7 @@ export default function AddModifier({
               <img src={dividerOne} alt="divider-icon" />
             </div>
             <div>
-              {product.product.group.dishes?.map((element, index) => (
+              {product.product.group?.dishes?.map((element, index) => (
                 <button
                   key={index}
                   onClick={() => {
@@ -91,7 +93,7 @@ export default function AddModifier({
                     setDishes(settingDishes);
                   }}
                 >
-                  {element.dishesName}
+                  {element?.dishesName}
                 </button>
               ))}
             </div>
@@ -124,7 +126,7 @@ export default function AddModifier({
                 ))}
               </div>
               <div>
-                {product.product.group.modifiers?.map((element, index) => (
+                {product.product.group?.modifiers?.map((element, index) => (
                   <button
                     key={index}
                     onClick={() => {
@@ -159,8 +161,9 @@ export default function AddModifier({
           </button>
           <button
             className={styles.saveBtn}
-            onClick={() =>
+            onClick={() =>{
               action({
+                
                 product: {
                   ...product.product,
                   dishes: dishes,
@@ -168,12 +171,19 @@ export default function AddModifier({
                 },
                 index: product.index,
               })
+              onClose();
             }
+          }
           >
             <img src={saveIcon} alt="save-icon" />
             Guardar
           </button>
-        </div>
+        </div></>
+        ) : ( <>
+        <CloseButton onClose={onClose} />
+        <h1 style={{height: "100%", display: "flex", alignItems: "center", justifyContent: "center"}}>Asigna un grupo de modificadores para este producto desde el administrador</h1>
+        </>)
+       }
       </div>
     </main>
   );

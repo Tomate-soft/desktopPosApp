@@ -5,7 +5,6 @@ interface state {
   isLoading: boolean;
   errors: boolean;
   message: string | null;
-
   closeCashierSession: (data: any) => void;
 }
 
