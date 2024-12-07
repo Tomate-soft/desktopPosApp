@@ -25,6 +25,7 @@ import {
 import { useAuthStore, useModal } from "@/shared";
 import AddTips from "../addTips/addTips";
 import { RAPPI_ORDER } from "@/lib/orders.lib";
+import { calculateBillTotal } from "@/utils/calculateTotals";
 
 interface Props {
   setRevolve: (value: string) => void;
@@ -86,7 +87,6 @@ export default function GenericPaymentInterface({
     if (trimmedValue.length <= 10) {
       setPaymentQuantity(trimmedValue);
       handleTransactionQuantity(trimmedValue);
-      console.log(currentTransaction);
     }
   };
 
@@ -123,8 +123,8 @@ export default function GenericPaymentInterface({
     0
   );
   const conditionalTotal = currentBill.note
-    ? currentBill.note?.checkTotal
-    : currentBill?.checkTotal;
+    ? calculateBillTotal(currentBill.note.products)
+    : calculateBillTotal(currentBill.products);
   const currentPayment = parseFloat(conditionalTotal) - totalTransactions;
   const [transactionAdded, setTransactionAdded] =
     useState<Transaction>(initialTransaction);
@@ -165,9 +165,9 @@ export default function GenericPaymentInterface({
             <h3>{`Código de pedido: ${currentBill.code}`}</h3>
             <div className={styles.sectionRight}>
               {currentBill.note ? (
-                <h3>{`Total: ${currentBill.note.checkTotal}`}</h3>
+                <h3>{`Total: ${calculateBillTotal(currentBill.note.products)}`}</h3>
               ) : (
-                <h3>{`Total: ${currentBill?.checkTotal}`}</h3>
+                <h3>{`Total: ${calculateBillTotal(currentBill.products)}`}</h3>
               )}
               <button className={styles.actionBtn}>
                 <img src={ActionsIcon} alt="burguer-menu" />
