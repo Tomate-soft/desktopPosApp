@@ -17,6 +17,9 @@ export default defineConfig({
         '@renderer': resolve('src/renderer/src')
       }
     },
-    plugins: [react(), tsconfigPaths()]
+    plugins: [react(), tsconfigPaths()],
+    define: {
+      __VERSION__: JSON.stringify(require('./package.json').version)
+    }
   }
 })
