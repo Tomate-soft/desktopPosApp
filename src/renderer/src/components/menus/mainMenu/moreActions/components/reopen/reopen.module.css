@@ -1,0 +1,44 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 1312px;
+
+  > div {
+    width: 526px;
+    height: 412px;
+    box-shadow: 5px 5px 20px 0px #00000080;
+    background: #494a4c;
+    border-radius: 32px;
+    padding: 64px;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 32px;
+
+    > h3 {
+      font-weight: 600;
+    }
+
+    > div {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      width: 100%;
+
+      > button {
+        width: 100%;
+        font-size: 20px;
+      }
+
+      > button:last-child {
+        background: #5e8708;
+        color: #fff;
+      }
+    }
+  }
+}
