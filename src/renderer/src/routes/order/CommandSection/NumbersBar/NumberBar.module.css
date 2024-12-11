@@ -1,0 +1,10 @@
+.numbersBar {
+   
+   
+    >div{
+        height: 80%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+}
