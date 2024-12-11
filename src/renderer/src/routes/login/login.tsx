@@ -145,7 +145,7 @@ export default function Login() {
             <img src={bullet} alt="bullet-icon" />
             <h3>LOC Terraza</h3>
             <img src={bullet} alt="bullet-icon" />
-            <h3>v-Develop</h3>
+            <h3>v0.1.69</h3>
           </div>
         </footer>
         {confirmPassword.isOpen && confirmPassword.modalName === CONFIRM_PASSWORD ? (

@@ -1,6 +1,6 @@
 import searchIcon from '@renderer/assets/icon/searchIcon.svg'
 import backtwo from '@renderer/assets/icon/backTwo.svg'
-import styles from "./NumberBar.module.css"
+import styles from './NumberBar.module.css'
 
 interface Props {
   action: (element: number) => void
@@ -13,7 +13,7 @@ export default function NumbersBar({ action, mainKeyboard }: Props) {
       <button onClick={mainKeyboard.openModal}>
         <img src={searchIcon} alt="search-icon" />
       </button>
-      <div >
+      <div>
         {[...Array(10)].map((item, index) => (
           <button onClick={() => action(index + 1)} key={index}>
             {index + 1}

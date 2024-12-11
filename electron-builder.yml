@@ -1,4 +1,4 @@
-appId: com.electron.app
+appId: com.tomatesoft.pos
 productName: Tomatesoft POS
 copyright: Copyright © 2023 ${author}
 directories:
@@ -14,7 +14,6 @@ asarUnpack:
   - resources/**
 win:
   executableName: Tomatesoft POS
-  icon: resources/favicon.ico
 nsis:
   artifactName: ${name}-${version}-setup.${ext}
   shortcutName: ${productName}
@@ -33,7 +32,7 @@ dmg:
   artifactName: ${name}-${version}.${ext}
 linux:
   target:
-    - AppImage                            
+    - AppImage
   maintainer: electronjs.org
   category: Utility
 appImage:
