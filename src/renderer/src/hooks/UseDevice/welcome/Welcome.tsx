@@ -47,10 +47,6 @@ export default function Welcome() {
   const errorsUpdate = UseBussines((state) => state.errors)
   const updateDevice = UseBussines((state) => state.updateDevice)
 
-  useEffect(() => {
-    console.log(data)
-  }, [])
-
   return (
     <main className={styles.screen}>
       <div>
@@ -82,12 +78,12 @@ export default function Welcome() {
             </div>
           ) : process ? (
             <section>
-              {device.devices.map((element, index) => (
+              {device?.devices.map((element, index) => (
                 <div
                   key={index} // Mover el 'key' fuera del 'onClick'
                   onClick={async () => {
                     if (element?.status === true) {
-                      const register = await fetch('http://localhost:3000/create-config', {
+                      const register = await fetch('http://localhost:8114/config/create-config', {
                         method: 'POST',
                         headers: {
                           'Content-Type': 'application/json' // Asegúrate de especificar el tipo de contenido

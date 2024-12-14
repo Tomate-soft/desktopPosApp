@@ -4,14 +4,18 @@ copyright: Copyright © 2023 ${author}
 directories:
   buildResources: build
 files:
+  - 'out/**'
+  - 'resources/**'
   - '!**/.vscode/*'
   - '!src/*'
   - '!electron.vite.config.{js,ts,mjs,cjs}'
   - '!{.eslintignore,.eslintrc.cjs,.prettierignore,.prettierrc.yaml,dev-app-update.yml,CHANGELOG.md,README.md}'
   - '!{.env,.env.*,.npmrc,pnpm-lock.yaml}'
   - '!{tsconfig.json,tsconfig.node.json,tsconfig.web.json}'
+  - 'tassets/**'
 asarUnpack:
   - resources/**
+  - tassets/**
 win:
   executableName: Tomatesoft POS
 nsis:

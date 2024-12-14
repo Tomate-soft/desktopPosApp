@@ -31,7 +31,7 @@ import PhoneOrders from './routes/phoneOrder/phoneOrder'
 import ProtectedRoute from './components/protect/protectedRoutes/protectedRoute'
 
 const App = () => {
-  const isAuth = useAuthStore((state) => state.isAuth) 
+  const isAuth = useAuthStore((state) => state.isAuth)
   return (
     <>
       <HashRouter>
