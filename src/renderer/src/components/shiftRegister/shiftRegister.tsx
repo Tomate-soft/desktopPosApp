@@ -4,6 +4,7 @@ import { keys } from '../../lib/components.lib'
 import returnIcon from '../../assets/icon/returnIcon.svg'
 import checkIcon from '../../assets/icon/buttonCheck.svg'
 import fingerShiftIcon from '../../assets/icon/fingerShift.svg'
+import CloseButton from '../buttons/CloseButton/closeButton'
 
 interface Props {
   isOpen: boolean

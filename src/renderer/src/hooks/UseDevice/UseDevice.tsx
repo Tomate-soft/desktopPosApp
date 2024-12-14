@@ -7,7 +7,7 @@ export default function useDevice() {
 
   const fetchingData = async () => {
     try {
-      const response = await fetch('http://localhost:3000/config')
+      const response = await fetch('http://localhost:8114/config')
       if (!response.ok) {
         setIsLoading(false)
         setError(new Error('Error al obtener la configuración del dispositivo'))

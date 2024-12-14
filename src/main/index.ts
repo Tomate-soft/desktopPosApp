@@ -1,6 +1,6 @@
 import { app, BrowserWindow } from 'electron'
 import { join } from 'path'
-import {  optimizer, is } from '@electron-toolkit/utils'
+import { optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import { execFile } from 'child_process'
 import path from 'path'
@@ -9,8 +9,6 @@ import { autoUpdater } from 'electron-updater'
 // Configuración del autoUpdater para usar GitHub Releases
 autoUpdater.autoDownload = false
 autoUpdater.autoInstallOnAppQuit = true
-
-
 
 let mainWindow: BrowserWindow | null = null
 
@@ -52,8 +50,6 @@ function executeMPrinter(): void {
     }
   })
 }
-
-
 
 app.whenReady().then(() => {
   executeMPrinter()
