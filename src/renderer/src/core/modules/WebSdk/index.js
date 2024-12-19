@@ -1496,7 +1496,7 @@
         d = add(d, oldd)
         e = add(e, olde)
       }
-      return new Array(a, b, c, d, e)
+      return [a, b, c, d, e]
     }
 
     function core_sha1(x, len) {
@@ -3146,7 +3146,7 @@
 
   // Digit conversions
   var BI_RM = '0123456789abcdefghijklmnopqrstuvwxyz'
-  var BI_RC = new Array()
+  var BI_RC = []
   var rr, vv
   rr = '0'.charCodeAt(0)
   for (vv = 0; vv <= 9; ++vv) BI_RC[rr++] = vv
@@ -3825,7 +3825,7 @@
       }
     } else {
       // new BigInteger(int,RNG)
-      var x = new Array(),
+      var x = [],
         t = a & 7
       x.length = (a >> 3) + 1
       b.nextBytes(x)
@@ -3838,7 +3838,7 @@
   // (public) convert to bigendian byte array
   function bnToByteArray() {
     var i = this.t,
-      r = new Array()
+      r = []
     r[0] = this.s
     var p = this.DB - ((i * this.DB) % 8),
       d,
@@ -4124,7 +4124,7 @@
     var q = nbi(),
       r = nbi()
     this.divRemTo(a, q, r)
-    return new Array(q, r)
+    return [q, r]
   }
 
   // (protected) this *= n, this >= 0, 1 < n < DV
@@ -4271,7 +4271,7 @@
     else z = new Montgomery(m)
 
     // precomputation
-    var g = new Array(),
+    var g = [],
       n = 3,
       k1 = k - 1,
       km = (1 << k) - 1
@@ -6097,7 +6097,7 @@
     var version = core.WebSdkEncryptionSupport.AESEncryption,
       debug = options.debug === true
 
-    if (!!options.version) {
+    if (options.version) {
       validateVersion(options.version)
       version = options.version
     }

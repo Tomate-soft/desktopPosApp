@@ -255,7 +255,7 @@ export default function Order() {
       }
       try {
         if (!billCurrent) {
-          let newBill = await createAccount(billCurrentCommand)
+          const newBill = await createAccount(billCurrentCommand)
           updateTable(ENABLE_STATUS, _id)
           handlePrint(billCurrentCommand)
           addBill(newBill._id, _id)

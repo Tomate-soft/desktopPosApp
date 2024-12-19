@@ -6,6 +6,7 @@ import { CONFIRM_CHANGES } from '@renderer/lib/modals.lib'
 import { useModal } from '@renderer/shared'
 import UseBussines from '@renderer/store/bussines/bussines.store'
 import { useEffect, useState } from 'react'
+import axios from '@renderer/configs/axios'
 
 export default function Welcome() {
   const [process, setProcess] = useState(false)
@@ -82,6 +83,7 @@ export default function Welcome() {
                 <div
                   key={index} // Mover el 'key' fuera del 'onClick'
                   onClick={async () => {
+                    const printersArray = (await axios('./printers')).data
                     if (element?.status === true) {
                       const register = await fetch('http://localhost:8114/config/create-config', {
                         method: 'POST',
@@ -90,7 +92,8 @@ export default function Welcome() {
                         },
                         body: JSON.stringify({
                           ...element,
-                          branch: device?.name // 'branch' se asume que existe en el objeto device
+                          branch: device?.name,
+                          printersArray // 'branch' se asume que existe en el objeto device
                         })
                       })
                         .then((response) => response.json())

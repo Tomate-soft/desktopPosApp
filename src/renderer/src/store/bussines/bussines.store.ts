@@ -1,11 +1,12 @@
-import { updateDevice } from '@renderer/services/bussines/bussines.service'
+import { updateDevice, updateSettingsDevice } from '@renderer/services/bussines/bussines.service'
 import { create } from 'zustand'
 
 interface state {
   isLoading: boolean
   errors: boolean
   message: string | null
-  updateDevice: (id: string, data: any) => Promise<void>
+  updateDevice: () => Promise<void>
+  updateConfigInDevice: () => Promise<void>
 }
 
 export const UseBussines = create<state>((set) => {
@@ -19,6 +20,24 @@ export const UseBussines = create<state>((set) => {
         const res = await updateDevice(id, body)
         const data = res.data
         set({ isLoading: false, message: data })
+      } catch (error) {
+        set({ isLoading: false, errors: true })
+      }
+    },
+    updateConfigInDevice: async () => {
+      set({ isLoading: true })
+      try {
+        const res = await updateSettingsDevice()
+        const data = res
+
+        await fetch('http://localhost:8114/config/update-config', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        })
+        set({ isLoading: false, message: 'Configuración actualizada' })
       } catch (error) {
         set({ isLoading: false, errors: true })
       }
