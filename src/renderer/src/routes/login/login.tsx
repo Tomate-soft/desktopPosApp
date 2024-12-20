@@ -7,7 +7,6 @@ import posLogo from '../../assets/icon/tomatePOSlogo.svg'
 import fingerprintIco from '../../assets/icon/fingerprint.svg'
 import startShift from '../../assets/icon/startShift.svg'
 import dividerBtn from '../../assets/icon/dividerBtn.svg'
-import foodShift from '../../assets/icon/foodShift.svg'
 import bullet from '../../assets/icon/bullet.svg'
 // Components
 import Pinboard from '../../components/tools/pinBoard/Pinboard'
@@ -157,7 +156,7 @@ export default function Login() {
             <img src={bullet} alt="bullet-icon" />
             <h3>LOC Terraza</h3>
             <img src={bullet} alt="bullet-icon" />
-            <h3>v0.2.14</h3>
+            <h3>v0.2.22</h3>
           </div>
         </footer>
         {confirmPassword.isOpen && confirmPassword.modalName === CONFIRM_PASSWORD ? (

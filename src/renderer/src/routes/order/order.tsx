@@ -27,7 +27,6 @@ import { ON_SITE_ORDER, PHONE_ORDER, RAPPI_ORDER, TO_GO_ORDER } from '../../lib/
 import { useToGoOrders } from '../../store/orders/togoOrder.store'
 import AddModifier from '../../components/modifiers/addModifier'
 import { ADD_MODIFIER_MODAL, CONFIRM_CHANGES, MAIN_KEYBOARD } from '../../lib/modals.lib'
-
 import { useNotesStore } from '../../store/notes.store'
 import ConfirmChanges from '../../components/modals/confirm/confirmChanges'
 import { ENABLE_STATUS, FOR_PAYMENT_STATUS } from '../../lib/tables.status.lib'
@@ -39,6 +38,8 @@ import CategoriesPanel from './CategoriesPanel/CategoriesPanel'
 import OrderFooter from './ordersFooter/OrderFooter'
 import CommandSection from './CommandSection/CommandSection'
 import { calculateBillTotal } from '@renderer/utils/calculateTotals'
+import UseImpression from '@renderer/hooks/useImpressions'
+import { CommandProduct } from '@renderer/bussines/entities/products/product'
 
 interface ToGoOrder {
   code: string /* esto despues sera automatico, agregar un unique*/
@@ -74,6 +75,7 @@ export default function Order() {
   const createPhoneOrder = usePhoneOrders((state) => state.createNewOrder)
   const updatePhoneOrder = usePhoneOrders((state) => state.updateOrder)
   const addBillForPayment = useCashierSessionStore((state) => state.addBillForPayment)
+  const { printCommandProducts,  printRestaurantOrderTicket} = UseImpression();
 
   //add modifier
   const [selectedProduct, setSelectedProduct] = useState<any>(null)
@@ -223,7 +225,11 @@ export default function Order() {
       return
     }
     // {
-    handlePrintBill('billPrint', billCurrentCommand),
+    // handlePrintBill('billPrint', billCurrentCommand)
+    // aqui no se estran los productos
+    // es el ticket de la cuenta, que es el mismo de las reimpresiones
+    printRestaurantOrderTicket(billCurrentCommand)
+ 
       //  }
       updateBill(FOR_PAYMENT_STATUS, billCurrent, billCurrentCommand)
     updateTable(FOR_PAYMENT_STATUS, _id)
@@ -253,17 +259,21 @@ export default function Order() {
         confirmChanges.openModal()
         return
       }
+
       try {
         if (!billCurrent) {
           const newBill = await createAccount(billCurrentCommand)
           updateTable(ENABLE_STATUS, _id)
-          handlePrint(billCurrentCommand)
+          //handlePrint(billCurrentCommand)
+          printCommandProducts(billCurrentCommand)
+
           addBill(newBill._id, _id)
           logOutRequest()
           return
         }
         // updateBill(ENABLE_STATUS, billCurrent, billCurrentCommand);
-        handlePrint(billCurrentCommand)
+        // handlePrint(billCurrentCommand)
+        printCommandProducts(billCurrentCommand)
         logOutRequest()
       } catch (error) {
         console.error('Error:', error)
@@ -337,7 +347,6 @@ export default function Order() {
           selectQuantity={selectQuantity}
           setSelectQuantity={setSelectQuantity}
         />
-
         <div>
           <section className={styles.sectionContainerProducts}>
             {productsArray &&

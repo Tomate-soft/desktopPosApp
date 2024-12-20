@@ -52,7 +52,8 @@ export default function Restaurant() {
         table: undefined
       })
     }
-  }, [])
+  }, []);
+  
   return (
     <div className={styles.container}>
       <HeaderTwo sellType="Restaurante" />
