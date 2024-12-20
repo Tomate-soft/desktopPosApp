@@ -19,7 +19,11 @@ export const useEntryDaily = create<State>((set) => {
         const res = await createEntryService(employeeNumber, pinPos)
 
         if (!res.data) {
-          set({ isLoading: false, errors: true, message: 'Error: No se obtuvo respuesta del servicio.' })
+          set({
+            isLoading: false,
+            errors: true,
+            message: 'Error: No se obtuvo respuesta del servicio.'
+          })
           return
         }
 
@@ -30,7 +34,7 @@ export const useEntryDaily = create<State>((set) => {
         const response = await fetch('http://localhost:8114/print/shift', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify( res.data ),
+          body: JSON.stringify(res.data)
         })
 
         if (!response.ok) {
@@ -42,6 +46,6 @@ export const useEntryDaily = create<State>((set) => {
         console.error('Error en createEntryDaily:', error)
         set({ isLoading: false, errors: true, message: error.message || 'Ocurrió un error.' })
       }
-    },
+    }
   }
 })

@@ -3,18 +3,12 @@ import { Bill } from '../types/account'
 
 export default function UseOrder() {
   const handlePrint = async (form: Bill) => {
-    const printersArray = [
-      { printerId: '192.168.1.91', position: 'Bebidas sin alcohol' },
-      { printerId: '192.168.1.91', position: 'Bebidas con alcohol' },
-      { printerId: '192.168.1.91', position: 'Medias ordenes' },
-      { printerId: '192.168.1.91', position: 'Postres' },
-      { printerId: '192.168.1.91', position: 'caja' },
-      { printerId: '192.168.1.91', position: 'comandas' },
-      { printerId: '192.168.1.91', position: 'Electronics' }
-    ]
-
+    console.log('aca vamos a ver como llega la ainformacionde form al procesod e envio de la orden')
+    console.log(form)
+    const printersArray = [{ printerId: '192.168.1.66', position: 'Alimentos' }]
+    // aqui sacamos lo sproductos que ya se comandaron
     const commandProducts = form.products?.filter((item) => item.active === false)
-
+    // aca estamos trayendo la simpresoras, que aqui es donde podemos traer el array de las que tenemos creadas en el administrador
     printersArray?.forEach(async (item) => {
       const currentPrinter = item.position
 
@@ -22,7 +16,6 @@ export default function UseOrder() {
         (item) => item?.subcategory === currentPrinter
       )
 
-      console.log(commandProductsFilter)
       try {
         const data = {
           items: commandProductsFilter,
@@ -32,7 +25,7 @@ export default function UseOrder() {
         }
         if (commandProductsFilter.length <= 0) return
 
-        await axios.post('http://localhost:3000/printer/order', {
+        await axios.post('http://localhost:8114/printer/order', {
           data: commandProductsFilter
         })
         console.log('Ticket enviado para impresión')

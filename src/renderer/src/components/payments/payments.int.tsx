@@ -21,7 +21,7 @@ import { Payment, Transaction } from '../../types/payment'
 import { initialState, initialTransaction } from './utils/initialState'
 import { useAuthStore, useModal } from '@renderer/shared'
 import AddTips from '../addTips/addTips'
-import { calculateBillTotal } from '@renderer/utils/calculateTotals'
+import { calculateBillTotal, calculateProductTotal } from '@renderer/utils/calculateTotals'
 interface Props {
   setRevolve: (value: string) => void
   handleLoading: (value: boolean) => void
@@ -41,6 +41,7 @@ export default function PaymentInterface({
   children,
   currentBill
 }: Props) {
+  
   // Date
   const { currentDateTime, opcionesFecha }: any = useDate()
   const formattedFecha = currentDateTime.toLocaleDateString('es-ES', opcionesFecha)
@@ -108,6 +109,7 @@ export default function PaymentInterface({
   const [transactionAdded, setTransactionAdded] = useState<Transaction>(initialTransaction)
 
   useEffect(() => {
+    console.log(currentBill);
     if (!paymentQuantity) setPaymentQuantity('0.00')
     setCreatePayment({
       ...createPayment,
@@ -123,6 +125,24 @@ export default function PaymentInterface({
 
   return (
     <div className={styles.screen}>
+      <div>
+        <header>
+          <h2>Detalles de la venta - {currentBill.code}</h2>
+        </header>
+        <main>
+         {
+          currentBill.products.map((product, index) => (
+            <div key={index}>
+              <h3>{product.quantity}</h3>
+              <h3>{product.productName}</h3>
+              <h3>${parseFloat(product.prices[0].price).toFixed(2)}</h3>
+              <h3>${parseFloat(calculateProductTotal(product)).toFixed(2)}</h3>
+            </div>
+          ))
+         }
+         
+        </main>
+      </div>
       <section className={styles.modal}>
         <div>
           <div>
@@ -147,9 +167,7 @@ export default function PaymentInterface({
               ) : (
                 <h3>{`Total: ${calculateBillTotal(currentBill.products)}`}</h3>
               )}
-              <button className={styles.actionBtn}>
-                <img src={ActionsIcon} alt="burguer-menu" />
-              </button>
+            
             </div>
           </div>
         </div>
@@ -309,9 +327,8 @@ export default function PaymentInterface({
                       <span>
                         {element.tips ? `$${parseFloat(element?.tips).toFixed(2)}` : '$0.00'}
                       </span>
-
                       <span>
-                        ${parseFloat(element.quantity.replace(/,/g, '')).toFixed(2).toString()}
+                        ${parseFloat(element.quantity.replace(/,/g, '')).toFixed(2)}
                       </span>
                       <button
                         onClick={() => {

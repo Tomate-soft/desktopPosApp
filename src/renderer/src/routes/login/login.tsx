@@ -7,7 +7,6 @@ import posLogo from '../../assets/icon/tomatePOSlogo.svg'
 import fingerprintIco from '../../assets/icon/fingerprint.svg'
 import startShift from '../../assets/icon/startShift.svg'
 import dividerBtn from '../../assets/icon/dividerBtn.svg'
-import foodShift from '../../assets/icon/foodShift.svg'
 import bullet from '../../assets/icon/bullet.svg'
 // Components
 import Pinboard from '../../components/tools/pinBoard/Pinboard'
@@ -30,6 +29,9 @@ import { useEntryDaily } from '../../store/dailyRegisterStore'
 import ExceptionMessages from '../../components/modals/exceptionMessages/exceptionMessages'
 import useDevice from '@renderer/hooks/UseDevice/UseDevice'
 import Welcome from '@renderer/hooks/UseDevice/welcome/Welcome'
+import GenericIconButton from '@renderer/components/buttons/GenericIconButton/GenericIconbutton'
+import syncIcon from '@renderer/assets/icon/syncIcon.svg'
+import UseBussines from '@renderer/store/bussines/bussines.store'
 
 export default function Login() {
   // Modals
@@ -51,6 +53,8 @@ export default function Login() {
   const createRegister = useEntryDaily((state) => state.createEntryDaily)
   const messages = useEntryDaily((state) => state.message)
   // other more
+  const updateConfigInDevice = UseBussines((state) => state.updateConfigInDevice)
+  const syncLoading = UseBussines((state) => state.isLoading)
 
   // update changes new hook
 
@@ -64,6 +68,13 @@ export default function Login() {
     <>
       {error && <Welcome />}
       <div className={styles.container}>
+        <GenericIconButton request={updateConfigInDevice} isLoading={syncLoading}>
+          {syncLoading ? (
+            <div className={styles.loader}></div>
+          ) : (
+            <img src={syncIcon} alt="sync-icon" style={{ width: '32px', height: '32px' }} />
+          )}
+        </GenericIconButton>
         <HeaderOne />
         <main className={styles.mainSection}>
           <section className={styles.sectionOne}>
@@ -126,7 +137,7 @@ export default function Login() {
         </main>
         <footer className={styles.footer}>
           <div>
-            <button>
+            <button disabled={true}>
               <img src={fingerprintIco} alt="fingerprint-icon" />
             </button>
             <img src={dividerBtn} alt="divider-icon" />
@@ -139,16 +150,13 @@ export default function Login() {
             >
               <img src={startShift} alt="start-shift-icon" />
             </button>
-            <button>
-              <img src={foodShift} alt="food-shift" />
-            </button>
           </div>
           <div>
             <h3>POS</h3>
             <img src={bullet} alt="bullet-icon" />
             <h3>LOC Terraza</h3>
             <img src={bullet} alt="bullet-icon" />
-            <h3>v0.2.0</h3>
+            <h3>v0.2.22</h3>
           </div>
         </footer>
         {confirmPassword.isOpen && confirmPassword.modalName === CONFIRM_PASSWORD ? (
