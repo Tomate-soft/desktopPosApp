@@ -21,7 +21,11 @@ import { Payment, Transaction } from '../../types/payment'
 import { initialState, initialTransaction } from './utils/initialState'
 import { useAuthStore, useModal } from '@renderer/shared'
 import AddTips from '../addTips/addTips'
-import { calculateBillTotal, calculateProductTotal } from '@renderer/utils/calculateTotals'
+import {
+  calculateBillTotal,
+  calculateProductTotal,
+  productTotalWithDiscount
+} from '@renderer/utils/calculateTotals'
 interface Props {
   setRevolve: (value: string) => void
   handleLoading: (value: boolean) => void
@@ -41,7 +45,6 @@ export default function PaymentInterface({
   children,
   currentBill
 }: Props) {
-  
   // Date
   const { currentDateTime, opcionesFecha }: any = useDate()
   const formattedFecha = currentDateTime.toLocaleDateString('es-ES', opcionesFecha)
@@ -62,6 +65,11 @@ export default function PaymentInterface({
 
     const valueWithoutCommas = currentValue?.replace(/,/g, '')
 
+    // Evitar múltiples puntos en el valor
+    if ((value === '.' && valueWithoutCommas.includes('.')) || valueWithoutCommas.startsWith('.')) {
+      return // No permite más de un punto
+    }
+
     const newValueWithCommas = (valueWithoutCommas + value).replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 
     // Limitar la cadena a un máximo de 10 caracteres
@@ -70,10 +78,8 @@ export default function PaymentInterface({
     if (trimmedValue.length <= 10) {
       setPaymentQuantity(trimmedValue)
       handleTransactionQuantity(trimmedValue)
-      console.log(currentTransaction)
     }
   }
-
   const addTransaction = (newTransaction: Transaction) => {
     setCreatePayment({
       ...createPayment,
@@ -109,7 +115,6 @@ export default function PaymentInterface({
   const [transactionAdded, setTransactionAdded] = useState<Transaction>(initialTransaction)
 
   useEffect(() => {
-    console.log(currentBill);
     if (!paymentQuantity) setPaymentQuantity('0.00')
     setCreatePayment({
       ...createPayment,
@@ -127,20 +132,23 @@ export default function PaymentInterface({
     <div className={styles.screen}>
       <div>
         <header>
-          <h2>Detalles de la venta - {currentBill.code}</h2>
+          <h2>
+            Detalles de la venta -{' '}
+            {currentBill.code ??
+              `Nota: ${currentBill.note?.noteNumber} Cuenta: ${currentBill.bill.code} `}
+          </h2>
         </header>
         <main>
-         {
-          currentBill.products.map((product, index) => (
-            <div key={index}>
-              <h3>{product.quantity}</h3>
-              <h3>{product.productName}</h3>
-              <h3>${parseFloat(product.prices[0].price).toFixed(2)}</h3>
-              <h3>${parseFloat(calculateProductTotal(product)).toFixed(2)}</h3>
-            </div>
-          ))
-         }
-         
+          {(currentBill.note ? currentBill.note.products : currentBill.products)?.map(
+            (product, index) => (
+              <div key={index}>
+                <h3>{product.quantity}</h3>
+                <h3>{product.productName}</h3>
+                <h3>${parseFloat(product.prices[0].price).toFixed(2)}</h3>
+                <h3>${parseFloat(productTotalWithDiscount(product)).toFixed(2)}</h3>
+              </div>
+            )
+          )}
         </main>
       </div>
       <section className={styles.modal}>
@@ -167,7 +175,6 @@ export default function PaymentInterface({
               ) : (
                 <h3>{`Total: ${calculateBillTotal(currentBill.products)}`}</h3>
               )}
-            
             </div>
           </div>
         </div>
@@ -266,6 +273,7 @@ export default function PaymentInterface({
                   className={styles.denominationBtn}
                   onClick={() => {
                     addTips.openModal()
+                    setTransactionAdded(currentTransaction)
                     /*
                     addTransaction(currentTransaction);
                     setPaymentType("cash");
@@ -291,6 +299,7 @@ export default function PaymentInterface({
           </div>
           {addTips.isOpen && addTips.modalName === 'ADD_TIPS' ? (
             <AddTips
+              products={currentBill.note ? currentBill.note.products : currentBill.products}
               isOpen={addTips.isOpen}
               onClose={addTips.closeModal}
               value={tips}
@@ -327,9 +336,7 @@ export default function PaymentInterface({
                       <span>
                         {element.tips ? `$${parseFloat(element?.tips).toFixed(2)}` : '$0.00'}
                       </span>
-                      <span>
-                        ${parseFloat(element.quantity.replace(/,/g, '')).toFixed(2)}
-                      </span>
+                      <span>${parseFloat(element.quantity.replace(/,/g, '')).toFixed(2)}</span>
                       <button
                         onClick={() => {
                           setCreatePayment({

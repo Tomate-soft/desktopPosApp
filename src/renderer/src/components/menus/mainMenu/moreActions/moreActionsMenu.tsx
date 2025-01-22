@@ -61,6 +61,7 @@ import GenericPaymentInterface from '@renderer/components/genericPaymentInterfac
 import { ADMIN, CASHIER } from '@renderer/components/tools/confirmPassword/lib'
 import ReopenModal from './components/reopen/reopen'
 import ReprintModal from './components/reprint/reprint'
+import CloseButton from '@renderer/components/buttons/CloseButton/closeButton'
 interface Props {
   isOpen: any
   onClose: any
@@ -111,9 +112,8 @@ export default function MoreActionsMenu({
       ) : null}
       {!confirmChanges.isOpen && (
         <section className={styles.modal}>
-          <button className={styles.closeButton} onClick={onClose}>
-            X
-          </button>
+          <CloseButton onClose={onClose} />
+
           <div className={styles.actionsContainer}>
             {type === ON_SITE_ORDER &&
               actionsMenu.map((element, index) => {

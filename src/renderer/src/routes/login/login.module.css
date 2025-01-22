@@ -7,6 +7,10 @@
   justify-content: space-between;
   height: 100vh;
   font-size: var(--font-size-small);
+  h4 {
+    font-size: 24px;
+    font-weight: 200;
+  }
 }
 
 .head {
@@ -92,8 +96,8 @@ main section h4 {
   align-items: center;
 
   > span {
-    font-size: 32px;
-    width: 30px;
+    font-size: 48px;
+    width: 48px;
     display: flex;
     justify-content: center;
   }

@@ -114,7 +114,7 @@ export default function SeparateChecks({ item, openModal }: Props) {
                         <h3>
                           {noteElement.noteName
                             ? noteElement.noteName
-                            : `Nota: 0${noteElement.noteNumber}`}
+                            : `Nota: 0${noteElement.noteNumber ?? index + 1}`}
                         </h3>
                       </div>
                       <img src={divider} alt="divider-icon" />

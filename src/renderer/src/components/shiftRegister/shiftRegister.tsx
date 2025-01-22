@@ -46,16 +46,14 @@ export default function ShiftRegister({
   return (
     <main className={styles.screen}>
       <div>
-        <button
-          className={styles.closeButton}
-          onClick={() => {
+        <CloseButton
+          onClose={() => {
             settingEmployeeNumber('')
             setStyle(false)
             onClose()
           }}
-        >
-          X
-        </button>
+        />
+
         <h3>{children}</h3>
         <div>
           <img src={fingerShiftIcon} alt="finger-icon" />
@@ -64,44 +62,60 @@ export default function ShiftRegister({
         <div className={styles.nums}>
           {employeeNumber.length > 0 && employeeNumber.length < 2 && employeeNumber.length === 1 ? (
             <div className={styles.sign}>
-              <span>{employeeNumber.slice(0, 1)}</span>
-              <span>.</span>
-              <span>.</span>
-              <span>.</span>
+              {/* <span>{employeeNumber.slice(0, 1)}</span> */}
+              <span style={{ color: '#4CAF50' }}>•</span>
+              <span>•</span>
+              <span>•</span>
+              <span>•</span>
             </div>
           ) : employeeNumber.length > 1 &&
             employeeNumber.length < 3 &&
             employeeNumber.length === 2 ? (
             <div className={styles.sign}>
-              <span>{employeeNumber.slice(0, 1)}</span>
-              <span>{employeeNumber.slice(1, 2)}</span>
-              <span>.</span>
-              <span>.</span>
+              {/*
+                    <span>{employeeNumber.slice(0, 1)}</span>
+                    <span>{employeeNumber.slice(1, 2)}</span>
+                    */}
+              <span style={{ color: '#4CAF50' }}>•</span>
+              <span style={{ color: '#4CAF50' }}>•</span>
+              <span>•</span>
+              <span>•</span>
             </div>
           ) : employeeNumber.length > 2 &&
             employeeNumber.length < 4 &&
             employeeNumber.length === 3 ? (
             <div className={styles.sign}>
-              <span>{employeeNumber.slice(0, 1)}</span>
-              <span>{employeeNumber.slice(1, 2)}</span>
-              <span>{employeeNumber.slice(2, 3)}</span>
-              <span>.</span>
+              {/*
+                    <span>{employeeNumber.slice(0, 1)}</span>
+                    <span>{employeeNumber.slice(1, 2)}</span>
+                    <span>{employeeNumber.slice(2, 3)}</span>
+                    */}
+              <span style={{ color: '#4CAF50' }}>•</span>
+              <span style={{ color: '#4CAF50' }}>•</span>
+              <span style={{ color: '#4CAF50' }}>•</span>
+              <span>•</span>
             </div>
           ) : employeeNumber.length > 3 &&
             employeeNumber.length < 5 &&
             employeeNumber.length === 4 ? (
             <div className={styles.sign}>
-              <span>{employeeNumber.slice(0, 1)}</span>
-              <span>{employeeNumber.slice(1, 2)}</span>
-              <span>{employeeNumber.slice(2, 3)}</span>
-              <span>{employeeNumber.slice(3, 4)}</span>
+              {/*
+                    <span>{employeeNumber.slice(0, 1)}</span>
+                    <span>{employeeNumber.slice(1, 2)}</span>
+                    <span>{employeeNumber.slice(2, 3)}</span>
+                    <span>{employeeNumber.slice(3, 4)}</span>
+                    */}
+              <span style={{ color: '#4CAF50' }}>•</span>
+              <span style={{ color: '#4CAF50' }}>•</span>
+              <span style={{ color: '#4CAF50' }}>•</span>
+              <span style={{ color: '#4CAF50' }}>•</span>
             </div>
           ) : (
             <div className={styles.sign}>
-              <span>.</span>
-              <span>.</span>
-              <span>.</span>
-              <span>.</span>
+              <span>•</span>
+              <span>•</span>
+              <span>•</span>
+              <span>•</span>
             </div>
           )}
         </div>

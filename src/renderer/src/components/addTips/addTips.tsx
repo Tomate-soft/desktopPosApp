@@ -3,17 +3,21 @@ import cashIcon from '../../assets/icon/cashCircle.svg'
 import minCheck from '@renderer/assets/icon/minCheck.svg'
 import backbtn from '@renderer/assets/icon/backTwo.svg'
 import { useEffect } from 'react'
+import CloseButton from '../buttons/CloseButton/closeButton'
+import { parse } from 'path'
+import { calculateBillTotal } from '@renderer/utils/calculateTotals'
 
 interface Props {
   isOpen: any
   onClose: any
   children: any
   actionType?: any
-  value?: any
-  setvalue?: any
+  value?: string
+  setvalue?: (value: string) => void
   openModal?: any
   closeModal?: any
   transaction?: any
+  products?: any
 }
 
 export default function AddTips({
@@ -21,17 +25,41 @@ export default function AddTips({
   onClose,
   children,
   actionType,
-  value,
+  value = '',
   setvalue,
   openModal,
   closeModal,
-  transaction
+  transaction,
+  products
 }: Props) {
   const keys = ['7', '8', '9', '4', '5', '6', '1', '2', '3', '0', '.', '00']
 
   useEffect(() => {
-    console.log(transaction)
+    console.log('transaction', transaction)
+    return () => {
+      setvalue('0')
+    }
   }, [isOpen])
+
+  const handleKeyPress = (key: string) => {
+    if (value.length >= 6) return // Evitar que exceda el maxLength
+
+    // Evitar múltiples puntos decimales
+    if (key === '.' && value.includes('.')) return
+
+    setvalue(value + key)
+  }
+
+  const handleBackspace = () => {
+    setvalue(value.slice(0, -1))
+  }
+
+  const handleConfirm = () => {
+    console.log(transaction)
+    actionType({ ...transaction, tips: value })
+    setvalue('') // Limpiar el valor después de confirmar
+    onClose()
+  }
 
   return (
     <main className={styles.screen}>
@@ -41,46 +69,30 @@ export default function AddTips({
             <img src={cashIcon} alt="head-icon" />
             <span>Agregar propina</span>
           </div>
-          <button className={styles.closeButton} onClick={onClose}>
-            X
-          </button>
+          <CloseButton onClose={onClose} />
         </div>
         <div className={styles.board}>
           <div className={styles.input}>
-            <input type="text" maxLength={6} value={value} />
+            <input type="text" maxLength={6} value={value} readOnly />
             <span>$</span>
           </div>
           <div className={styles.pinboard}>
             <div className={styles.keys}>
               {keys.map((key) => (
-                <button
-                  key={key}
-                  className={styles.key}
-                  onClick={() => {
-                    setvalue(value + key)
-                  }}
-                >
+                <button key={key} className={styles.key} onClick={() => handleKeyPress(key)}>
                   {key}
                 </button>
               ))}
             </div>
             <div>
-              <button
-                className={styles.backButton}
-                onClick={() => {
-                  setvalue(value.slice(0, -1))
-                }}
-              >
+              <button className={styles.backButton} onClick={handleBackspace}>
                 <img src={backbtn} alt="back-icon" />
               </button>
               <button className={styles.percentButton}>%</button>
               <button
                 className={styles.checkButton}
-                onClick={() => {
-                  actionType({ ...transaction, tips: value })
-                  setvalue('')
-                  onClose()
-                }}
+                onClick={handleConfirm}
+                disabled={parseFloat(value) > calculateBillTotal(products)}
               >
                 <img src={minCheck} alt="check-icon" />
               </button>

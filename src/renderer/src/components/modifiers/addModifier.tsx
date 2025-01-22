@@ -14,8 +14,10 @@ interface Props {
   children: any
   product: any
   action: (args: any) => void
+  indexP: number
 }
-export default function AddModifier({ isOpen, onClose, children, product, action }: Props) {
+
+export default function AddModifier({ isOpen, onClose, children, product, action, indexP }: Props) {
   const [dishes, setDishes] = useState<any[]>([])
   const [modifiers, setModifiers] = useState<any[]>([])
   const [selectedModifier, setSelectedModifier] = useState()
@@ -39,32 +41,36 @@ export default function AddModifier({ isOpen, onClose, children, product, action
             <div>
               <h3>{product.product.productName}</h3>
               <div>
-                {dishes?.map((element, index) => (
-                  <div>
-                    <h3>{element?.dishesName}</h3>
-                    <button
-                      onClick={() => {
-                        const filterDishes = dishes.filter((_, i) => i !== index)
-                        setDishes(filterDishes)
-                      }}
-                    >
-                      <img src={crossBtn} alt="cross-button" />
-                    </button>
-                  </div>
-                ))}
-                {modifiers?.map((element, index) => (
-                  <div>
-                    <h3>{element.modifierName}</h3>
-                    <button
-                      onClick={() => {
-                        const filterModifiers = modifiers.filter((_, i) => i !== index)
-                        setModifiers(filterModifiers)
-                      }}
-                    >
-                      <img src={crossBtn} alt="cross-button" />
-                    </button>
-                  </div>
-                ))}
+                <section>
+                  {dishes?.map((element, index) => (
+                    <div>
+                      <h3>{element?.dishesName}</h3>
+                      <button
+                        onClick={() => {
+                          const filterDishes = dishes.filter((_, i) => i !== index)
+                          setDishes(filterDishes)
+                        }}
+                      >
+                        <img src={crossBtn} alt="cross-button" />
+                      </button>
+                    </div>
+                  ))}
+                </section>
+                <section>
+                  {modifiers?.map((element, index) => (
+                    <div>
+                      <h3>{element.modifierName}</h3>
+                      <button
+                        onClick={() => {
+                          const filterModifiers = modifiers.filter((_, i) => i !== index)
+                          setModifiers(filterModifiers)
+                        }}
+                      >
+                        <img src={crossBtn} alt="cross-button" />
+                      </button>
+                    </div>
+                  ))}
+                </section>
               </div>
             </div>
             <div>
@@ -115,25 +121,29 @@ export default function AddModifier({ isOpen, onClose, children, product, action
                     ))}
                   </div>
                   <div>
-                    {product.product.group?.modifiers?.map((element, index) => (
-                      <button
-                        key={index}
-                        onClick={() => {
-                          const settingmodifiers = !modifiers.length
-                            ? [element]
-                            : [
-                                ...modifiers,
-                                {
-                                  ...element,
-                                  modifierName: `${selectedModifier?.tittle} ${element.modifierName}`
-                                }
-                              ]
-                          setModifiers(settingmodifiers)
-                        }}
-                      >
-                        {element.modifierName}
-                      </button>
-                    ))}
+                    {product.product.group?.modifiers?.map((element, index) => {
+                      const isSelected = element.verbs.includes(selectedModifier?.value)
+                      return isSelected ? (
+                        <button
+                          key={index}
+                          onClick={() => {
+                            const settingModifiers = !modifiers.length
+                              ? [{ ...element, modifierName: `${selectedModifier?.tittle } ${element.modifierName}` }]
+                              : [
+                                  ...modifiers,
+                                  {
+                                    ...element,
+                                    modifierName: `${selectedModifier?.tittle } ${element.modifierName}`
+                                  }
+                                ]
+
+                            setModifiers(settingModifiers)
+                          }}
+                        >
+                          {element.modifierName}
+                        </button>
+                      ) : null
+                    })}
                   </div>
                 </div>
               </div>

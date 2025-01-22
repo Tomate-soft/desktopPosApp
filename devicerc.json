@@ -16,9 +16,7 @@
         "updatedAt": "2024-12-20T15:42:04.104Z",
         "__v": 0,
         "associatedProducts": [],
-        "printActions": [
-          "PRINT_ONSITE_ORDER_TICKET"
-        ]
+        "printActions": ["PRINT_ONSITE_ORDER_TICKET"]
       }
     ],
     "createdAt": "2024-12-14T02:32:20.129Z",
@@ -35,9 +33,7 @@
       "updatedAt": "2024-12-20T15:42:04.104Z",
       "__v": 0,
       "associatedProducts": [],
-      "printActions": [
-        "PRINT_ONSITE_ORDER_TICKET"
-      ]
+      "printActions": ["PRINT_ONSITE_ORDER_TICKET"]
     },
     {
       "_id": "675ce613b38b56956c8b4e06",
@@ -47,9 +43,7 @@
       "updatedAt": "2024-12-20T15:42:12.677Z",
       "__v": 0,
       "associatedProducts": [],
-      "printActions": [
-        "PRINT_ONSITE_ORDER_TICKET"
-      ]
+      "printActions": ["PRINT_ONSITE_ORDER_TICKET"]
     },
     {
       "_id": "675ce62fb38b56956c8b4e08",
@@ -58,10 +52,7 @@
       "createdAt": "2024-12-14T01:58:07.063Z",
       "updatedAt": "2024-12-20T15:51:58.171Z",
       "__v": 0,
-      "associatedProducts": [
-        "01010001",
-        "01010002"
-      ],
+      "associatedProducts": ["01010001", "01010002"],
       "printActions": []
     },
     {
@@ -72,9 +63,7 @@
       "updatedAt": "2024-12-20T15:43:11.659Z",
       "__v": 0,
       "associatedProducts": [],
-      "printActions": [
-        "PRINT_ONSITE_ORDER_TICKET"
-      ]
+      "printActions": ["PRINT_ONSITE_ORDER_TICKET"]
     },
     {
       "_id": "675ce652b38b56956c8b4e0c",
@@ -84,9 +73,7 @@
       "updatedAt": "2024-12-20T15:43:19.236Z",
       "__v": 0,
       "associatedProducts": [],
-      "printActions": [
-        "PRINT_ONSITE_ORDER_TICKET"
-      ]
+      "printActions": ["PRINT_ONSITE_ORDER_TICKET"]
     },
     {
       "_id": "675ce669b38b56956c8b4e0e",
@@ -96,9 +83,7 @@
       "updatedAt": "2024-12-20T15:43:30.823Z",
       "__v": 0,
       "associatedProducts": [],
-      "printActions": [
-        "PRINT_ONSITE_ORDER_TICKET"
-      ]
+      "printActions": ["PRINT_ONSITE_ORDER_TICKET"]
     },
     {
       "_id": "675ce67ab38b56956c8b4e10",
@@ -108,9 +93,7 @@
       "updatedAt": "2024-12-20T15:43:38.512Z",
       "__v": 0,
       "associatedProducts": [],
-      "printActions": [
-        "PRINT_ONSITE_ORDER_TICKET"
-      ]
+      "printActions": ["PRINT_ONSITE_ORDER_TICKET"]
     },
     {
       "_id": "675ce68cb38b56956c8b4e12",
@@ -120,9 +103,7 @@
       "updatedAt": "2024-12-20T15:43:55.346Z",
       "__v": 0,
       "associatedProducts": [],
-      "printActions": [
-        "PRINT_ONSITE_ORDER_TICKET"
-      ]
+      "printActions": ["PRINT_ONSITE_ORDER_TICKET"]
     },
     {
       "_id": "675ce69db38b56956c8b4e14",
@@ -132,9 +113,7 @@
       "updatedAt": "2024-12-19T16:02:46.001Z",
       "__v": 0,
       "associatedProducts": [],
-      "printActions": [
-        "PRINT_ONSITE_ORDER_TICKET"
-      ]
+      "printActions": ["PRINT_ONSITE_ORDER_TICKET"]
     },
     {
       "_id": "675ce6b2b38b56956c8b4e16",
@@ -144,9 +123,7 @@
       "updatedAt": "2024-12-20T15:55:31.643Z",
       "__v": 0,
       "associatedProducts": [],
-      "printActions": [
-        "PRINT_ONSITE_ORDER_TICKET"
-      ]
+      "printActions": ["PRINT_ONSITE_ORDER_TICKET"]
     },
     {
       "_id": "675ce6c2b38b56956c8b4e18",
@@ -155,13 +132,8 @@
       "createdAt": "2024-12-14T02:00:34.538Z",
       "updatedAt": "2024-12-20T18:19:11.761Z",
       "__v": 0,
-      "associatedProducts": [
-        "01010001",
-        "01010002"
-      ],
-      "printActions": [
-        "PRINT_ONSITE_ORDER_TICKET"
-      ]
+      "associatedProducts": ["01010001", "01010002"],
+      "printActions": ["PRINT_ONSITE_ORDER_TICKET"]
     },
     {
       "_id": "675ce6cbb38b56956c8b4e1a",

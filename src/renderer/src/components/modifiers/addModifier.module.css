@@ -43,13 +43,12 @@
     }
 
     > div:nth-child(2) {
-      height: 188px;
+      height: 240px;
       border-radius: 16px;
       background: rgba(249, 249, 249, 0.1);
-      padding: 16px;
+      padding: 32px;
       display: flex;
       flex-direction: column;
-      gap: 8px;
 
       > h3 {
         margin: 8px;
@@ -62,25 +61,43 @@
         display: flex;
         flex-wrap: wrap;
         overflow-y: auto;
-        gap: 8px;
+        gap: 16px;
         align-items: flex-start;
+        section:first-child {
+          flex: 1;
+        }
+        section:last-child {
+          flex: 1.35;
+        }
 
-        > div {
-          width: fit-content;
-          height: 48px;
-          border-radius: 24px;
+        section {
+          height: 100%;
+          overflow-y: auto;
           display: flex;
-          align-items: center;
-          justify-content: center;
-          border: 2px solid rgba(249, 249, 249, 0.2);
-          padding: 0px 0px 0px 16px;
-          transition: 0.25s ease;
-          background: rgba(249, 249, 249, 0.1);
+          flex-wrap: wrap;
+          gap: 8px;
+          padding: 8px;
+          border-radius: 8px;
+          background-color: rgba(240, 248, 255, 0.103);
 
-          > button {
-            background-color: transparent;
-            box-shadow: none;
-            cursor: pointer;
+          > div {
+            height: 48px;
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid rgba(249, 249, 249, 0.2);
+            padding: 0px 0px 0px 16px;
+            transition: 0.25s ease;
+            background: rgba(249, 249, 249, 0.1);
+            width: fit-content;
+
+            > button {
+              width: fit-content;
+              background-color: transparent;
+              box-shadow: none;
+              cursor: pointer;
+            }
           }
         }
 

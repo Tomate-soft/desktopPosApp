@@ -6,6 +6,10 @@
   background: #353639;
   position: relative;
 }
+img[alt='logo'] {
+  height: 60px;
+  width: 200px;
+}
 
 .head div {
   display: flex;

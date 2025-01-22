@@ -11,7 +11,6 @@ interface Props {
 }
 
 export default function ReprintModal({ children, openModal, currentBill, handleLoading }: Props) {
-
   const { printRestaurantOrderTicket } = UseImpression()
   return (
     <main className={styles.container}>

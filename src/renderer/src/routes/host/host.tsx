@@ -66,8 +66,9 @@ export default function Host() {
       <div className={allowEdit ? styles.backgroundRepeat : styles.noBackground}></div>
 
       <main className={styles.mainSection}>
-        {tablesArray?.map((item: any, index: any) => {
-          return (
+        {tablesArray
+          ?.sort((a, b) => a.tableNum - b.tableNum)
+          .map((item, index) => (
             <div className={styles.grid} key={index}>
               <TableBox
                 current={current}
@@ -82,8 +83,7 @@ export default function Host() {
                 enableTable={openTableModal.openModal}
               />
             </div>
-          )
-        })}
+          ))}
       </main>
       {confirmChanges.isOpen && confirmChanges.modalName === CONFIRM_CHANGES ? (
         <ConfirmChanges

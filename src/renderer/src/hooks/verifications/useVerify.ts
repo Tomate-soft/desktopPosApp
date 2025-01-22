@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { useOperationProcess } from '../../store/operatingPeriod/operatingPeriod.store'
 import { useAuthStore } from '../../shared'
+import { get } from 'http'
 
 export default function UseVerify() {
   const authData = useAuthStore((state) => state.authData) // datos del usuario

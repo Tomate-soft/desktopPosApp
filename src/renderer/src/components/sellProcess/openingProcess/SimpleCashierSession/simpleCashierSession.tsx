@@ -12,6 +12,7 @@ import { useAuthStore, useModal } from '../../../../shared'
 import ConfirmChanges from '../../../modals/confirm/confirmChanges'
 import { CASHIER_PATH, SELL_TYPES_PATH } from '../../../../lib/routes.paths.lib'
 import { useOperationProcess } from '../../../../store/operatingPeriod/operatingPeriod.store'
+import { formatToCurrency } from '@renderer/utils/formatToCurrency'
 
 interface Props {
   onClose: () => void
@@ -33,6 +34,7 @@ export default function SimpleCashierSession({ onClose }: Props) {
   const isLoading = useCashierSessionStore((state) => state.isLoading)
   const errors = useCashierSessionStore((state) => state.errors)
   const confirmChanges = useModal(CONFIRM_CHANGES)
+  const logOutRequest = useAuthStore((state) => state.logOutRequest)
 
   const keys = ['7', '8', '9', '4', '5', '6', '1', '2', '3', '0', '.', '00']
 
@@ -53,14 +55,14 @@ export default function SimpleCashierSession({ onClose }: Props) {
       <div>
         <div>
           <h3>Ingresa el importe</h3>
-          <strong>{value.length === 0 ? '$0' : `$${value}`}</strong>
+          <strong>{value.length === 0 ? '$0.00' : `$${formatToCurrency(value)}`}</strong>
         </div>
         <div>
           <div className={styles.mapKeys}>
             {keys.map((element, index) => (
               <button
                 onClick={() => {
-                  if (value.length >= 6) {
+                  if (value.length >= 6 || (value.includes('.') && element === '.')) {
                     return
                   }
                   setValue((prevValue) => {
@@ -88,7 +90,7 @@ export default function SimpleCashierSession({ onClose }: Props) {
           </div>
         </div>
         <button
-          disabled={!value.length || parseFloat(value) < 100}
+          disabled={!value.length || parseFloat(value) < 100 || value.startsWith('.')}
           onClick={() => {
             createSession(value, cashierId)
             confirmChanges.openModal()
@@ -100,7 +102,10 @@ export default function SimpleCashierSession({ onClose }: Props) {
         {confirmChanges.isOpen && confirmChanges.modalName === CONFIRM_CHANGES ? (
           <>
             <ConfirmChanges
-              actionType={getOperatingPeriod}
+              actionType={() => {
+                getOperatingPeriod()
+                logOutRequest()
+              }}
               closeModal={onClose}
               isOpen={confirmChanges.isOpen}
               onClose={confirmChanges.closeModal}

@@ -37,12 +37,14 @@ import ExceptionMessages from '../../components/modals/exceptionMessages/excepti
 import UseCashierException from '../../hooks/exceptions/useCashierException'
 import { useEffect } from 'react'
 import { billInitialState } from '../../configs/bills.initial.state'
+import { WAITER } from '@renderer/components/tools/confirmPassword/lib'
 
 export default function Sells() {
   //exceptions
   const cashierSessionException = useModal(EXCEPTION_MESSAGES_CASHIER_SESSION_MODAL)
 
   const authData = useAuthStore((state) => state.authData)
+  const allowRole = authData.payload.user.role.role.name
   const navigate = useNavigate()
   const billCurrentCommand = useCurrentCommand((state) => state.BillCommandCurrent)
 
@@ -76,7 +78,6 @@ export default function Sells() {
   UseCashierException(cashierSessionException.openModal)
 
   useEffect(() => {
-    console.log(billCurrentCommand)
     setBillCurrentCommand(billInitialState)
   }, [])
 
@@ -123,7 +124,7 @@ export default function Sells() {
             Cuentas finalizadas <span>{[...Array(1037)].length}</span>
           </button>
         </div>
-        <button onClick={mainMenu.openModal}>
+        <button onClick={mainMenu.openModal} disabled={allowRole === WAITER}>
           <img src={burgerMenu} alt="burger-menu" />
           Menu
         </button>

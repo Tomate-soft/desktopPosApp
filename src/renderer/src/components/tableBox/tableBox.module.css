@@ -42,6 +42,9 @@
 .table div:first-child {
   margin-top: 10px;
   padding: 10px 0px;
+  > span:first-child {
+    white-space: nowrap;
+  }
 }
 .table div:last-child {
   width: 85%;
@@ -57,7 +60,7 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  padding: 16px;
+  position: relative;
 }
 .table p,
 .table span {
@@ -85,6 +88,7 @@
     border-radius: 50%;
     padding: 5px;
     transition: 0.3s ease;
+    box-shadow: none;
   }
   > button:hover {
     background-color: rgba(0, 0, 0, 0.103);
