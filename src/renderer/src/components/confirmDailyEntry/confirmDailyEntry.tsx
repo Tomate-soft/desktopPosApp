@@ -4,6 +4,7 @@ import { keys } from '../../lib/components.lib'
 import checkIcon from '../../assets/icon/minCheck.svg'
 import returnIcon from '../../assets/icon/returnIcon.svg'
 import { useEntryDaily } from '../../store/dailyRegisterStore'
+import CloseButton from '../buttons/CloseButton/closeButton'
 interface Props {
   isOpen: any
   onClose: any
@@ -39,58 +40,69 @@ export default function ConfirmEntryDaily({
   return (
     <main className={styles.screen}>
       <div>
-        <button className={styles.closeButton} onClick={onClose}>
-          X
-        </button>
         <h1>{children}</h1>
         <main className={styles.screen}>
           <div className={styles.container}>
-            <button
-              className={styles.closeButton}
-              onClick={() => {
+            <CloseButton
+              onClose={() => {
                 settingEmployeeNumber('')
                 setStyle(false)
                 onClose()
               }}
-            >
-              X
-            </button>
+            />
             <h3>{children}</h3>
             <div className={styles.nums}>
               {value.length > 0 && value.length < 2 && value.length === 1 ? (
                 <div className={styles.sign}>
-                  <span>{value.slice(0, 1)}</span>
-                  <span>.</span>
-                  <span>.</span>
-                  <span>.</span>
+                  {/*<span>{value.slice(0, 1)}</span> */}
+                  <span style={{ color: '#4CAF50' }}>•</span>
+                  <span>•</span>
+                  <span>•</span>
+                  <span>•</span>
                 </div>
               ) : value.length > 1 && value.length < 3 && value.length === 2 ? (
                 <div className={styles.sign}>
-                  <span>{value.slice(0, 1)}</span>
-                  <span>{value.slice(1, 2)}</span>
-                  <span>.</span>
-                  <span>.</span>
+                  {/* 
+              <span>{value.slice(0, 1)}</span>
+              <span>{value.slice(1, 2)}</span>
+               */}
+                  <span style={{ color: '#4CAF50' }}>•</span>
+                  <span style={{ color: '#4CAF50' }}>•</span>
+                  <span>•</span>
+                  <span>•</span>
                 </div>
               ) : value.length > 2 && value.length < 4 && value.length === 3 ? (
                 <div className={styles.sign}>
-                  <span>{value.slice(0, 1)}</span>
-                  <span>{value.slice(1, 2)}</span>
-                  <span>{value.slice(2, 3)}</span>
-                  <span>.</span>
+                  {/*
+              <span>{value.slice(0, 1)}</span>
+              <span>{value.slice(1, 2)}</span>
+              <span>{value.slice(2, 3)}</span> 
+              */}
+                  <span style={{ color: '#4CAF50' }}>•</span>
+                  <span style={{ color: '#4CAF50' }}>•</span>
+                  <span style={{ color: '#4CAF50' }}>•</span>
+
+                  <span>•</span>
                 </div>
               ) : value.length > 3 && value.length < 5 && value.length === 4 ? (
                 <div className={styles.sign}>
-                  <span>{value.slice(0, 1)}</span>
-                  <span>{value.slice(1, 2)}</span>
-                  <span>{value.slice(2, 3)}</span>
-                  <span>{value.slice(3, 4)}</span>
+                  {/*
+                <span>{value.slice(0, 1)}</span>
+              <span>{value.slice(1, 2)}</span>
+              <span>{value.slice(2, 3)}</span>
+              <span>{value.slice(3, 4)}</span>
+                */}
+                  <span style={{ color: '#4CAF50' }}>•</span>
+                  <span style={{ color: '#4CAF50' }}>•</span>
+                  <span style={{ color: '#4CAF50' }}>•</span>
+                  <span style={{ color: '#4CAF50' }}>•</span>
                 </div>
               ) : (
                 <div className={styles.sign}>
-                  <span>.</span>
-                  <span>.</span>
-                  <span>.</span>
-                  <span>.</span>
+                  <span>•</span>
+                  <span>•</span>
+                  <span>•</span>
+                  <span>•</span>
                 </div>
               )}
             </div>

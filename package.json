@@ -1,6 +1,6 @@
 {
   "name": "tomatesoft-pos",
-  "version": "0.2.22",
+  "version": "0.2.36",
   "description": "An Electron application with React and TypeScript",
   "main": "./out/main/index.js",
   "author": "Ing. Moises Baldenegro Melendez",

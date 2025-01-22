@@ -306,7 +306,8 @@ footer {
   border-bottom: 1px solid #33333333;
   width: 100%;
   display: flex;
-  justify-content: center;
+  color: #333;
+  text-indent: 16px;
 }
 .option:hover {
   background-color: #6e717442;

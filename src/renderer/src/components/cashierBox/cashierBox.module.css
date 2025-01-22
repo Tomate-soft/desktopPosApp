@@ -10,31 +10,56 @@
   transition: 150ms;
 }
 
-.table div {
+.table > div {
   width: 75%;
   display: flex;
   justify-content: space-between;
   z-index: 100;
 }
 
-.table div:first-child {
-  margin-top: 10px;
-  padding: 10px 0px;
+.table > div:last-child {
+  display: flex;
+  justify-content: center;
 }
 
-.table div:last-child {
-  margin-bottom: 8px;
+.table > div:first-child {
+  margin-top: 10px;
+  padding: 16px;
+  width: 90%;
+
+  > div {
+    gap: 3px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    span {
+      height: 100%;
+    }
+
+    > img {
+      position: relative;
+    }
+  }
+}
+
+.table > div:last-child {
+  margin-bottom: 16px;
   padding: 8px 0px;
 }
 
-.table p {
+.table > p {
   font-size: 40px;
-  margin-top: 20px;
+  margin-top: 8px;
+  margin: 6px;
 }
 
 .table p,
 .table span {
   z-index: 100;
+  max-width: 140px;
+  text-align: center;
+  overflow: ellipsis;
+  max-height: 36px;
 }
 
 .table img {

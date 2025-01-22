@@ -14,6 +14,7 @@ import {
 import { keys } from '../../../lib/components.lib'
 import Loader from '../../loader/loader'
 import { useOperationProcess } from '../../../store/operatingPeriod/operatingPeriod.store'
+import CloseButton from '@renderer/components/buttons/CloseButton/closeButton'
 
 interface Props {
   pin: string
@@ -80,52 +81,66 @@ export default function ConfirmPassword({
   return (
     <main className={styles.screen}>
       <div className={styles.container}>
-        <button
-          className={styles.closeButton}
-          onClick={() => {
+        <CloseButton
+          onClose={() => {
             onClose()
             set('')
             reset('')
           }}
-        >
-          X
-        </button>
+        />
         <h3>Ingreso de contraseña</h3>
         <div className={styles.nums}>
           {value.length > 0 && value.length < 2 && value.length === 1 ? (
             <div className={styles.sign}>
-              <span>{value.slice(0, 1)}</span>
-              <span>.</span>
-              <span>.</span>
-              <span>.</span>
+              {/*<span>{value.slice(0, 1)}</span> */}
+              <span style={{ color: '#4CAF50' }}>•</span>
+              <span>•</span>
+              <span>•</span>
+              <span>•</span>
             </div>
           ) : value.length > 1 && value.length < 3 && value.length === 2 ? (
             <div className={styles.sign}>
+              {/* 
               <span>{value.slice(0, 1)}</span>
               <span>{value.slice(1, 2)}</span>
-              <span>.</span>
-              <span>.</span>
+               */}
+              <span style={{ color: '#4CAF50' }}>•</span>
+              <span style={{ color: '#4CAF50' }}>•</span>
+              <span>•</span>
+              <span>•</span>
             </div>
           ) : value.length > 2 && value.length < 4 && value.length === 3 ? (
             <div className={styles.sign}>
+              {/*
               <span>{value.slice(0, 1)}</span>
               <span>{value.slice(1, 2)}</span>
-              <span>{value.slice(2, 3)}</span>
-              <span>.</span>
+              <span>{value.slice(2, 3)}</span> 
+              */}
+              <span style={{ color: '#4CAF50' }}>•</span>
+              <span style={{ color: '#4CAF50' }}>•</span>
+              <span style={{ color: '#4CAF50' }}>•</span>
+
+              <span>•</span>
             </div>
           ) : value.length > 3 && value.length < 5 && value.length === 4 ? (
             <div className={styles.sign}>
-              <span>{value.slice(0, 1)}</span>
+              {/*
+                <span>{value.slice(0, 1)}</span>
               <span>{value.slice(1, 2)}</span>
               <span>{value.slice(2, 3)}</span>
               <span>{value.slice(3, 4)}</span>
+                */}
+              <span style={{ color: '#4CAF50' }}>•</span>
+              <span style={{ color: '#4CAF50' }}>•</span>
+              <span style={{ color: '#4CAF50' }}>•</span>
+              <span style={{ color: '#4CAF50' }}>•</span>
             </div>
           ) : (
             <div className={styles.sign}>
-              <span>.</span>
-              <span>.</span>
-              <span>.</span>
-              <span>.</span>
+              <span>•</span>
+              <span>•</span>
+              <span>•</span>
+              <span>•</span>
             </div>
           )}
         </div>

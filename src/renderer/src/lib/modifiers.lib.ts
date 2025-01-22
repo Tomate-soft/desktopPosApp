@@ -1,37 +1,37 @@
 export const staticModifiers = [
   {
     tittle: 'Sin',
-    value: '',
+    value: 'SIN',
     active: true
   },
   {
     tittle: 'Con',
-    value: '',
+    value: 'CON',
     active: true
   },
   {
     tittle: 'Poco (a)',
-    value: '',
+    value: 'POCO',
     active: true
   },
   {
     tittle: 'Mucho (a)',
-    value: '',
+    value: 'MUCHO',
     active: true
   },
   {
     tittle: 'Coccion',
-    value: '',
+    value: 'COCCION',
     active: true
   },
   {
     tittle: 'No trabaja',
-    value: '',
+    value: 'NO_TRABAJA',
     active: true
   },
   {
     tittle: 'Otro',
-    value: '',
+    value: 'OTRO',
     active: true
   }
 ]

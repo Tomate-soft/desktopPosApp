@@ -62,7 +62,7 @@ export default function Order() {
 
   const [selectNote, setSelectNote] = useState([])
   const [toggleStatus, setToggleStatus] = useState(false)
-  const [selectQuantity, setSelectQuantity] = useState<number | null>(null)
+  const [selectQuantity, setSelectQuantity] = useState<number | null>(0)
 
   // MODALS
   const addModifier = useModal(ADD_MODIFIER_MODAL)
@@ -75,7 +75,7 @@ export default function Order() {
   const createPhoneOrder = usePhoneOrders((state) => state.createNewOrder)
   const updatePhoneOrder = usePhoneOrders((state) => state.updateOrder)
   const addBillForPayment = useCashierSessionStore((state) => state.addBillForPayment)
-  const { printCommandProducts,  printRestaurantOrderTicket} = UseImpression();
+  const { printCommandProducts, printRestaurantOrderTicket } = UseImpression()
 
   //add modifier
   const [selectedProduct, setSelectedProduct] = useState<any>(null)
@@ -91,6 +91,8 @@ export default function Order() {
   const managementNotes = tableItem?.bill[0]?.notes?.filter(
     (element: any) => element.status === ENABLE_STATUS
   )
+  const [sendOrder, setSendOrder] = useState(false)
+  const [indexProduct, setIndexProduct] = useState(0)
 
   const userName = authData?.payload?.user?.name
   const initialOrderTogo: ToGoOrder = {
@@ -112,10 +114,10 @@ export default function Order() {
   const billCurrentCommand = useCurrentCommand((state) => state.BillCommandCurrent)
   const setBillCurrentCommand = useCurrentCommand((state) => state.setState)
 
-  const handleAddedProducts = (item: Product) => {
+  const handleAddedProducts = async (item: Product) => {
     const itemWithUnique = { ...item, unique: uuidv4() }
 
-    setBillCurrentCommand({
+    await setBillCurrentCommand({
       ...billCurrentCommand,
       products: [...billCurrentCommand.products, itemWithUnique]
     })
@@ -192,6 +194,7 @@ export default function Order() {
 
     // Función de limpieza del efecto
     return () => {
+      location.state = {}
       setBillCurrentCommand({
         ...billCurrentCommand,
         products: []
@@ -207,6 +210,20 @@ export default function Order() {
 
   //////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////
+  const logOut = () => {
+    logOutRequest()
+    setBillCurrentCommand({ products: [] })
+  }
+
+  const deleteProduct = (index: number) => {
+    console.log(index)
+    const newProducts = [...billCurrentCommand.products].reverse()
+    newProducts.splice(index, 1)
+    setBillCurrentCommand({
+      ...billCurrentCommand,
+      products: newProducts.reverse()
+    })
+  }
 
   //////////////////////////////////////////////////////////////////////
   ///////////////////FOOTER PROPS///////////////////////////
@@ -229,9 +246,9 @@ export default function Order() {
     // aqui no se estran los productos
     // es el ticket de la cuenta, que es el mismo de las reimpresiones
     printRestaurantOrderTicket(billCurrentCommand)
- 
-      //  }
-      updateBill(FOR_PAYMENT_STATUS, billCurrent, billCurrentCommand)
+
+    //  }
+    updateBill(FOR_PAYMENT_STATUS, billCurrent, billCurrentCommand)
     updateTable(FOR_PAYMENT_STATUS, _id)
     // vamos a mandar el indice 0 desde el periodo operativo actual
     const elasticBalnceChargeBills =
@@ -246,6 +263,7 @@ export default function Order() {
   }
 
   const sendAction = async () => {
+    setSendOrder(true)
     if (type === ON_SITE_ORDER) {
       if (isWithNotes) {
         const dataTransfer = {
@@ -268,13 +286,13 @@ export default function Order() {
           printCommandProducts(billCurrentCommand)
 
           addBill(newBill._id, _id)
-          logOutRequest()
+          logOut()
           return
         }
-        // updateBill(ENABLE_STATUS, billCurrent, billCurrentCommand);
+        updateBill(ENABLE_STATUS, billCurrent, billCurrentCommand)
         // handlePrint(billCurrentCommand)
         printCommandProducts(billCurrentCommand)
-        logOutRequest()
+        logOut()
       } catch (error) {
         console.error('Error:', error)
       }
@@ -282,7 +300,7 @@ export default function Order() {
     if (type === TO_GO_ORDER) {
       if (toGoOrder) {
         updateToGoOrder(toGoOrder._id, billCurrentCommand)
-        logOutRequest()
+        logOut()
         return
       }
       createToGoOrder(billCurrentCommand)
@@ -291,30 +309,38 @@ export default function Order() {
     if (type === RAPPI_ORDER) {
       if (toGoOrder) {
         updateRappiOrder(toGoOrder._id, billCurrentCommand)
-        logOutRequest()
+        logOut()
         return
       }
       createRappiOrder(billCurrentCommand)
-      logOutRequest()
+      logOut()
     }
     if (type === PHONE_ORDER) {
       if (toGoOrder) {
         updatePhoneOrder(toGoOrder._id, billCurrentCommand)
-        logOutRequest()
+        logOut()
         return
       }
       createPhoneOrder(billCurrentCommand)
-      logOutRequest()
+      logOut()
     }
   }
-
   ////////////////////////////////////////////////////////////////////////////
   // ver si hay notas
   // todo para HOY
   function addExtrasInProduct(product: any) {
+    console.log(`aca el pinche unique del product: ${product.product.unique}`)
     const currentData = { ...billCurrentCommand }
+    const inProd = currentData.products?.findIndex(
+      (element) => product?.product?.unique === element?.unique
+    )
+    currentData.products[inProd] = product.product
+    setBillCurrentCommand(currentData)
+
+    /*
     currentData.products[product.index] = product.product
     setBillCurrentCommand(currentData)
+    */
   }
 
   ////////////////////////////////////////////////////////////////////////
@@ -326,6 +352,9 @@ export default function Order() {
       <HeaderTwo sellType={sellTypeHead} />
       <main className={styles.mainSection}>
         <CommandSection
+          deleteProduct={(index) => {
+            deleteProduct(index)
+          }}
           notesAllow={notesAllow}
           type={type}
           tableItem={tableItem}
@@ -356,7 +385,10 @@ export default function Order() {
                   key={index}
                   className={styles.containerProduct}
                   onClick={() => {
-                    handleAddedProducts(item)
+                    handleAddedProducts({
+                      ...item,
+                      quantity: selectQuantity === 0 ? 1 : selectQuantity
+                    })
                   }}
                 >
                   <p>{item.productName}</p>
@@ -391,7 +423,7 @@ export default function Order() {
         handlePrint={handlePrintForFooter}
         billCurrent={billCurrent}
         sendAction={sendAction}
-        sendDisabled={billCurrentCommand?.products.length < 1}
+        sendDisabled={billCurrentCommand?.products.length < 1 || sendOrder}
       />
       {addModifier.isOpen && addModifier.modalName === ADD_MODIFIER_MODAL ? (
         <AddModifier
@@ -399,6 +431,7 @@ export default function Order() {
           onClose={addModifier.closeModal}
           product={selectedProduct}
           action={addExtrasInProduct}
+          indexP={indexProduct}
         >
           ""
         </AddModifier>

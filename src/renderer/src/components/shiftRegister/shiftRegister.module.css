@@ -29,7 +29,6 @@
       display: flex;
       width: 85%;
       justify-content: flex-start;
-      font-size: 32px;
     }
 
     > div:nth-child(3) {
@@ -61,11 +60,9 @@
       > button {
         width: 80px;
         height: 80px;
-        gap: 8px;
-        border-radius: 8px;
-        background: rgba(249, 249, 249, 0.2);
         font-size: 32px;
         justify-self: center;
+        border-radius: 16px;
       }
 
       > h3 {
@@ -108,7 +105,7 @@
   align-items: center;
 
   > span {
-    font-size: 32px;
+    font-size: 48px;
     width: 30px;
     display: flex;
     justify-content: center;

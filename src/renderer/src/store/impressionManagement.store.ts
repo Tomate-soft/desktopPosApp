@@ -3,7 +3,7 @@ import axios from 'axios'
 interface ImpressionManagement {
   isLoading: boolean
   errors: string | Error
-  printRestaurantOrderTicket: (body: any) => void,
+  printRestaurantOrderTicket: (body: any) => void
   printCommandProducts: (body: any) => void
 }
 
@@ -31,8 +31,8 @@ export const useImpressionManagement = create<ImpressionManagement>((set) => ({
     }
   },
   printCommandProducts: async (body: any) => {
-        console.log('billCurrentCommand peri es', body);
-    
+    console.log('billCurrentCommand peri es', body)
+
     set(() => ({
       isLoading: true,
       errors: ''

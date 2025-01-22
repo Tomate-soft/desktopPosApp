@@ -28,14 +28,6 @@ export default function MainKeyboard({ isOpen, onClose, children, products, addP
   return (
     <main className={styles.container}>
       <section>
-        <button
-          className={styles.closeButton}
-          onClick={() => {
-            onClose()
-          }}
-        >
-          X
-        </button>
         <div className={styles.products}>
           {filterProducts?.map((element: any, index: any) => (
             <div

@@ -73,21 +73,25 @@ export default function DisableProducts({ isOpen, onClose, children }: Props) {
               <img src={dividerOne} alt="divider-icon" />
             </div>
             <div>
-              {categoriesArray?.map((element) => (
-                <button
-                  key={element.id} // Make sure to add a unique key
-                  style={
-                    element.categoryName === selectCategory?.categoryName
-                      ? { background: 'white', color: 'black' }
-                      : {}
-                  }
-                  onClick={() => {
-                    setSelectCategory(element)
-                  }}
-                >
-                  {element.categoryName}
-                </button>
-              ))}
+              {categoriesArray
+                ?.flatMap((element) => {
+                  return element.subCategories
+                })
+                .map((element) => (
+                  <button
+                    key={element.id} // Make sure to add a unique key
+                    style={
+                      element.name === selectCategory?.name
+                        ? { background: 'white', color: 'black' }
+                        : {}
+                    }
+                    onClick={() => {
+                      setSelectCategory(element)
+                    }}
+                  >
+                    {element.name}
+                  </button>
+                ))}
             </div>
           </div>
           <div>
@@ -167,45 +171,47 @@ export default function DisableProducts({ isOpen, onClose, children }: Props) {
                 </ConfirmChanges>
               ) : null}
               <div>
-                {filterByStatus?.map((element) => (
-                  <div key={element._id}>
-                    <h3>{element.productName}</h3>
-                    <div>
-                      {element.status === 'enabled' ? (
-                        <>
-                          <img src={indicatorOne} alt="indicator-icon" />
-                          <h3>Sí</h3>
-                        </>
-                      ) : (
-                        <>
-                          <img src={indicatorTwo} alt="indicator-icon" />
-                          <h3>No</h3>
-                        </>
-                      )}
+                {filterByStatus
+                  ?.filter((element) => element.category === selectCategory?.name)
+                  .map((element) => (
+                    <div key={element._id}>
+                      <h3>{element.productName}</h3>
+                      <div>
+                        {element.status === 'enabled' ? (
+                          <>
+                            <img src={indicatorOne} alt="indicator-icon" />
+                            <h3>Sí</h3>
+                          </>
+                        ) : (
+                          <>
+                            <img src={indicatorTwo} alt="indicator-icon" />
+                            <h3>No</h3>
+                          </>
+                        )}
+                      </div>
+                      <div>
+                        {element.status === 'enabled' ? (
+                          <button
+                            onClick={() => {
+                              confirmChanges.openModal()
+                              disableProduct(element._id, { status: 'disabled' })
+                            }}
+                          >
+                            <img src={bloquedIcon} alt="bloqued-icon" />
+                          </button>
+                        ) : (
+                          <button
+                            onClick={() => {
+                              confirmChanges.openModal()
+                              disableProduct(element._id, { status: 'enabled' })
+                            }}
+                          >
+                            <img src={backArrowBtn} alt="back-icon" />
+                          </button>
+                        )}
+                      </div>
                     </div>
-                    <div>
-                      {element.status === 'enabled' ? (
-                        <button
-                          onClick={() => {
-                            confirmChanges.openModal()
-                            disableProduct(element._id, { status: 'disabled' })
-                          }}
-                        >
-                          <img src={bloquedIcon} alt="bloqued-icon" />
-                        </button>
-                      ) : (
-                        <button
-                          onClick={() => {
-                            confirmChanges.openModal()
-                            disableProduct(element._id, { status: 'enabled' })
-                          }}
-                        >
-                          <img src={backArrowBtn} alt="back-icon" />
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                ))}
+                  ))}
               </div>
             </div>
           </div>

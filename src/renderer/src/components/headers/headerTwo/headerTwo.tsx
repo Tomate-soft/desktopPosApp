@@ -1,7 +1,7 @@
 // styles
 import styles from './headerTwo.module.css'
 // Icons
-import logo from '../../../assets/icon/logo.svg'
+import logo from '../../../assets/icon/tomatePOSlogo.svg'
 import logoDivider from '../../../assets/icon/logoDivider.svg'
 import bulletIcon from '../../../assets/icon/bullet.svg'
 import dividerIcon from '../../../assets/icon/dividerBtn.svg'

@@ -16,14 +16,6 @@ import { useModal } from '../../../hooks/useModal'
 import { CASH_MOVES } from '../mainMenuActions/constants'
 import CashMoves from '../mainMenuActions/cashMoves/cashMoves'
 import { TABLES_CONTROL_PATH } from '../../../lib/routes.paths.lib'
-import {
-  CASH_OUT_PROCESS,
-  CLOSE_CASHIER_SESSION,
-  CLOSE_OPERATIONS_PERIOD,
-  CONFIRM_CHANGES,
-  DISABLED_PRODUCTS,
-  OPEN_CASHIER_SESSION
-} from '../../../lib/modals.lib'
 import DisableProducts from '../../disableProducts/disableProducts'
 import OpeningProcess from '../../sellProcess/openingProcess/openingProcess'
 import AdvanzedClosing from '../../sellProcess/closingProcess/advanzedClosing/advanzedClosing'
@@ -34,6 +26,14 @@ import { ADMIN, CASHIER } from '../../tools/confirmPassword/lib'
 import UseVerify from '../../../hooks/verifications/useVerify'
 import { usePayStore } from '@renderer/store/payments/payments.store'
 import ConfirmChanges from '@renderer/components/modals/confirm/confirmChanges'
+import {
+  CASH_OUT_PROCESS,
+  CLOSE_CASHIER_SESSION,
+  CLOSE_OPERATIONS_PERIOD,
+  CONFIRM_CHANGES,
+  DISABLED_PRODUCTS,
+  OPEN_CASHIER_SESSION
+} from '../../../lib/modals.lib'
 
 interface Props {
   isOpen: any
@@ -57,6 +57,7 @@ export default function MainMenu({ isOpen, onClose, children }: Props) {
   const confirmChanges = useModal(CONFIRM_CHANGES)
   const isLoading = usePayStore((state) => state.isLoading)
   const errors = usePayStore((state) => state.errors)
+  const logOutRequest = useAuthStore((state) => state.logOutRequest)
 
   return (
     <div className={styles.screen}>
@@ -76,23 +77,25 @@ export default function MainMenu({ isOpen, onClose, children }: Props) {
             <img src={menuTwo} alt="menu-icon" />
             Apertura de caja
           </button>
-          <button onClick={cashOutProcess.openModal}>
-            <img src={cashOutIcon} alt="menu-icon" />
-            <span>Retiro parcial</span>
-          </button>
-          <button onClick={cashMoves.openModal}>
-            <img src={tipsIcon} alt="tips-icon" />
-            <span>Propinas</span>
-          </button>
-          <button>
-            <img src={menuTwo} alt="menu-icon" />
-            <span>Corte parcial</span>
-          </button>
           <button onClick={cashierCloseSession.openModal} disabled={!isCashierEnable}>
             <img src={menuTwo} alt="menu-icon" />
             <span>Cierre de caja</span>
           </button>
+          <button onClick={cashOutProcess.openModal} disabled={!isCashierEnable}>
+            <img src={cashOutIcon} alt="menu-icon" />
+            <span>Retiro parcial</span>
+          </button>
+
+          <button disabled={!isCashierEnable}>
+            <img src={menuTwo} alt="menu-icon" />
+            <span>Corte parcial</span>
+          </button>
+          <button onClick={cashMoves.openModal} disabled={!isCashierEnable}>
+            <img src={tipsIcon} alt="tips-icon" />
+            <span>Propinas</span>
+          </button>
           <button
+            disabled={allowRole != ADMIN}
             onClick={() => {
               navigate(`/${TABLES_CONTROL_PATH}`)
             }}
@@ -104,11 +107,12 @@ export default function MainMenu({ isOpen, onClose, children }: Props) {
             <img src={menuFour} alt="menu-icon" />
             <span>Desactivar Productos</span>
           </button>
-          <button>
+          <button disabled={allowRole != ADMIN}>
             <img src={menuFive} alt="menu-icon" />
             <span>Comedor de empleados</span>
           </button>
           <button
+            disabled={allowRole != ADMIN}
             onClick={() => {
               navigate('/biometrics')
             }}
@@ -116,11 +120,12 @@ export default function MainMenu({ isOpen, onClose, children }: Props) {
             <img src={menuSix} alt="menu-icon" />
             <span>Registro de huellas</span>
           </button>
-          <button>
+          <button disabled={allowRole != ADMIN}>
             <img src={menuEight} alt="menu-icon" />
             <span>Reservaciones</span>
           </button>
           <button
+            disabled={allowRole != ADMIN}
             onClick={() => {
               navigate('/reports')
             }}
@@ -128,10 +133,13 @@ export default function MainMenu({ isOpen, onClose, children }: Props) {
             <img src={menuNine} alt="menu-icon" />
             <span>Reportes</span>
           </button>
-          <button onClick={closeOperations.openModal}>
+          {/*
+            <button onClick={closeOperations.openModal}>
             <img src={opertingIcon} alt="menu-icon" />
             <span>Cierre operativo</span>
           </button>
+
+            */}
         </section>
       </section>
       {confirmChanges.isOpen && confirmChanges.modalName === CONFIRM_CHANGES ? (

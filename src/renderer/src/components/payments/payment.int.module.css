@@ -15,7 +15,7 @@
   background: rgba(15, 15, 15, 0.829);
   gap: 16px;
 
-  >div{
+  > div {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -30,13 +30,13 @@
     box-shadow: 0px 0px 10px rgba(117, 117, 117, 0.2);
     padding: 32px;
 
-    >header{
+    > header {
       padding: 16px;
-      border-bottom: 2px solid #2c9aad; 
+      border-bottom: 2px solid #2c9aad;
       width: 100%;
     }
 
-    >main{
+    > main {
       flex: 1;
       width: 100%;
       border-radius: 16px;
@@ -49,22 +49,20 @@
       max-height: 685px;
       overflow-y: auto;
 
-      >div{
+      > div {
         display: flex;
         justify-content: space-between;
         align-items: center;
         width: 100%;
         gap: 16px;
 
-        >h3:nth-child(2){
+        > h3:nth-child(2) {
           flex: 1;
-          overflow: hidden
+          overflow: hidden;
         }
-        
       }
     }
-
-  };
+  }
 }
 
 .modal {
@@ -299,7 +297,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding:  4px 0px; 
+  padding: 4px 0px;
 }
 
 .transactionContainer > div {

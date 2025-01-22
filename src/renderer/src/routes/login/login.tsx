@@ -8,6 +8,7 @@ import fingerprintIco from '../../assets/icon/fingerprint.svg'
 import startShift from '../../assets/icon/startShift.svg'
 import dividerBtn from '../../assets/icon/dividerBtn.svg'
 import bullet from '../../assets/icon/bullet.svg'
+
 // Components
 import Pinboard from '../../components/tools/pinBoard/Pinboard'
 import HeaderOne from '../../components/headers/headerOne/headerOne'
@@ -52,17 +53,14 @@ export default function Login() {
   const isErrorsShift = useEntryDaily((state) => state.errors)
   const createRegister = useEntryDaily((state) => state.createEntryDaily)
   const messages = useEntryDaily((state) => state.message)
+
   // other more
   const updateConfigInDevice = UseBussines((state) => state.updateConfigInDevice)
   const syncLoading = UseBussines((state) => state.isLoading)
 
   // update changes new hook
-
   // const { initReader } = UseFingerSignIn(confirmEntry.openModal);
   const { isLoading, error, data } = useDevice()
-  useEffect(() => {
-    //initReader();
-  }, [error])
 
   return (
     <>
@@ -81,50 +79,66 @@ export default function Login() {
             <img src={posLogo} alt="pos-logo" />
           </section>
           <section className={styles.sectionTwo}>
-            <h4>ingresar código</h4>
+            <h4>Ingresar código</h4>
             <div className={styles.nums}>
               {employeeNumber.length > 0 &&
               employeeNumber.length < 2 &&
               employeeNumber.length === 1 ? (
                 <div className={styles.sign}>
-                  <span>{employeeNumber.slice(0, 1)}</span>
-                  <span>.</span>
-                  <span>.</span>
-                  <span>.</span>
+                  {/* <span>{employeeNumber.slice(0, 1)}</span> */}
+                  <span style={{ color: '#4CAF50' }}>•</span>
+                  <span>•</span>
+                  <span>•</span>
+                  <span>•</span>
                 </div>
               ) : employeeNumber.length > 1 &&
                 employeeNumber.length < 3 &&
                 employeeNumber.length === 2 ? (
                 <div className={styles.sign}>
-                  <span>{employeeNumber.slice(0, 1)}</span>
-                  <span>{employeeNumber.slice(1, 2)}</span>
-                  <span>.</span>
-                  <span>.</span>
+                  {/*
+                    <span>{employeeNumber.slice(0, 1)}</span>
+                    <span>{employeeNumber.slice(1, 2)}</span>
+                    */}
+                  <span style={{ color: '#4CAF50' }}>•</span>
+                  <span style={{ color: '#4CAF50' }}>•</span>
+                  <span>•</span>
+                  <span>•</span>
                 </div>
               ) : employeeNumber.length > 2 &&
                 employeeNumber.length < 4 &&
                 employeeNumber.length === 3 ? (
                 <div className={styles.sign}>
-                  <span>{employeeNumber.slice(0, 1)}</span>
-                  <span>{employeeNumber.slice(1, 2)}</span>
-                  <span>{employeeNumber.slice(2, 3)}</span>
-                  <span>.</span>
+                  {/*
+                    <span>{employeeNumber.slice(0, 1)}</span>
+                    <span>{employeeNumber.slice(1, 2)}</span>
+                    <span>{employeeNumber.slice(2, 3)}</span>
+                    */}
+                  <span style={{ color: '#4CAF50' }}>•</span>
+                  <span style={{ color: '#4CAF50' }}>•</span>
+                  <span style={{ color: '#4CAF50' }}>•</span>
+                  <span>•</span>
                 </div>
               ) : employeeNumber.length > 3 &&
                 employeeNumber.length < 5 &&
                 employeeNumber.length === 4 ? (
                 <div className={styles.sign}>
-                  <span>{employeeNumber.slice(0, 1)}</span>
-                  <span>{employeeNumber.slice(1, 2)}</span>
-                  <span>{employeeNumber.slice(2, 3)}</span>
-                  <span>{employeeNumber.slice(3, 4)}</span>
+                  {/*
+                    <span>{employeeNumber.slice(0, 1)}</span>
+                    <span>{employeeNumber.slice(1, 2)}</span>
+                    <span>{employeeNumber.slice(2, 3)}</span>
+                    <span>{employeeNumber.slice(3, 4)}</span>
+                    */}
+                  <span style={{ color: '#4CAF50' }}>•</span>
+                  <span style={{ color: '#4CAF50' }}>•</span>
+                  <span style={{ color: '#4CAF50' }}>•</span>
+                  <span style={{ color: '#4CAF50' }}>•</span>
                 </div>
               ) : (
                 <div className={styles.sign}>
-                  <span>.</span>
-                  <span>.</span>
-                  <span>.</span>
-                  <span>.</span>
+                  <span>•</span>
+                  <span>•</span>
+                  <span>•</span>
+                  <span>•</span>
                 </div>
               )}
             </div>
@@ -156,7 +170,7 @@ export default function Login() {
             <img src={bullet} alt="bullet-icon" />
             <h3>LOC Terraza</h3>
             <img src={bullet} alt="bullet-icon" />
-            <h3>v0.2.22</h3>
+            <h3>v0.2.35</h3>
           </div>
         </footer>
         {confirmPassword.isOpen && confirmPassword.modalName === CONFIRM_PASSWORD ? (

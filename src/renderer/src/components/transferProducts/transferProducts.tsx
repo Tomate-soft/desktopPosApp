@@ -1,4 +1,4 @@
-import { Children, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import styles from './transferProducts.module.css'
 import disquetIcon from '../../assets/icon/disquetIcon.svg'
 import arrow from '../../assets/icon/selectArrow.svg'

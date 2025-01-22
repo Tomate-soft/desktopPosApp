@@ -42,7 +42,7 @@ export default function UseAccount() {
         throw new Error('No se encontro respuesta')
       }
       setNewAccount(response.data)
-      alert('Enviado con exito') // aca hay que abrir el modal de confirmacion y bquitar elo alert
+      // alert('Enviado con exito') // aca hay que abrir el modal de confirmacion y bquitar elo alert
       return response.data
     } catch (error) {
       setIsLoading(false)

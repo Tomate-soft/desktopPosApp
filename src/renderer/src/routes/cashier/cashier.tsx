@@ -1,4 +1,4 @@
-// Styles
+import { useEffect, useRef, useState } from 'react'
 import HeaderTwo from '../../components/headers/headerTwo/headerTwo'
 import '../../styles/global/global.css'
 import styles from './cashier.module.css'
@@ -20,7 +20,6 @@ import PaymentInterface from '../../components/payments/payments.int'
 
 // Components
 import CashierBox from '../../components/cashierBox/cashierBox'
-import { useEffect, useState } from 'react'
 import ConfirmPayment from '../../components/modals/confirmPayments/confirmPayments'
 import { useAuthStore } from '../../store/auth/auth.store'
 import { useNavigate } from 'react-router-dom'
@@ -39,7 +38,7 @@ import { useCashierSession } from '@renderer/store/cashierSession.store'
 import ConfirmChanges from '@renderer/components/modals/confirm/confirmChanges'
 
 export default function Cashier() {
-  //exceptions
+  // Exceptions
   const cashierSessionException = useModal(EXCEPTION_MESSAGES_CASHIER_SESSION_MODAL)
 
   const logOutRequest = useAuthStore((state) => state.logOutRequest)
@@ -84,39 +83,44 @@ export default function Cashier() {
     getBills()
   }, [])
 
+  // Usamos useRef para mantener el conjunto de elementos renderizados
+  const renderedItems = useRef(new Set<string>())
+
+  useEffect(() => {
+    // Limpiar el conjunto de ítems renderizados cuando cambie el filtro de la sesión
+    renderedItems.current.clear()
+  }, [filterSession])
+
   return (
     <div className={styles.container}>
       <HeaderTwo />
       <main className={styles.mainSection}>
         {filterSession && filterSession.length > 0
-          ? filterSession[0].bills?.map((item) =>
-              item.status === FOR_PAYMENT_STATUS && !item.notes.length ? (
-                <div key={item.id}>
-                  <CashierBox
-                    setting={setCurrentBill}
-                    openModal={paymentInterface.openModal}
-                    item={item}
-                    route={ENTRY_PATH}
-                  />
-                </div>
-              ) : (
-                item.notes.map(
-                  (note, index) =>
-                    note.status === FOR_PAYMENT_STATUS && (
-                      <div key={note.id}>
-                        <CashierBox
-                          setting={setCurrentBill}
-                          openModal={paymentInterface.openModal}
-                          item={item}
-                          isNote={note}
-                          route={ENTRY_PATH}
-                        />
-                      </div>
-                    )
+          ? filterSession[0].bills?.map((item) => {
+              // Verificar si el item ya ha sido renderizado usando _id
+              if (renderedItems.current.has(item._id)) {
+                return null // No renderizamos el item si ya está en el conjunto
+              }
+
+              // Añadir el item al conjunto para evitar duplicados
+              renderedItems.current.add(item._id)
+
+              return (
+                item.status === FOR_PAYMENT_STATUS &&
+                !item.notes.length && (
+                  <div key={item._id}>
+                    <CashierBox
+                      setting={setCurrentBill}
+                      openModal={paymentInterface.openModal}
+                      item={item}
+                      route={ENTRY_PATH}
+                    />
+                  </div>
                 )
               )
-            )
+            })
           : null}
+
         {confirmChanges.isOpen && confirmChanges.modalName === 'confirmChanges' ? (
           <ConfirmChanges
             errors={errorsCashierSession}

@@ -26,7 +26,6 @@ export default function ReopenModal({
       accountId: currentBill?._id,
       userId: userId
     }
-    console.log(body)
 
     reopenBill(body)
     openModal()

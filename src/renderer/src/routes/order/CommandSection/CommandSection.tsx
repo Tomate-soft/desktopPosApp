@@ -5,6 +5,7 @@ import trashBtn from '@renderer/assets/icon/trashIcon.svg'
 import NumbersBar from './NumbersBar/NumbersBar'
 import QuantityInterface from './QuantityInterface.tsx/QuantityInterface'
 import { calculateBillTotal, calculateProductTotal } from '@renderer/utils/calculateTotals'
+import { formatToCurrency } from '@renderer/utils/formatToCurrency'
 
 interface Props {
   notesAllow: boolean
@@ -22,6 +23,7 @@ interface Props {
   selectQuantity: number | null
   mainKeyboard: any
   setSelectQuantity: any
+  deleteProduct: any
 }
 
 export default function CommandSection({
@@ -39,7 +41,8 @@ export default function CommandSection({
   setSelectedProduct,
   selectQuantity,
   mainKeyboard,
-  setSelectQuantity
+  setSelectQuantity,
+  deleteProduct
 }: Props) {
   return (
     <section>
@@ -47,9 +50,7 @@ export default function CommandSection({
         <>
           <div>
             <div className={styles.headAccount}>
-              <span>
-                Cuenta con notas ... Cuenta: 0{type === ON_SITE_ORDER ? tableItem.tableNum : '#'}
-              </span>
+              <span>Cuenta: 0{type === ON_SITE_ORDER ? tableItem.tableNum : '#'}</span>
               <div className={styles.containerInput}>
                 <div className={styles.categoriesSelect}>
                   <div className={styles.customSelect} onClick={setToggleStatus}>
@@ -72,66 +73,65 @@ export default function CommandSection({
                 </div>
               </div>
             </div>
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '4px'
-              }}
-            >
-              {billCurrentCommand?.products?.map((element, index) => (
-                <div className={styles.pr} key={index}>
-                  <div className={styles.productContainer} key={index}>
-                    {!element.active ? (
-                      <QuantityInterface
-                        incrementAction={() => {
-                          handleQuantityChange(index, true)
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+              {billCurrentCommand?.products?.map((_, index, array) => {
+                const element = array[array.length - 1 - index] // Accede al elemento desde el final
+                return (
+                  <div className={styles.pr} key={index}>
+                    <div className={styles.productContainer}>
+                      {!element.active ? (
+                        <QuantityInterface
+                          incrementAction={() => {
+                            handleQuantityChange(array.length - 1 - index, true)
+                          }}
+                          decrementAction={() => {
+                            handleQuantityChange(array.length - 1 - index, false)
+                          }}
+                          decrementDisable={
+                            billCurrentCommand.products[array.length - 1 - index].quantity <= 1 ||
+                            element.active
+                          }
+                          incrementDisable={
+                            billCurrentCommand.products[array.length - 1 - index].quantity >= 99 ||
+                            element.active
+                          }
+                          element={element}
+                        />
+                      ) : (
+                        <h3>{element.quantity}</h3>
+                      )}
+                      <span
+                        onClick={() => {
+                          if (element.active) {
+                            return
+                          }
+                          addModifier.openModal()
+                          setSelectedProduct({ index: index, product: element })
                         }}
-                        decrementAction={() => {
-                          handleQuantityChange(index, false)
-                        }}
-                        decrementDisable={
-                          billCurrentCommand.products[index].quantity <= 1 || element.active
-                        }
-                        incrementDisable={
-                          billCurrentCommand.products[index].quantity >= 99 || element.active
-                        }
-                        element={element}
-                      />
-                    ) : (
-                      <h3>{element.quantity}</h3>
-                    )}
-                    <span
-                      onClick={() => {
-                        if (element.active) {
-                          return
-                        }
-                        addModifier.openModal()
-                        setSelectedProduct({ index: index, product: element })
-                      }}
-                    >
-                      {element.productName}
-                    </span>
-                    <p>{calculateProductTotal(element)}</p>
-                    {!element.active && (
-                      <button>
-                        <img src={trashBtn} alt="trash-button" />
-                      </button>
-                    )}
+                      >
+                        {element.productName}
+                      </span>
+                      <p>${formatToCurrency(calculateProductTotal(element))}</p>
+                      {!element.active && (
+                        <button onClick={() => deleteProduct(index)}>
+                          <img src={trashBtn} alt="trash-button" />
+                        </button>
+                      )}
+                    </div>
+                    {element.dishes &&
+                      element.dishes.map((dish, index) => (
+                        <div key={index}>
+                          <p>{dish.dishesName}</p>
+                          {!element.active && (
+                            <button>
+                              <img src={trashBtn} alt="trash-button" />
+                            </button>
+                          )}
+                        </div>
+                      ))}
                   </div>
-                  {element.dishes &&
-                    element.dishes.map((dish, index) => (
-                      <div key={index}>
-                        <p>{dish.dishesName}</p>
-                        {!element.active && (
-                          <button>
-                            <img src={trashBtn} alt="trash-button" />
-                          </button>
-                        )}
-                      </div>
-                    ))}
-                </div>
-              ))}
+                )
+              })}
             </div>
             <div>
               <span>Cantidad:</span>
@@ -152,59 +152,65 @@ export default function CommandSection({
               <span>Cuenta: 0{type === ON_SITE_ORDER ? tableItem.tableNum : '#'}</span>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-              {billCurrentCommand?.products?.map((element, index) => (
-                <div key={index} className={styles.pr}>
-                  <div className={styles.productContainer}>
-                    {!element.active ? (
-                      <QuantityInterface
-                        incrementAction={() => {
-                          handleQuantityChange(index, true)
+              {billCurrentCommand?.products?.map((_, index, array) => {
+                const element = array[array.length - 1 - index] // Accede al elemento desde el final
+                return (
+                  <div key={index} className={styles.pr}>
+                    <div className={styles.productContainer}>
+                      {!element.active ? (
+                        <QuantityInterface
+                          incrementAction={() => {
+                            handleQuantityChange(array.length - 1 - index, true)
+                          }}
+                          decrementAction={() => {
+                            handleQuantityChange(array.length - 1 - index, false)
+                          }}
+                          decrementDisable={
+                            billCurrentCommand.products[array.length - 1 - index].quantity <= 1 ||
+                            element.active
+                          }
+                          incrementDisable={
+                            billCurrentCommand.products[array.length - 1 - index].quantity >= 99 ||
+                            element.active
+                          }
+                          element={element}
+                        />
+                      ) : (
+                        <h3>{element.quantity}</h3>
+                      )}
+                      <span
+                        onClick={() => {
+                          if (element.active) {
+                            return
+                          }
+                          addModifier.openModal()
+                          console.log({ index: index, product: element })
+                          setSelectedProduct({ index: index, product: element })
                         }}
-                        decrementAction={() => {
-                          handleQuantityChange(index, false)
-                        }}
-                        decrementDisable={
-                          billCurrentCommand.products[index].quantity <= 1 || element.active
-                        }
-                        incrementDisable={
-                          billCurrentCommand.products[index].quantity >= 99 || element.active
-                        }
-                        element={element}
-                      />
-                    ) : (
-                      <h3>{element.quantity}</h3>
-                    )}
-                    <span
-                      onClick={() => {
-                        if (element.active) {
-                          return
-                        }
-                        addModifier.openModal()
-                        setSelectedProduct({ index: index, product: element })
-                      }}
-                    >
-                      {element.productName}
-                    </span>
-                    <p>{calculateProductTotal(element)}</p>
-                    {!element.active && (
-                      <button>
-                        <img src={trashBtn} alt="trash-button" />
-                      </button>
-                    )}
+                      >
+                        {element.productName}
+                      </span>
+                      <p>${formatToCurrency(calculateProductTotal(element))}</p>
+                      {!element.active && (
+                        <button onClick={() => deleteProduct(index)}>
+                          <img src={trashBtn} alt="trash-button" />
+                        </button>
+                      )}
+                    </div>
+                    {element.dishes &&
+                      element.dishes.map((dish, index) => (
+                        <div key={index}>
+                          <p>{dish.dishesName}</p>
+                          {!element.active && (
+                            <button>
+                              <img src={trashBtn} alt="trash-button" />
+                            </button>
+                          )}
+                        </div>
+                      ))}
                   </div>
-                  {element.dishes &&
-                    element.dishes.map((dish, index) => (
-                      <div key={index}>
-                        <p>{dish.dishesName}</p>
-                        {!element.active && (
-                          <button>
-                            <img src={trashBtn} alt="trash-button" />
-                          </button>
-                        )}
-                      </div>
-                    ))}
-                </div>
-              ))}
+                )
+              })}
             </div>
             <div>
               <span>Cantidad:</span>
@@ -213,7 +219,7 @@ export default function CommandSection({
             <div className={styles.totalContainer}>
               <div>
                 <span>Total: </span>
-                <span>${calculateBillTotal(billCurrentCommand.products)}</span>
+                <span>${formatToCurrency(calculateBillTotal(billCurrentCommand.products))}</span>
               </div>
             </div>
           </div>

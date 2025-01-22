@@ -35,6 +35,14 @@ export const calculateProductTotal = (product: Product): number => {
   return baseTotal
 }
 
+export const productTotalWithDiscount = (product: Product): number => {
+  if (!product.discount) {
+    return calculateProductTotal(product)
+  }
+  // aca vamos con lña logica para hacer los descuentos
+  return 666
+}
+
 // Calcula el total de una lista de productos.
 export const calculateBillTotal = (products: Product[]): string => {
   if (!products.length) return '0.00'

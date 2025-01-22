@@ -55,6 +55,7 @@
         height: 48px;
         display: flex;
         justify-content: center;
+        margin-top: 8px;
 
         > button {
           width: 158px;
@@ -233,6 +234,7 @@
 }
 
 /* //////////////*/
+
 .containerInput {
   height: 48px;
 }

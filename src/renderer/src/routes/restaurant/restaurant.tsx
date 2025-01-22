@@ -52,8 +52,8 @@ export default function Restaurant() {
         table: undefined
       })
     }
-  }, []);
-  
+  }, [])
+
   return (
     <div className={styles.container}>
       <HeaderTwo sellType="Restaurante" />
@@ -66,16 +66,18 @@ export default function Restaurant() {
             item={idTable}
           ></MoreActionsMenu>
         ) : null}
-        {(isAdmin ? tablesArray : avalaibleTables)?.map((item: any) => (
-          <div className={styles.grid}>
-            <TableBox
-              item={item}
-              route={'/restaurant-order/:item'}
-              openModal={openMoreActions.openModal}
-              set={setIdTable}
-            />
-          </div>
-        ))}
+        {(isAdmin ? tablesArray : avalaibleTables)
+          ?.sort((a, b) => a.tableNum - b.tableNum)
+          .map((item: any) => (
+            <div className={styles.grid}>
+              <TableBox
+                item={item}
+                route={'/restaurant-order/:item'}
+                openModal={openMoreActions.openModal}
+                set={setIdTable}
+              />
+            </div>
+          ))}
       </main>
       {cashierSessionException.isOpen &&
       cashierSessionException.modalName === EXCEPTION_MESSAGES_CASHIER_SESSION_MODAL ? (

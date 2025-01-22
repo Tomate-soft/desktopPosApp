@@ -69,8 +69,10 @@ export default function TableBox({
       }
       if (userRole === HOSTESS) {
         // Esto lo vamos a quitar por que, la hostess debe de cambiar desde el panel de mesas no de aca
-        setCurrent(item)
-        enableTable()
+        if (item.status === FREE_STATUS) {
+          setCurrent(item)
+          enableTable()
+        }
       }
       if (userRole === WAITER) {
         if (item.status === FREE_STATUS || item.status === FOR_PAYMENT_STATUS) {
@@ -125,7 +127,7 @@ export default function TableBox({
   if (!loading && newAccount?.code === 200) handleclick /* que es esto? */
 
   useEffect(() => {
-    console.log('Variable del tiempoo', item.updatedAt)
+    console.log('NOMBRE DEL USUARIO', item.user)
   }, [item])
   return (
     <div
@@ -141,7 +143,7 @@ export default function TableBox({
             : { opacity: '1' }
       }
     >
-      <div>
+      <div style={!item.bill[0] ? { padding: '16px 0px' } : {}}>
         {item.status != FREE_STATUS && (
           <span style={{ fontSize: '15px', paddingTop: '3px' }}>{timing}</span>
         )}
@@ -189,13 +191,20 @@ export default function TableBox({
       </>
       <div
         className={styles.openTable}
+        style={
+          item.bill[0] && item.user
+            ? { padding: '0px', marginTop: '-8px' }
+            : !item.bill[0] && item.user
+              ? { padding: '0px' }
+              : { padding: '16px 0px' }
+        }
         onClick={() => {
           if (!item.availability || item.joinedTables.length > 0) return
           isEdit && item.status != FOR_PAYMENT_STATUS ? handleEdit() : handleclick()
         }}
       >
         <p>{item.tableNum}</p>
-        <span className={styles.serverName}>{item.user?.name ?? ''}</span>
+        <span className={styles.serverName}>{item.user?.name ?? 'No asignada'}</span>
       </div>
       <div className={item.joinedTables.length <= 0 ? styles.footBox : styles.footBoxBetween}>
         {item.joinedTables.length > 0 && isEdit && (
@@ -216,10 +225,12 @@ export default function TableBox({
             <img src={tableIcon} alt="more-actions" />
           </button>
         )}
-
         {item.status != FREE_STATUS && (
           <button
             onClick={() => {
+              if (userRole === HOSTESS) {
+                return
+              } // SI MAS ADELANTE LA HOSTES PUEDE HACER ALGO, ACA LO PONDREMOS
               if (!item.availability) return
               if (isEdit) {
                 return

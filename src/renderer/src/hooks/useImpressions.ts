@@ -1,7 +1,8 @@
 import { useImpressionManagement } from '@renderer/store/impressionManagement.store'
 
 export default function UseImpression() {
-  const { isLoading, errors, printRestaurantOrderTicket, printCommandProducts } = useImpressionManagement()
+  const { isLoading, errors, printRestaurantOrderTicket, printCommandProducts } =
+    useImpressionManagement()
 
   return {
     isLoading,

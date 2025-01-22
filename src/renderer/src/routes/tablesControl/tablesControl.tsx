@@ -51,6 +51,7 @@ export default function TablesControl() {
   useEffect(() => {
     getTables()
     getUsers()
+    console.log(usersArray)
   }, [])
   return (
     <div className={styles.container}>
@@ -68,56 +69,58 @@ export default function TablesControl() {
       ) : null}
       <div className={styles.mainSection}>
         <div>
-          {tablesArray.map((item: Table, index) => (
-            <div
-              style={!item.availability ? { opacity: '0.2' } : {}}
-              onClick={() => {
-                if (!item.availability) return
-                if (!item.active) {
-                  return
-                }
-                if (item.assigned) {
-                  return
-                }
-                if (selectedUser) {
-                  const alreadySelected = selectedTables.includes(item._id)
-
-                  if (alreadySelected) {
-                    setSelectedTables(selectedTables.filter((id) => id !== item._id))
-                  } else {
-                    setSelectedTables([...selectedTables, item._id])
+          {tablesArray
+            .sort((a, b) => a.tableNum - b.tableNum)
+            .map((item, index) => (
+              <div
+                style={!item.availability ? { opacity: '0.2' } : {}}
+                onClick={() => {
+                  if (!item.availability) return
+                  if (!item.active) {
+                    return
                   }
-                }
-                return
-              }}
-              /*
+                  if (item.assigned) {
+                    return
+                  }
+                  if (selectedUser) {
+                    const alreadySelected = selectedTables.includes(item._id)
+
+                    if (alreadySelected) {
+                      setSelectedTables(selectedTables.filter((id) => id !== item._id))
+                    } else {
+                      setSelectedTables([...selectedTables, item._id])
+                    }
+                  }
+                  return
+                }}
+                /*
               style={
                 selectedTables.includes(item._id)
                   ? { background: "rgba(167, 92, 57, 1)" }
                   : {}
               }
               */
-            >
-              {item.zone ? <h4>{item.zone}</h4> : <></>}
-              {item.assigned ? (
-                <h5>{`${item?.user?.name.slice(0, 1).toUpperCase()}${item?.user?.name
-                  .slice(1, 11)
-                  .toLowerCase()}`}</h5>
-              ) : (
-                <></>
-              )}
-              <h3 key={index}>{item.tableNum}</h3>
-              {!item.active ? (
-                <img src={disabledTable} alt="table-icon" />
-              ) : item.assigned ? (
-                <img src={assignedTable} alt="table-icon" />
-              ) : selectedTables.includes(item._id) ? (
-                <img src={tableSelected} alt="table-icon" />
-              ) : (
-                <img src={tableBase} alt="table-icon" />
-              )}
-            </div>
-          ))}
+              >
+                {item.zone ? <h4>{item.zone}</h4> : <></>}
+                {item.assigned ? (
+                  <h5>{`${item?.user?.name.slice(0, 1).toUpperCase()}${item?.user?.name
+                    .slice(1, 11)
+                    .toLowerCase()}`}</h5>
+                ) : (
+                  <></>
+                )}
+                <h3 key={index}>{item.tableNum}</h3>
+                {!item.active ? (
+                  <img src={disabledTable} alt="table-icon" />
+                ) : item.assigned ? (
+                  <img src={assignedTable} alt="table-icon" />
+                ) : selectedTables.includes(item._id) ? (
+                  <img src={tableSelected} alt="table-icon" />
+                ) : (
+                  <img src={tableBase} alt="table-icon" />
+                )}
+              </div>
+            ))}
         </div>
         <div>
           <div>
@@ -133,22 +136,33 @@ export default function TablesControl() {
             </div>
           </div>
           <div>
-            {usersArray?.map((element: any) => (
-              <div
-                className={styles.userBox}
-                style={
-                  selectedUser?._id === element._id ? { background: 'rgba(167, 92, 57, 1)' } : {}
+            {usersArray
+              ?.sort((a, b) => parseInt(a.employeeNumber) - parseInt(b.employeeNumber))
+              .map((element) => {
+                // Verificar si el role.value es igual a "WAITER"
+                if (element.role?.role?.value !== 'WAITER') {
+                  return null // Si no es "WAITER", no renderizar este elemento
                 }
-                onClick={() => {
-                  setSelectedTables([])
-                  setSelectedUser(element)
-                }}
-              >
-                <h4>{element.employeeNumber}</h4>
-                <h4>{element.name.toUpperCase().slice(0, 18)}</h4>
-                <h4>{element.role?.profileName?.toUpperCase().slice(0, 17)}</h4>
-              </div>
-            ))}
+
+                return (
+                  <div
+                    className={styles.userBox}
+                    style={
+                      selectedUser?._id === element._id
+                        ? { background: 'rgba(167, 92, 57, 1)' }
+                        : {}
+                    }
+                    onClick={() => {
+                      setSelectedTables([])
+                      setSelectedUser(element)
+                    }}
+                  >
+                    <h4>{element.employeeNumber}</h4>
+                    <h4>{element.name.toUpperCase().slice(0, 18)}</h4>
+                    <h4>{element.role?.profileName?.toUpperCase().slice(0, 17)}</h4>
+                  </div>
+                )
+              })}
           </div>
         </div>
       </div>
